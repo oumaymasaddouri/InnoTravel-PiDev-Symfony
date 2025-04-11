@@ -1,0 +1,86 @@
+{% extends 'Admin/base.html.twig' %}
+
+{% block body %}
+<div class="content-wrapper">
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">List Trips</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ path('admin') }}">Tableaux de bord</a></li>
+                    <li class="breadcrumb-item active">Liste Trips</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                {% include "admin/includes/flashes.twig" %}
+                <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <a href="{{ path('create_trip') }}" class="btn btn-primary">Create Trip</a>
+                    <form method="get" class="form-inline">
+                        <input type="text" name="search" class="form-control form-control-sm mr-2" value="{{ search }}" placeholder="Search by user or status">
+                        <button type="submit" class="btn btn-sm btn-secondary">Filter</button>
+                    </form>
+                </div>
+        
+                    <div class="card-body table-responsive">
+                        <table id="FilterTable" class="table table-head-fixed table-bordered">
+                            <thead>
+                            <tr class="text-center">
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>budget</th>
+                                <th>Arrival Date</th>
+                                <th>Departure Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                             {% for trip in pagination %}
+                            <tr class="text-center">
+                                <td>{{ trip.id }}</td>
+                                <td class="title-text">{{ trip.user.fullName }}</td>
+                                <td class="title-text">{{ trip.budget }}</td>
+                                <td class="title-text">{{ trip.arrivalDate|date('y-m-d') }}</td>
+                                <td class="title-text">{{ trip.departure|date('y-m-d') }}</td>   
+                                <td class="title-text">
+                                    {% if trip.status == 'Accept' %}
+                                        <span class="badge bg-success">{{ trip.status }}</span>
+                                    {% elseif trip.status == 'Pending' %}
+                                        <span class="badge bg-warning">{{ trip.status }}</span>
+                                    {% elseif trip.status == 'canceled' %}
+                                        <span class="badge bg-danger">{{ trip.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ trip.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a class="btn btn-warning" href="{{ path('view_trip',{id:trip.id}) }}">Update</a>
+                                    <button class="btn btn-danger delete-trip" data-id="{{ trip.id }}">
+                                    Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-center mt-3">
+                            {{ knp_pagination_render(pagination) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+{% endblock %}

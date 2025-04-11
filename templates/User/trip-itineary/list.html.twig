@@ -1,0 +1,130 @@
+{% extends 'User/base.html.twig' %}
+
+{% block body %}  
+
+    <!-- start of breadcumb-section -->
+    <div class="wpo-breadcumb-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="wpo-breadcumb-wrap">
+                        <h2>Trips</h2>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><span>Trips</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-area section-padding">
+        <div class="container">
+            <div class="form">
+                <div class="cart-wrapper">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="submit-btn-area">
+                                <ul>
+                                    <li><a class="theme-btn" href="{{path('user_create_trip')}}">Add new trip <i class="fa fa-angle-double-right"></i></a></li>
+                                </ul>
+                            </div>
+                            <form method="get" class="row g-3 mb-4">
+                                <div class="col-md-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select name="status" id="status" class="form-select">
+                                        <option value="">All</option>
+                                        <option value="Pending" {{ filterStatus == 'Pending' ? 'selected' }}>Pending</option>
+                                        <option value="Accept" {{ filterStatus == 'Accept' ? 'selected' }}>Accept</option>
+                                        <option value="Canceled" {{ filterStatus == 'Canceled' ? 'selected' }}>Canceled</option>
+                                    </select>
+                                </div>
+                    
+
+                                <div class="col-md-3">
+                                    <label>Min Budget</label>
+                                    <input type="number" step="0.01" name="min_budget" value="{{ filterMinBudget }}" class="form-control">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label>Max Budget</label>
+                                    <input type="number" step="0.01" name="max_budget" value="{{ filterMaxBudget }}" class="form-control">
+                                </div>
+
+                                <div class="col-12 text-end mt-3">
+                                    <button type="submit" class="theme-btn">Filter</button>
+                                    <a href="{{ path('trip_itinerary_user') }}" class="btn btn-secondary">Reset</a>
+                                </div>
+                            </form>
+                            {% include "Admin/includes/flashes.twig" %}
+                            <table class="table-responsive cart-wrap">
+                                <thead>
+                                    <tr>
+                                        <th class="images images-b">ID</th>
+                                        <th class="product-2">Departure Day</th>
+                                        <th class="pr">Arrival Date</th>
+                                        <th class="ptice">Budget</th>
+                                        <th class="stock">Status</th>
+                                        <th class="remove remove-b">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tripItinerarie in tripItineraries %}
+                                    <tr>
+                                        <td class="images">{{ tripItinerarie.id }}</td>
+                                        <td class="product">
+                                            <ul>
+                                                <li class="first-cart">{{ tripItinerarie.departure|date('y-m-d') }}</li>
+                                            </ul>
+                                        </td>
+                                        <td class="stock">
+                                            <ul>
+                                                <li class="first-cart">{{ tripItinerarie.arrivalDate|date('y-m-d') }}</li>
+                                            </ul>
+                                        </td>
+                                        <td class="stock chack-in-out">{{ tripItinerarie.budget }}</td>
+                                        <td class="price">
+                                            {% if tripItinerarie.status == 'Accept' %}
+                                                <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> Accept</span>
+                                            {% elseif tripItinerarie.status == 'Pending' %}
+                                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Pending</span>
+                                            {% elseif tripItinerarie.status == 'Canceled' %}
+                                                <span class="badge bg-danger"><i class="bi bi-x-circle-fill"></i> Canceled</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ tripItinerarie.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="action">
+                                        <ul class="list-unstyled d-flex">
+                                            <li class="w-btn me-2">
+                                                <a href="{{ path('user_view_trip', {id: tripItinerarie.id}) }}">
+                                                    <i class="fi ti-eye"></i>
+                                                </a>
+                                            </li>
+                                            {% if tripItinerarie.status == 'Pending' %}
+                                                <li class="w-btn">
+                                                    <a class="delete-trip-btn" data-id="{{ tripItinerarie.id }}">
+                                                        <i class="fi ti-trash"></i>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </td>
+                                    
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <div class="d-flex justify-content-center mt-3">
+                            {{ knp_pagination_render(tripItineraries) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

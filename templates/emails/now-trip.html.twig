@@ -1,0 +1,12 @@
+
+ <p>Hello {{ data.admin.fullName }},</p>
+ <p>A new trip has been created. Here are the details:</p>
+<ul>
+    <li><strong>User Fullname:</strong> {{ data.trip.user.fullName }}</li>
+    <li><strong>User Email:</strong> {{ data.trip.user.email  }}</li>
+    <li><strong>Arrival Date:</strong> {{ data.trip.arrivalDate|date('Y-m-d') }}</li>
+    <li><strong>Budget:</strong> {{ data.trip.budget }}</li>
+    <li><strong>Status:</strong> {{ data.trip.status }}</li>
+</ul>
+   
+

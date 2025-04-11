@@ -1,0 +1,16 @@
+{# templates/emails/status_change.html.twig #}
+
+<p>Dear {{ data.user.fullName }},</p>
+
+<p>The status of the trip  has been changed.</p>
+
+<p>Details of the trip:</p>
+<ul>
+    <li><strong>Trip Id:</strong> {{ data.trip.id }}</li>
+    <li><strong>Status:</strong> {{ data.trip.status }}</li>
+    <li><strong>Start Date:</strong> {{ data.trip.departure|date('Y-m-d') }}</li>
+    <li><strong>End Date:</strong> {{ data.trip.arrivalDate|date('Y-m-d') }}</li>
+</ul>
+
+<p>Regards,</p>
+<p>Your Trip Management Team</p>
