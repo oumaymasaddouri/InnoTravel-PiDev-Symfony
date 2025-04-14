@@ -1,0 +1,15 @@
+{% block title %}New Event{% endblock %}
+
+{% block body %}
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card p-4 shadow-sm">
+        <h1 class="mb-4">Create New Event</h1>
+
+        {{ include('event/_form.html.twig') }}
+
+        <a href="{{ path('app_event_index') }}" class="btn btn-secondary mt-3">Back to list</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

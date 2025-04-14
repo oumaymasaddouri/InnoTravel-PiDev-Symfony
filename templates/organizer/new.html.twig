@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Organizer{% endblock %}
+
+{% block body %}
+    <h1>Create new Organizer</h1>
+
+    {{ include('organizer/_form.html.twig') }}
+
+    <a href="{{ path('app_organizer_index') }}">back to list</a>
+{% endblock %}

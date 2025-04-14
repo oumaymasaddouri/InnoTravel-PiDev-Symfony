@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Organizer index{% endblock %}
+
+{% block body %}
+    <h1>Organizer index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Contact_info</th>
+                <th>Website_url</th>
+                <th>Verified</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for organizer in organizers %}
+            <tr>
+                <td>{{ organizer.id }}</td>
+                <td>{{ organizer.name }}</td>
+                <td>{{ organizer.contactInfo }}</td>
+                <td>{{ organizer.websiteUrl }}</td>
+                <td>{{ organizer.verified ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_organizer_show', {'id': organizer.id}) }}">show</a>
+                    <a href="{{ path('app_organizer_edit', {'id': organizer.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_organizer_new') }}">Create new</a>
+{% endblock %}

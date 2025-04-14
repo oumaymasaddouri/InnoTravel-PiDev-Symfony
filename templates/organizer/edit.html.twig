@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Organizer{% endblock %}
+
+{% block body %}
+    <h1>Edit Organizer</h1>
+
+    {{ include('organizer/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_organizer_index') }}">back to list</a>
+
+    {{ include('organizer/_delete_form.html.twig') }}
+{% endblock %}
