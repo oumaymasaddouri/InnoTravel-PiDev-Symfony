@@ -1,0 +1,42 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">My Bookings</h1>
+
+    {% if bookings is not empty %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Hotel</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.hotelId.name }}</td>
+                        <td>{{ booking.startdate|date('Y-m-d') }}</td>
+                        <td>{{ booking.enddate|date('Y-m-d') }}</td>
+                        <td>
+                            {% if booking.status == 'pending' %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% elseif booking.status == 'confirmed' %}
+                                <span class="badge bg-success">Confirmed</span>
+                            {% else %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info text-center">You have no bookings yet.</div>
+    {% endif %}
+
+    <a href="{{ path('user_hotel_index') }}" class="btn btn-secondary mt-3">← Back to Hotels</a>
+{% endblock %}

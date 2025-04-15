@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/hotel')]
+#[Route('/admin/hotel')]
 final class HotelController extends AbstractController
 {
     #[Route(name: 'app_hotel_index', methods: ['GET'])]
@@ -71,7 +71,7 @@ final class HotelController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_hotel_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_hotel_delete', methods: ['POST'])]
     public function delete(Request $request, Hotel $hotel, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$hotel->getId(), $request->getPayload()->getString('_token'))) {
@@ -81,5 +81,7 @@ final class HotelController extends AbstractController
 
         return $this->redirectToRoute('app_hotel_index', [], Response::HTTP_SEE_OTHER);
     }
+    
+    
 }
 

@@ -1,0 +1,50 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}{{ hotel.name }}{% endblock %}
+
+{% block body %}
+<section class="featured-section s2 section-padding">
+    <div class="container">
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-8 text-center">
+                <div class="wpo-section-title s2">
+                    <span>// Hotel Details</span>
+                    <h2>{{ hotel.name }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow p-4">
+                    <h4><i class="ti-location-pin"></i> Location:</h4>
+                    <p>{{ hotel.location }}</p>
+
+                    <h4>Price per Night:</h4>
+                    <p>${{ hotel.pricepernight }}</p>
+
+                    <h4>Rating:</h4>
+                    <p>{{ hotel.rating }} / 5</p>
+
+                    <h4>Eco Certification:</h4>
+                    <p>
+                        {% if hotel.ecocertification %}
+                            <span class="badge bg-success">Certified</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Not Certified</span>
+                        {% endif %}
+                    </p>
+
+                    <h4>Description:</h4>
+                    <p>{{ hotel.description }}</p>
+
+                    <div class="text-end mt-4">
+                        <a href="{{ path('user_hotel_index') }}" class="btn btn-outline-primary">← Back to List</a>
+                        <a href="{{ path('user_booking_new', { hotelId: hotel.id }) }}" class="btn btn-primary">Book this Hotel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

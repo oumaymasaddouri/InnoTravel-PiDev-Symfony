@@ -10,10 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/booking')]
+#[Route('/admin/booking')]
 final class BookingController extends AbstractController
 {
-    #[Route(name: 'app_booking_index', methods: ['GET'])]
+    #[Route('/',name: 'app_booking_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
         $bookings = $entityManager
@@ -73,7 +73,7 @@ final class BookingController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_booking_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_booking_delete', methods: ['POST'])]
     public function delete(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$booking->getId(), $request->getPayload()->getString('_token'))) {

@@ -1,0 +1,43 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Hotels{% endblock %}
+
+{% block body %}
+<section class="featured-section s2 section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-12">
+                <div class="wpo-section-title s2 text-center">
+                    <span>// Hotels</span>
+                    <h2>Browse Our Best Picks</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for hotel in hotels %}
+                <div class="col-xl-3 col-lg-4 col-md-6 col-12 custom-grid zoomIn">
+                    <div class="featured-card">
+                        <div class="content">
+                            <div class="top-content">
+                                <ul>
+                                    <li><span>${{ hotel.pricepernight }}</span><span class="date">Night</span></li>
+                                    <li><span>{{ hotel.rating }}</span><span class="date">Rating</span></li>
+                                </ul>
+                            </div>
+                            <h2>
+                                <a href="{{ path('user_hotel_show', {'id': hotel.id}) }}">{{ hotel.name }}</a>
+                            </h2>
+                            <span><i class="ti-location-pin"></i> {{ hotel.location }}</span>
+                            <p class="mt-2">{{ hotel.description|slice(0, 100) ~ '...' }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center">
+                    <div class="alert alert-info">No hotels available at this moment. Please check back later.</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

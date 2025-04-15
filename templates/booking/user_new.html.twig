@@ -1,0 +1,28 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}New Booking{% endblock %}
+
+{% block body %}
+    <h1>Create New Booking</h1>
+
+    <h2>You’re booking: <strong>{{ hotel.name }}</strong></h2>
+
+    {{ form_start(form) }}
+
+        {{ form_row(form.startdate) }}
+        {{ form_row(form.enddate) }}
+
+        <div style="display:none;">
+            {{ form_widget(form.status, {'attr': {'type': 'hidden'}}) }}
+            {{ form_widget(form.hotelId, {'attr': {'type': 'hidden'}}) }}
+            {{ form_widget(form.userId, {'attr': {'type': 'hidden'}}) }}
+
+        </div>
+
+        {# ✅ Only your button now #}
+        <button type="submit" class="btn btn-primary mt-3">Book Now</button>
+
+    {{ form_end(form, {'render_rest': false}) }}
+
+    <a href="{{ path('user_booking_index') }}">← Back to My Bookings</a>
+{% endblock %}
