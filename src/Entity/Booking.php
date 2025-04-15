@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Entity\Hotel;
 
@@ -16,21 +17,32 @@ class Booking
     #[ORM\Column(type: "integer")]
     private int $id;
 
-        #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "bookings")]
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "bookings")]
     #[ORM\JoinColumn(name: 'userId', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Assert\NotBlank(message: 'User is required')]
     private Users $userId;
 
-        #[ORM\ManyToOne(targetEntity: Hotel::class, inversedBy: "bookings")]
+    #[ORM\ManyToOne(targetEntity: Hotel::class, inversedBy: "bookings")]
     #[ORM\JoinColumn(name: 'hotelId', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Assert\NotBlank(message: 'Hotel is required')]
     private Hotel $hotelId;
 
     #[ORM\Column(type: "date")]
+    #[Assert\NotBlank(message: 'Check-in date is required')]
+    #[Assert\GreaterThan('today', message: 'Check-in date must be in the future')]
     private \DateTimeInterface $startdate;
 
     #[ORM\Column(type: "date")]
+    #[Assert\NotBlank(message: 'Check-out date is required')]
+    #[Assert\GreaterThan(propertyPath: 'startdate', message: 'Check-out date must be after check-in date')]
     private \DateTimeInterface $enddate;
 
     #[ORM\Column(type: "string", length: 50)]
+    #[Assert\NotBlank(message: 'Status is required')]
+    #[Assert\Choice(
+        choices: ['pending', 'confirmed', 'cancelled'],
+        message: 'Status must be either pending, confirmed, or cancelled'
+    )]
     private string $status;
 
     public function getId()

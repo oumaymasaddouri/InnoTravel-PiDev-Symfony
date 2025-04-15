@@ -9,19 +9,29 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 
 class BookingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('startdate', null, [
-                'widget' => 'single_text',
+            ->add('startdate', DateType::class, [
+                'widget' => 'single_text'
             ])
-            ->add('enddate', null, [
-                'widget' => 'single_text',
+            ->add('enddate', DateType::class, [
+                'widget' => 'single_text'
             ])
-            ->add('status')
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'Pending' => 'pending',
+                    'Confirmed' => 'confirmed',
+                    'Cancelled' => 'cancelled'
+                ]
+            ])
             ->add('userId', EntityType::class, [
                 'class' => Users::class,
                 'choice_label' => 'id',
@@ -30,6 +40,12 @@ class BookingType extends AbstractType
                 'class' => Hotel::class,
                 'choice_label' => 'id',
             ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Save Booking',
+                'attr' => ['class' => 'btn btn-primary']
+            ])
+            
+            
         ;
     }
 

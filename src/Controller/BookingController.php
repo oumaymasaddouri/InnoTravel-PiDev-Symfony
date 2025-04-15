@@ -24,6 +24,8 @@ final class BookingController extends AbstractController
             'bookings' => $bookings,
         ]);
     }
+    
+
 
     #[Route('/new', name: 'app_booking_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

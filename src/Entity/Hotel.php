@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Booking;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 class Hotel
@@ -18,21 +18,57 @@ class Hotel
     private int $id;
 
     #[ORM\Column(type: "string", length: 255)]
+    #[Assert\NotBlank(message: 'Hotel name is required')]
+    #[Assert\Length(
+        min: 3,
+        max: 100,
+        minMessage: 'Hotel name must be at least {{ limit }} characters long',
+        maxMessage: 'Hotel name cannot be longer than {{ limit }} characters'
+    )]
     private string $name;
 
     #[ORM\Column(type: "string", length: 255)]
+    #[Assert\NotBlank(message: 'Location is required')]
+    #[Assert\Length(
+        min: 3,
+        max: 100,
+        minMessage: 'Location must be at least {{ limit }} characters long',
+        maxMessage: 'Location cannot be longer than {{ limit }} characters'
+    )]
     private string $location;
 
     #[ORM\Column(type: "float")]
+    #[Assert\NotBlank(message: 'Price per night is required')]
+    #[Assert\Type(type: 'numeric', message: 'Price must be a number')]
+    #[Assert\Range(
+        min: 0,
+        max: 9999.99,
+        notInRangeMessage: 'Price must be between {{ min }} and {{ max }}'
+    )]
     private float $pricepernight;
 
     #[ORM\Column(type: "float")]
+    #[Assert\NotBlank(message: 'Rating is required')]
+    #[Assert\Type(type: 'numeric', message: 'Rating must be a number')]
+    #[Assert\Range(
+        min: 0,
+        max: 5,
+        notInRangeMessage: 'Rating must be between {{ min }} and {{ max }}'
+    )]
     private float $rating;
 
     #[ORM\Column(type: "text")]
+    #[Assert\NotBlank(message: 'Description is required')]
+    #[Assert\Length(
+        min: 10,
+        max: 1000,
+        minMessage: 'Description must be at least {{ limit }} characters long',
+        maxMessage: 'Description cannot be longer than {{ limit }} characters'
+    )]
     private string $description;
 
     #[ORM\Column(type: "boolean")]
+    #[Assert\NotBlank(message: 'Eco certification is required')]
     private bool $ecocertification;
 
     public function getId()
