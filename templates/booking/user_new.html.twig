@@ -16,13 +16,10 @@
             {{ form_widget(form.status, {'attr': {'type': 'hidden'}}) }}
             {{ form_widget(form.hotelId, {'attr': {'type': 'hidden'}}) }}
             {{ form_widget(form.userId, {'attr': {'type': 'hidden'}}) }}
-
         </div>
 
-        {# ✅ Only your button now #}
-        <button type="submit" class="btn btn-primary mt-3">Book Now</button>
 
-    {{ form_end(form, {'render_rest': false}) }}
+    {{ form_end(form) }} {# ✅ CSRF token now included #}
 
     <a href="{{ path('user_booking_index') }}">← Back to My Bookings</a>
 {% endblock %}

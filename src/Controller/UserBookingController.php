@@ -41,6 +41,8 @@ class UserBookingController extends AbstractController
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($booking);
             $em->flush();
@@ -56,15 +58,21 @@ class UserBookingController extends AbstractController
     }
 
     #[Route('/', name: 'user_booking_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $em, Security $security): Response
+    public function index(EntityManagerInterface $em): Response
     {
-        $user = $security->getUser();
+        // Simulate the same user (ID 3)
+        $user = $em->getRepository(\App\Entity\Users::class)->find(3);
+        if (!$user) {
+            throw $this->createNotFoundException('User not found.');
+        }
+    
         $bookings = $em->getRepository(Booking::class)->findBy([
             'userId' => $user,
         ]);
-
+    
         return $this->render('booking/user_index.html.twig', [
             'bookings' => $bookings,
         ]);
     }
+    
 }
