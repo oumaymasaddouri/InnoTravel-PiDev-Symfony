@@ -41,7 +41,7 @@ final class HotelController extends AbstractController
 
         return $this->render('hotel/new.html.twig', [
             'hotel' => $hotel,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -50,6 +50,7 @@ final class HotelController extends AbstractController
     {
         return $this->render('hotel/show.html.twig', [
             'hotel' => $hotel,
+            
         ]);
     }
 
@@ -67,7 +68,7 @@ final class HotelController extends AbstractController
 
         return $this->render('hotel/edit.html.twig', [
             'hotel' => $hotel,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

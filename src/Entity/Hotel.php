@@ -68,7 +68,7 @@ class Hotel
     private string $description;
 
     #[ORM\Column(type: "boolean")]
-    #[Assert\NotBlank(message: 'Eco certification is required')]
+    #[Assert\NotNull(message: 'Eco certification must be selected')]
     private bool $ecocertification;
 
     public function getId()
