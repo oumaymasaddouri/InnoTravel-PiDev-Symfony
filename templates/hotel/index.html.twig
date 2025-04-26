@@ -38,6 +38,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Image</th>
                                     <th>Name</th>
                                     <th>Location</th>
                                     <th>Price per Night</th>
@@ -51,6 +52,13 @@
                             {% for hotel in hotels %}
                                 <tr>
                                     <td>{{ hotel.id }}</td>
+                                    <td>
+                                        {% if hotel.image %}
+                                            <img src="{{ asset('uploads/hotels/' ~ hotel.image) }}" alt="{{ hotel.name }}" style="max-width: 100px;">
+                                        {% else %}
+                                            No image
+                                        {% endif %}
+                                    </td>
                                     <td>{{ hotel.name }}</td>
                                     <td>{{ hotel.location }}</td>
                                     <td>{{ hotel.pricepernight }}</td>

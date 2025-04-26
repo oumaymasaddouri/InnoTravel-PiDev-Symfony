@@ -31,7 +31,7 @@ class UserBookingController extends AbstractController
         if (!$user) {
             throw $this->createNotFoundException('User not found.');
         }
-        
+
 
         $booking = new Booking();
         $booking->setHotelId($hotel);   // ✅ Pass Hotel entity
@@ -58,21 +58,30 @@ class UserBookingController extends AbstractController
     }
 
     #[Route('/', name: 'user_booking_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $em): Response
+    public function index(Request $request, EntityManagerInterface $em): Response
     {
+        // Get pagination parameters
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 5; // Number of bookings per page
+
         // Simulate the same user (ID 3)
         $user = $em->getRepository(\App\Entity\Users::class)->find(3);
         if (!$user) {
             throw $this->createNotFoundException('User not found.');
         }
-    
-        $bookings = $em->getRepository(Booking::class)->findBy([
-            'userId' => $user,
-        ]);
-    
+
+        // Get paginated bookings
+        $bookingRepository = $em->getRepository(Booking::class);
+        $result = $bookingRepository->findByUserPaginated($user, $page, $limit);
+
+        // Extract bookings and pagination data
+        $bookings = $result['bookings'];
+        $pagination = $result['pagination'];
+
         return $this->render('booking/user_index.html.twig', [
             'bookings' => $bookings,
+            'pagination' => $pagination,
         ]);
     }
-    
+
 }

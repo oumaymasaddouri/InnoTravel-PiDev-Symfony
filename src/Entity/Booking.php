@@ -4,10 +4,10 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
 use App\Entity\Hotel;
+use App\Repository\BookingRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: BookingRepository::class)]
 class Booking
 {
 

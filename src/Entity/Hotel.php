@@ -5,13 +5,14 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Booking;
+use App\Repository\HotelRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: HotelRepository::class)]
 class Hotel
 {
 
-    #[ORM\Id]   
+    #[ORM\Id]
     #[ORM\GeneratedValue]
 
     #[ORM\Column(type: "integer")]
@@ -70,6 +71,9 @@ class Hotel
     #[ORM\Column(type: "boolean")]
     #[Assert\NotNull(message: 'Eco certification must be selected')]
     private bool $ecocertification;
+
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    private ?string $image = null;
 
     public function getId()
     {
@@ -141,6 +145,17 @@ class Hotel
         $this->ecocertification = $value;
     }
 
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
+
     #[ORM\OneToMany(mappedBy: "hotelId", targetEntity: Booking::class)]
     private Collection $bookings;
 
@@ -148,17 +163,17 @@ class Hotel
         {
             return $this->bookings;
         }
-    
+
         public function addBooking(Booking $booking): self
         {
             if (!$this->bookings->contains($booking)) {
                 $this->bookings[] = $booking;
                 $booking->setHotelId($this);
             }
-    
+
             return $this;
         }
-    
+
         public function removeBooking(Booking $booking): self
         {
             if ($this->bookings->removeElement($booking)) {
@@ -167,7 +182,7 @@ class Hotel
                     $booking->setHotelId(null);
                 }
             }
-    
+
             return $this;
         }
 }

@@ -2,35 +2,301 @@
 
 {% block title %}Hotels{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Card Hover Effects */
+    .hover-shadow {
+        transition: all 0.3s ease;
+    }
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+    }
+    .hover-scale {
+        transition: all 0.3s ease;
+    }
+    .hover-scale:hover {
+        transform: scale(1.05);
+    }
+
+    /* Form Styling */
+    .form-label {
+        font-weight: 500;
+    }
+    .form-select.form-select-lg {
+        height: calc(3.5rem + 2px);
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        background-position: right 1rem center;
+    }
+    .form-control-lg,
+    .form-select-lg {
+        min-height: calc(3.5rem + 2px);
+    }
+    #sortBy.form-select {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    /* Star Rating Styling */
+    .card-text img {
+        margin-right: 2px;
+        display: inline-block;
+    }
+
+    /* Card title styling */
+    .hotel-card-title {
+        font-size: 1.5em;
+        font-weight: 600;
+        color: #333;
+        margin-top: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        display: inline-block;
+    }
+
+    /* Search form styling */
+    .search-form {
+        background-color: #212529;
+        border-radius: 8px;
+        padding: 20px;
+        color: white;
+        margin-bottom: 2rem;
+    }
+    .search-form .form-control,
+    .search-form .form-select {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+    .search-form .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .search-form .form-label {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 5px;
+    }
+    .search-form .btn-reset {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .search-form .btn-reset:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+</style>
+{% endblock %}
+
 {% block section8 %}
 <section class="featured-section s2 section-padding">
     <div class="container">
-       
-        <div class="row">
+        {# Search Form with Dark Styling #}
+        <div class="search-form">
+            <form method="get" class="mb-0">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-2">
+                        <label for="name" class="form-label">
+                            <i class="fas fa-hotel me-2"></i> Hotel Name
+                        </label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Search by name" value="{{ app.request.query.get('name') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="city" class="form-label">
+                            <i class="fas fa-map-marker-alt me-2"></i> Location
+                        </label>
+                        <input type="text" id="city" name="city" class="form-control" placeholder="Search by location" value="{{ app.request.query.get('city') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="minPrice" class="form-label">
+                            <i class="fas fa-dollar-sign me-2"></i> Min Price
+                        </label>
+                        <input type="number" id="minPrice" name="minPrice" class="form-control" placeholder="Min" value="{{ app.request.query.get('minPrice') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="maxPrice" class="form-label">
+                            <i class="fas fa-dollar-sign me-2"></i> Max Price
+                        </label>
+                        <input type="number" id="maxPrice" name="maxPrice" class="form-control" placeholder="Max" value="{{ app.request.query.get('maxPrice') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="sortBy" class="form-label">
+                            <i class="fas fa-sort me-2"></i> Sort By
+                        </label>
+                        <select id="sortBy" name="sortBy" class="form-select">
+                            <option value="">All</option>
+                            <option value="price_asc" {% if app.request.query.get('sortBy') == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_desc" {% if app.request.query.get('sortBy') == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="rating_desc" {% if app.request.query.get('sortBy') == 'rating_desc' %}selected{% endif %}>Highest Rated</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-grow-1">
+                                <i class="fas fa-search me-1"></i> Search
+                            </button>
+                            <a href="{{ path('user_hotel_index') }}" class="btn btn-reset flex-grow-1">
+                                <i class="fas fa-sync-alt me-1"></i> Reset
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {# Hotels Grid #}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for hotel in hotels %}
-                <div class="col-xl-3 col-lg-4 col-md-6 col-12 custom-grid zoomIn">
-                    <div class="featured-card">
-                        <div class="content">
-                            <div class="top-content">
-                                <ul>
-                                    <li><span>${{ hotel.pricepernight }}</span><span class="date">Night</span></li>
-                                    <li><span>{{ hotel.rating }}</span><span class="date">Rating</span></li>
-                                </ul>
+                <div class="col">
+                    <div class="card h-100 shadow-sm hover-shadow">
+                        {% if hotel.image %}
+                            <img src="{{ asset('uploads/hotels/' ~ hotel.image) }}"
+                                 class="card-img-top"
+                                 alt="{{ hotel.name }}"
+                                 style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <img src="{{ asset('frontoffice/images/error-404.png') }}"
+                                 class="card-img-top"
+                                 alt="No image available"
+                                 style="height: 200px; object-fit: contain;">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <div class="text-center mb-3">
+                                <h5 class="card-title hotel-card-title">
+                                    {{ hotel.name }}
+                                </h5>
                             </div>
-                            <h2>
-                                <a href="{{ path('user_hotel_show', {'id': hotel.id}) }}">{{ hotel.name }}</a>
-                            </h2>
-                            <span><i class="ti-location-pin"></i> {{ hotel.location }}</span>
-                            <p class="mt-2">{{ hotel.description|slice(0, 100) ~ '...' }}</p>
+                            <p class="card-text"><i class="fas fa-map-marker-alt text-primary me-2"></i>{{ hotel.location }}</p>
+                            <p class="card-text d-flex align-items-center">
+                                <span>Rating: </span>
+                                <span class="ms-2">
+                                    {% set fullStars = hotel.rating|round(0, 'floor') %}
+                                    {% for i in 1..fullStars %}
+                                        <img src="{{ asset('frontoffice/images/authorlist/star.svg') }}" alt="star" width="16" height="16">
+                                    {% endfor %}
+                                </span>
+                            </p>
+                            <p class="card-text"><i class="fas fa-tag text-primary me-2"></i>${{ hotel.pricepernight }} per night</p>
+                            {% if hotel.ecocertification %}
+                                <p class="card-text">
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-leaf me-1"></i>Eco Certified
+                                    </span>
+                                </p>
+                            {% endif %}
+                            <div class="mt-auto text-center">
+                                <a href="{{ path('user_hotel_show', { id: hotel.id }) }}"
+                                   class="btn btn-outline-primary btn-lg w-100 hover-scale">
+                                    <i class="fas fa-info-circle me-2"></i>View Details
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             {% else %}
-                <div class="col-12 text-center">
-                    <div class="alert alert-info">No hotels available at this moment. Please check back later.</div>
+                <div class="col-12">
+                    <div class="alert alert-info text-center p-5">
+                        <i class="fas fa-info-circle fa-2x mb-3"></i>
+                        <p class="lead mb-0">No hotels available at this moment. Please check back later.</p>
+                    </div>
                 </div>
             {% endfor %}
         </div>
+
+        {# Centered Pagination #}
+        {% if pagination.totalPages > 1 %}
+        <div class="d-flex justify-content-center mt-5">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <!-- Previous page link -->
+                    {% if pagination.currentPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('user_hotel_index', {
+                                'page': pagination.currentPage - 1,
+                                'name': app.request.query.get('name'),
+                                'city': app.request.query.get('city'),
+                                'minPrice': app.request.query.get('minPrice'),
+                                'maxPrice': app.request.query.get('maxPrice'),
+                                'sortBy': app.request.query.get('sortBy')
+                            }) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link" aria-hidden="true">&laquo;</span>
+                        </li>
+                    {% endif %}
+
+                    <!-- Page numbers -->
+                    {% set startPage = max(1, pagination.currentPage - 2) %}
+                    {% set endPage = min(pagination.totalPages, startPage + 4) %}
+                    {% if endPage - startPage < 4 %}
+                        {% set startPage = max(1, endPage - 4) %}
+                    {% endif %}
+
+                    {% for i in startPage..endPage %}
+                        <li class="page-item {{ i == pagination.currentPage ? 'active' : '' }}">
+                            <a class="page-link" href="{{ path('user_hotel_index', {
+                                'page': i,
+                                'name': app.request.query.get('name'),
+                                'city': app.request.query.get('city'),
+                                'minPrice': app.request.query.get('minPrice'),
+                                'maxPrice': app.request.query.get('maxPrice'),
+                                'sortBy': app.request.query.get('sortBy')
+                            }) }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+
+                    <!-- Next page link -->
+                    {% if pagination.currentPage < pagination.totalPages %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('user_hotel_index', {
+                                'page': pagination.currentPage + 1,
+                                'name': app.request.query.get('name'),
+                                'city': app.request.query.get('city'),
+                                'minPrice': app.request.query.get('minPrice'),
+                                'maxPrice': app.request.query.get('maxPrice'),
+                                'sortBy': app.request.query.get('sortBy')
+                            }) }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link" aria-hidden="true">&raquo;</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        <div class="text-center mt-2 text-muted">
+            <small>Showing {{ hotels|length }} of {{ pagination.totalItems }} hotels</small>
+        </div>
+        {% endif %}
     </div>
 </section>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation to cards when they appear
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100 * index);
+    });
+});
+</script>
 {% endblock %}
