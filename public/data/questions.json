@@ -1,0 +1,395 @@
+[
+  {
+    "question": "Plan a 7-day trip to Japan focusing on culture and food.",
+    "response": {
+      "destination": "Japan",
+      "days": 7,
+      "activities": [
+        "Visit Kyoto temples",
+        "Explore Tsukiji fish market",
+        "Sushi-making workshop",
+        "Stay in a ryokan",
+        "Tea ceremony experience",
+        "Visit Hiroshima Peace Park",
+        "Street food tour in Osaka"
+      ],
+      "tips": [
+        "Buy a Japan Rail Pass",
+        "Learn basic Japanese phrases",
+        "Try local izakayas for authentic food"
+      ]
+    }
+  },
+  {
+    "question": "Suggest a 5-day adventure trip to New Zealand.",
+    "response": {
+      "destination": "New Zealand",
+      "days": 5,
+      "activities": [
+        "Bungee jump in Queenstown",
+        "Visit Hobbiton movie set",
+        "Hike Tongariro Alpine Crossing",
+        "Kayak in Abel Tasman",
+        "Explore Waitomo Glowworm Caves"
+      ],
+      "tips": [
+        "Pack for unpredictable weather",
+        "Rent a car for flexibility",
+        "Book adventure activities in advance"
+      ]
+    }
+  },
+  {
+    "question": "Create a 10-day Europe backpacking itinerary.",
+    "response": {
+      "destination": "Europe",
+      "days": 10,
+      "activities": [
+        "Tour Paris landmarks",
+        "Ride a gondola in Venice",
+        "Explore Berlin's history",
+        "Visit Prague's Old Town",
+        "See Amsterdam's canals",
+        "Experience Swiss Alps",
+        "Party in Barcelona",
+        "Eat pizza in Naples",
+        "See Edinburgh Castle",
+        "Relax in Santorini"
+      ],
+      "tips": [
+        "Travel by Eurail pass",
+        "Stay in hostels",
+        "Pack light and smart"
+      ]
+    }
+  },
+  {
+    "question": "Recommend a 3-day romantic getaway to Paris.",
+    "response": {
+      "destination": "Paris",
+      "days": 3,
+      "activities": [
+        "Visit Eiffel Tower",
+        "Walk along the Seine",
+        "Dinner at a cozy bistro"
+      ],
+      "tips": [
+        "Book museums in advance",
+        "Learn basic French phrases",
+        "Carry an umbrella"
+      ]
+    }
+  },
+  {
+    "question": "Design a 7-day family trip to Orlando.",
+    "response": {
+      "destination": "Orlando",
+      "days": 7,
+      "activities": [
+        "Visit Walt Disney World",
+        "Explore Universal Studios",
+        "Swim at Typhoon Lagoon",
+        "Visit Kennedy Space Center",
+        "Safari at Animal Kingdom",
+        "Shop at Disney Springs",
+        "Relax at a resort pool"
+      ],
+      "tips": [
+        "Buy park tickets early",
+        "Stay hydrated",
+        "Plan downtime between parks"
+      ]
+    }
+  },
+  {
+    "question": "Outline a 6-day culinary tour of Italy.",
+    "response": {
+      "destination": "Italy",
+      "days": 6,
+      "activities": [
+        "Pasta making in Bologna",
+        "Pizza tour in Naples",
+        "Wine tasting in Tuscany",
+        "Gelato tour in Florence",
+        "Truffle hunting in Piedmont",
+        "Seafood feast in Sicily"
+      ],
+      "tips": [
+        "Book cooking classes early",
+        "Bring comfortable walking shoes",
+        "Try regional specialties"
+      ]
+    }
+  },
+  {
+    "question": "Suggest a 4-day hiking trip in Patagonia.",
+    "response": {
+      "destination": "Patagonia",
+      "days": 4,
+      "activities": [
+        "Hike to Fitz Roy",
+        "Explore Torres del Paine",
+        "Visit Perito Moreno Glacier",
+        "Camp under the stars"
+      ],
+      "tips": [
+        "Pack layers for weather changes",
+        "Book refugios early",
+        "Carry a good camera"
+      ]
+    }
+  },
+  {
+    "question": "Organize a 5-day beach vacation to Bali.",
+    "response": {
+      "destination": "Bali",
+      "days": 5,
+      "activities": [
+        "Relax on Seminyak beach",
+        "Visit Uluwatu temple",
+        "Surf in Canggu",
+        "Explore Ubud rice terraces",
+        "Attend a beach party"
+      ],
+      "tips": [
+        "Respect local customs",
+        "Use bottled water",
+        "Haggle at markets"
+      ]
+    }
+  },
+  {
+    "question": "Plan a 7-day cultural trip to Egypt.",
+    "response": {
+      "destination": "Egypt",
+      "days": 7,
+      "activities": [
+        "Tour the Pyramids of Giza",
+        "Cruise the Nile",
+        "Explore Luxor temples",
+        "Visit the Egyptian Museum",
+        "Ride a camel in the desert",
+        "See Abu Simbel",
+        "Shop at Khan el-Khalili bazaar"
+      ],
+      "tips": [
+        "Stay hydrated",
+        "Dress modestly",
+        "Hire licensed guides"
+      ]
+    }
+  },
+  {
+    "question": "Suggest a 5-day ski trip to Switzerland.",
+    "response": {
+      "destination": "Switzerland",
+      "days": 5,
+      "activities": [
+        "Ski in Zermatt",
+        "Explore St. Moritz",
+        "Snowboard in Verbier",
+        "Visit Jungfrau region",
+        "Après-ski in cozy lodges"
+      ],
+      "tips": [
+        "Book accommodations early",
+        "Dress in layers",
+        "Check weather updates"
+      ]
+    }
+  },
+  {
+    "question": "Plan a 6-day wildlife safari in Kenya.",
+    "response": {
+      "destination": "Kenya",
+      "days": 6,
+      "activities": [
+        "Safari in Maasai Mara",
+        "Visit Amboseli National Park",
+        "Boat ride on Lake Naivasha",
+        "Explore Nairobi National Park",
+        "Visit Giraffe Centre",
+        "Cultural tour with Maasai tribe"
+      ],
+      "tips": [
+        "Carry insect repellent",
+        "Respect wildlife",
+        "Bring binoculars"
+      ]
+    }
+  },
+  {
+    "question": "Create a 3-day sightseeing tour in New York City.",
+    "response": {
+      "destination": "New York City",
+      "days": 3,
+      "activities": [
+        "See Times Square",
+        "Walk in Central Park",
+        "Visit Statue of Liberty",
+        "Explore Metropolitan Museum",
+        "Watch a Broadway show"
+      ],
+      "tips": [
+        "Use MetroCard for transport",
+        "Wear comfortable shoes",
+        "Reserve attractions ahead"
+      ]
+    }
+  },
+  {
+    "question": "Organize a 7-day history-focused trip to Greece.",
+    "response": {
+      "destination": "Greece",
+      "days": 7,
+      "activities": [
+        "Tour Athens and Acropolis",
+        "Visit Delphi ruins",
+        "Explore Meteora monasteries",
+        "Sail to Santorini",
+        "See Knossos Palace in Crete",
+        "Visit Ancient Olympia",
+        "Relax in Rhodes Old Town"
+      ],
+      "tips": [
+        "Pack light clothes",
+        "Wear sun protection",
+        "Try Greek street food"
+      ]
+    }
+  },
+  {
+    "question": "Plan a 5-day wine tasting trip in Napa Valley.",
+    "response": {
+      "destination": "Napa Valley",
+      "days": 5,
+      "activities": [
+        "Tour wineries",
+        "Hot air balloon ride",
+        "Visit downtown Napa",
+        "Spa day in Calistoga",
+        "Fine dining experiences"
+      ],
+      "tips": [
+        "Book tastings ahead",
+        "Arrange a driver",
+        "Hydrate between tastings"
+      ]
+    }
+  },
+  {
+    "question": "Create a 4-day eco-tourism trip to Costa Rica.",
+    "response": {
+      "destination": "Costa Rica",
+      "days": 4,
+      "activities": [
+        "Rainforest hike",
+        "Zip-line adventure",
+        "Beach day at Manuel Antonio",
+        "Visit Arenal Volcano"
+      ],
+      "tips": [
+        "Bring insect repellent",
+        "Respect nature",
+        "Learn about local wildlife"
+      ]
+    }
+  },
+  {
+    "question": "Organize a 5-day cultural exploration of India.",
+    "response": {
+      "destination": "India",
+      "days": 5,
+      "activities": [
+        "Visit Taj Mahal",
+        "Tour Jaipur's palaces",
+        "Explore Varanasi ghats",
+        "Attend a Bollywood show",
+        "Taste street food in Delhi"
+      ],
+      "tips": [
+        "Stay hydrated",
+        "Dress modestly",
+        "Use bottled water"
+      ]
+    }
+  },
+  {
+    "question": "Suggest a 7-day winter wonderland trip to Iceland.",
+    "response": {
+      "destination": "Iceland",
+      "days": 7,
+      "activities": [
+        "Chase Northern Lights",
+        "Visit Blue Lagoon",
+        "Explore Golden Circle",
+        "Glacier hike",
+        "Black sand beaches",
+        "Visit Reykjavik",
+        "See waterfalls like Gullfoss"
+      ],
+      "tips": [
+        "Dress in layers",
+        "Rent a 4x4 car",
+        "Book tours in advance"
+      ]
+    }
+  },
+  {
+    "question": "Plan a 6-day cultural tour of Morocco.",
+    "response": {
+      "destination": "Morocco",
+      "days": 6,
+      "activities": [
+        "Explore Marrakech souks",
+        "Visit Atlas Mountains",
+        "Camel trek in Sahara",
+        "Tour Fes medina",
+        "Relax in Essaouira",
+        "Stay in a riad"
+      ],
+      "tips": [
+        "Bargain at markets",
+        "Learn basic Arabic phrases",
+        "Respect local customs"
+      ]
+    }
+  },
+  {
+    "question": "Design a 5-day surf trip to Hawaii.",
+    "response": {
+      "destination": "Hawaii",
+      "days": 5,
+      "activities": [
+        "Surf at Waikiki Beach",
+        "Explore North Shore",
+        "Hike Diamond Head",
+        "Snorkel at Hanauma Bay",
+        "Attend a luau"
+      ],
+      "tips": [
+        "Use reef-safe sunscreen",
+        "Respect local traditions",
+        "Stay hydrated"
+      ]
+    }
+  },
+  {
+    "question": "Create a 4-day shopping and sightseeing trip to Dubai.",
+    "response": {
+      "destination": "Dubai",
+      "days": 4,
+      "activities": [
+        "Visit Burj Khalifa",
+        "Shop at Dubai Mall",
+        "Desert safari adventure",
+        "Explore Old Dubai souks"
+      ],
+      "tips": [
+        "Dress modestly",
+        "Stay hydrated",
+        "Plan visits outside noon heat"
+      ]
+    }
+  }
+]

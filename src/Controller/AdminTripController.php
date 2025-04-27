@@ -184,8 +184,8 @@ class AdminTripController extends AbstractController
                     // Status has changed, send an email
                     $container = [
                         'mailInfo' => [
-                            'mailExpeditor' => 'hedi.laater@gmail.com', 
-                            'nameExpeditor' => 'hedi',  
+                            'mailExpeditor' => 'saddourioumayma@gmail.com',
+                            'nameExpeditor' => 'saddouri oumayma',
                             'receiverList' => [
                                 'Email' => $trip->getUser()->getEmail(), 
                                 'Name' =>  $trip->getUser()->getFullName(),

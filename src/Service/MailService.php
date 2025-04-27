@@ -25,8 +25,8 @@ class MailService
     public function sendEmail(array $container): bool
     {
         $mj = new Client(
-            '8948cf8a466e25b726d175c9438c1b50',
-            '732674cfc547547f6565cd10b2e808bb',
+            '1ebe66d082ca3ebcfd3cb47fe5e200bf',
+            '6981014666d6636d434e0431c69367cf',
             true,
             ['version' => 'v3.1']
         );

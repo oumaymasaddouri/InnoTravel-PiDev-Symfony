@@ -68,3 +68,30 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function() {
+    $('#chat-form').on('submit', function(e) {
+        e.preventDefault();
+
+        let userMessage = $('#user-message').val();
+        if (userMessage.trim() === '') return;
+
+        $('#chat-box').append('<div><strong>You:</strong> ' + $('<div>').text(userMessage).html() + '</div>');
+        $('#user-message').val('');
+        $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+
+        $.ajax({
+            url: Routing.generate('api_travel_chat'),
+            method: 'GET',
+            data: { message: userMessage },
+            success: function(response) {
+
+                $('#chat-box').append('<div class="text-primary"><strong>InnoTravel AI Assistant:</strong> ' + $('<div>').text(response.response).html() + '</div>');
+                $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+            },
+            error: function(xhr) {
+                $('#chat-box').append('<div class="text-danger"><strong>Error:</strong> ' + (xhr.responseJSON?.error ?? 'Unknown error') + '</div>');
+                $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+            }
+        });
+    });
+});

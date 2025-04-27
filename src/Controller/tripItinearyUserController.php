@@ -141,8 +141,8 @@ class tripItinearyUserController extends AbstractController
                               
                 $container = [
                     'mailInfo' => [
-                        'mailExpeditor' => 'hedi.laater@gmail.com', 
-                        'nameExpeditor' => 'hedi',  
+                        'mailExpeditor' => 'saddourioumayma@gmail.com',
+                        'nameExpeditor' => 'saddouri oumayma',
                         'receiverList' => [
                                 'Email' => $admin->getEmail(), 
                                 'Name' =>  $admin->getFullName(),
