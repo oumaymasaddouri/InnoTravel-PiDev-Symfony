@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controller;
-
 use App\Service\GeminiChatService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
