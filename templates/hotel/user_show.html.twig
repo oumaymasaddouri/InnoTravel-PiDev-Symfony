@@ -14,6 +14,15 @@
         padding: 2.5rem 2rem 2rem 2rem;
         text-align: center;
     }
+
+    /* Price animation */
+    .price-animated {
+        transition: all 0.3s ease;
+    }
+    .price-animated:hover {
+        color: #007bff;
+        transform: scale(1.05);
+    }
     .hotel-image {
         width: 100%;
         max-height: 340px;
@@ -133,18 +142,56 @@
     }
 </style>
 {% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation to prices on hover
+    const priceElement = document.querySelector('.price-animated');
+    if (priceElement) {
+        priceElement.addEventListener('mouseenter', function() {
+            this.style.color = '#007bff';
+            this.style.transform = 'scale(1.05)';
+        });
+        priceElement.addEventListener('mouseleave', function() {
+            this.style.color = '';
+            this.style.transform = '';
+        });
+    }
+
+    // Auto-refresh when currency changes
+    const currencySelect = document.querySelector('select[name="currency"]');
+    if (currencySelect) {
+        currencySelect.addEventListener('change', function() {
+            // Get all current URL parameters
+            const params = new URLSearchParams(window.location.search);
+            // Update currency
+            params.set('currency', this.value);
+            // Navigate with updated parameters
+            window.location.href = `${window.location.pathname}?${params.toString()}`;
+        });
+    }
+});
+</script>
+{% endblock %}
+
 {% block section8 %}
 <section class="places-section section-padding">
     <div class="container">
         <div class="hotel-detail-wrapper" style="max-width: 800px; margin: 0 auto; background: #fff; padding: 40px 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center;">
 
             <!-- Hotel Image -->
-            <div class="hotel-image" style="margin-bottom: 30px;">
+            <div class="hotel-image" style="margin-bottom: 30px; position: relative;">
                 {% if hotel.image %}
                     <img src="{{ asset('uploads/hotels/' ~ hotel.image) }}" alt="{{ hotel.name }}" style="width: 100%; max-width: 500px; height: auto; border-radius: 10px;">
                 {% else %}
                     <img src="{{ asset('frontoffice/images/error-404.png') }}" alt="No image available" style="width: 100%; max-width: 500px; height: auto; border-radius: 10px;">
                 {% endif %}
+
+                <!-- Currency Badge -->
+                <div style="position: absolute; top: 10px; right: 10px; background-color: rgba(0, 123, 255, 0.8); color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    {{ currencySymbol }}
+                </div>
             </div>
 
             <!-- Hotel Title -->
@@ -155,7 +202,27 @@
                 <div class="col-md-4 col-12 mb-3">
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                         <div style="font-size: 0.9rem; color: #6c757d;">Price/Night</div>
-                        <div style="font-size: 1.2rem; font-weight: bold;">${{ hotel.pricepernight }}</div>
+                        <div style="font-size: 1.2rem; font-weight: bold;" class="price-animated">
+                            {% set convertedPrice = hotel.pricepernight * exchangeRate %}
+                            {{ currencySymbol }}{{ convertedPrice|round(2) }}
+                            {% if selectedCurrency != 'USD' %}
+                                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 5px;">(Original USD: ${{ hotel.pricepernight|round(2) }})</div>
+                            {% endif %}
+                        </div>
+                        
+                        {# Currency Selector moved here #}
+                        <div class="mt-3">
+                            <form method="get" class="d-inline-block" style="width: 200px;">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
+                                    <select name="currency" class="form-select form-select-sm" onchange="this.form.submit()">
+                                        {% for code, name in currencies %}
+                                            <option value="{{ code }}" {% if selectedCurrency == code %}selected{% endif %}>{{ code }} - {{ name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4 col-12 mb-3">
@@ -188,11 +255,18 @@
                 {% endif %}
             </div>
 
+
             <!-- Action Buttons -->
             <div style="display: flex; justify-content: center; gap: 20px;">
-                <a href="{{ path('user_hotel_index') }}" class="theme-btn-s2" style="padding: 10px 20px; border-radius: 8px;">Back to List</a>
+                <a href="{{ path('user_hotel_index', {'currency': selectedCurrency}) }}" class="theme-btn-s2" style="padding: 10px 20px; border-radius: 8px;">Back to List</a>
                 <a href="{{ path('user_booking_new', { 'slug': hotel.slug }) }}" class="theme-btn" style="padding: 10px 20px; border-radius: 8px;">Book Now</a>
             </div>
+
+            {% if app.environment == 'dev' %}
+            <div class="mt-4 p-2 bg-light border rounded text-center">
+                <small>Debug: Selected Currency: {{ selectedCurrency }}, Exchange Rate: {{ exchangeRate }}</small>
+            </div>
+            {% endif %}
 
         </div>
     </div>

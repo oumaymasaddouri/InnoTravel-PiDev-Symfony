@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Hotel;
 use App\Repository\HotelRepository;
+use App\Service\CurrencyService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UserHotelController extends AbstractController
 {
     #[Route('/', name: 'user_hotel_index', methods: ['GET'])]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, CurrencyService $currencyService): Response
     {
         /** @var HotelRepository $hotelRepository */
         $hotelRepository = $entityManager->getRepository(Hotel::class);
@@ -22,6 +23,9 @@ final class UserHotelController extends AbstractController
         // Get pagination parameters
         $page = max(1, $request->query->getInt('page', 1));
         $limit = 3; // Number of hotels per page
+
+        // Get selected currency (default to USD)
+        $selectedCurrency = $request->query->get('currency', 'USD');
 
         // Get filter parameters from request
         $filterCriteria = [
@@ -67,19 +71,40 @@ final class UserHotelController extends AbstractController
         $hotels = $result['hotels'];
         $pagination = $result['pagination'];
 
+        // Get currency data
+        $currencies = $currencyService->getAvailableCurrencies();
+        $currencySymbols = $currencyService->getCurrencySymbols();
+        $exchangeRate = $currencyService->getExchangeRate($selectedCurrency);
+
         return $this->render('hotel/user_index.html.twig', [
             'hotels' => $hotels,
             'locations' => $locationOptions,
             'filters' => $filterCriteria,
             'pagination' => $pagination,
+            'currencies' => $currencies,
+            'selectedCurrency' => $selectedCurrency,
+            'currencySymbol' => $currencySymbols[$selectedCurrency] ?? '$',
+            'exchangeRate' => $exchangeRate,
         ]);
     }
 
     #[Route('/{slug}', name: 'user_hotel_show', methods: ['GET'])]
-    public function show(Hotel $hotel): Response
+    public function show(Request $request, Hotel $hotel, CurrencyService $currencyService): Response
     {
+        // Get selected currency (default to USD)
+        $selectedCurrency = $request->query->get('currency', 'USD');
+
+        // Get currency data
+        $currencies = $currencyService->getAvailableCurrencies();
+        $currencySymbols = $currencyService->getCurrencySymbols();
+        $exchangeRate = $currencyService->getExchangeRate($selectedCurrency);
+
         return $this->render('hotel/user_show.html.twig', [
             'hotel' => $hotel,
+            'currencies' => $currencies,
+            'selectedCurrency' => $selectedCurrency,
+            'currencySymbol' => $currencySymbols[$selectedCurrency] ?? '$',
+            'exchangeRate' => $exchangeRate,
         ]);
     }
 }
