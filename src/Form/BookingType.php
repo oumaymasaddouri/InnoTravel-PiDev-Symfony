@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 
 class BookingType extends AbstractType
@@ -20,10 +21,14 @@ class BookingType extends AbstractType
     {
         $builder
             ->add('startdate', DateType::class, [
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'label' => 'Check-in Date',
+                'attr' => ['class' => 'form-control']
             ])
             ->add('enddate', DateType::class, [
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'label' => 'Check-out Date',
+                'attr' => ['class' => 'form-control']
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => [
@@ -40,12 +45,22 @@ class BookingType extends AbstractType
                 'class' => Hotel::class,
                 'choice_label' => 'id',
             ])
+            ->add('paymentMethod', ChoiceType::class, [
+                'mapped' => false,
+                'label' => 'Payment Method',
+                'choices' => [
+                    'Cash (Pay at Hotel)' => 'cash',
+                    'Credit Card (Pay Now)' => 'stripe'
+                ],
+                'expanded' => true,
+                'multiple' => false,
+                'required' => true,
+                'attr' => ['class' => 'payment-method-selector']
+            ])
             ->add('save', SubmitType::class, [
-                'label' => 'Save Booking',
+                'label' => 'Complete Booking',
                 'attr' => ['class' => 'btn btn-primary']
             ])
-            
-            
         ;
     }
 

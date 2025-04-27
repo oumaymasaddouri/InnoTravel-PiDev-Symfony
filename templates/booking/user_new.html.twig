@@ -2,24 +2,182 @@
 
 {% block title %}New Booking{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .booking-form {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        animation: fadeIn 0.6s ease-in-out;
+    }
+    
+    .booking-form h1 {
+        color: #333;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 700;
+    }
+    
+    .booking-form h2 {
+        color: #007bff;
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        text-align: center;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-control {
+        height: 50px;
+        font-size: 16px;
+    }
+    
+    .payment-options {
+        margin: 30px 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+    }
+    
+    .payment-options label {
+        display: block;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        background-color: #fff;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .payment-options label:hover {
+        border-color: #007bff;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+    }
+    
+    .payment-options input[type="radio"]:checked + label {
+        border-color: #007bff;
+        background-color: #f0f7ff;
+    }
+    
+    .btn-primary {
+        height: 50px;
+        font-size: 18px;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #6c757d;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .back-link:hover {
+        color: #007bff;
+    }
+    
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Payment method styling */
+    .payment-method-selector {
+        margin-top: 20px;
+    }
+    
+    .payment-method-selector .form-check {
+        padding: 15px;
+        margin-bottom: 10px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+    }
+    
+    .payment-method-selector .form-check:hover {
+        background-color: #e9ecef;
+        border-color: #adb5bd;
+    }
+    
+    .payment-method-selector .form-check-input:checked ~ .form-check-label {
+        font-weight: bold;
+        color: #007bff;
+    }
+</style>
+{% endblock %}
+
 {% block section8 %}
-    <h1>Create New Booking</h1>
-
-    <h2>You’re booking: <strong>{{ hotel.name }}</strong></h2>
-
-    {{ form_start(form) }}
-
-        {{ form_row(form.startdate) }}
-        {{ form_row(form.enddate) }}
-
-        <div style="display:none;">
-            {{ form_widget(form.status, {'attr': {'type': 'hidden'}}) }}
-            {{ form_widget(form.hotelId, {'attr': {'type': 'hidden'}}) }}
-            {{ form_widget(form.userId, {'attr': {'type': 'hidden'}}) }}
+<div class="container py-5">
+    <div class="booking-form">
+        <h1>Create New Booking</h1>
+        
+        <h2>You're booking: <strong>{{ hotel.name }}</strong></h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Hotel Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Location:</strong> {{ hotel.location }}</p>
+                        <p><strong>Price per night:</strong> ${{ hotel.pricepernight }}</p>
+                        <p><strong>Rating:</strong> {{ hotel.rating }} / 5</p>
+                        {% if hotel.ecocertification %}
+                            <p><span class="badge bg-success">Eco Certified</span></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                    <div class="form-group">
+                        {{ form_label(form.startdate) }}
+                        {{ form_widget(form.startdate) }}
+                        {{ form_errors(form.startdate) }}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.enddate) }}
+                        {{ form_widget(form.enddate) }}
+                        {{ form_errors(form.enddate) }}
+                    </div>
+                    
+                    <div class="payment-options">
+                        <h5>Select Payment Method</h5>
+                        {{ form_widget(form.paymentMethod) }}
+                        {{ form_errors(form.paymentMethod) }}
+                    </div>
+                    
+                    <div style="display:none;">
+                        {{ form_widget(form.status, {'attr': {'type': 'hidden'}}) }}
+                        {{ form_widget(form.hotelId, {'attr': {'type': 'hidden'}}) }}
+                        {{ form_widget(form.userId, {'attr': {'type': 'hidden'}}) }}
+                    </div>
+                    
+                    {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-block'}}) }}
+                {{ form_end(form) }}
+            </div>
         </div>
-
-
-    {{ form_end(form) }} {# ✅ CSRF token now included #}
-
-    <a href="{{ path('user_booking_index') }}">← Back to My Bookings</a>
+        
+        <a href="{{ path('user_booking_index') }}" class="back-link">← Back to My Bookings</a>
+    </div>
+</div>
 {% endblock %}
