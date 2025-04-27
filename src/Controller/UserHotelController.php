@@ -75,7 +75,7 @@ final class UserHotelController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'user_hotel_show', methods: ['GET'])]
+    #[Route('/{slug}', name: 'user_hotel_show', methods: ['GET'])]
     public function show(Hotel $hotel): Response
     {
         return $this->render('hotel/user_show.html.twig', [

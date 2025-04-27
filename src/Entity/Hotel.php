@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Entity\Booking;
 use App\Repository\HotelRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: HotelRepository::class)]
 class Hotel
@@ -74,6 +75,10 @@ class Hotel
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $image = null;
+
+    #[ORM\Column(type: "string", length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['name'])]
+    private string $slug;
 
     public function getId()
     {
@@ -153,6 +158,17 @@ class Hotel
     public function setImage(?string $image): self
     {
         $this->image = $image;
+        return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
         return $this;
     }
 

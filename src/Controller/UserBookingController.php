@@ -15,17 +15,13 @@ use Symfony\Component\Security\Core\Security;
 #[Route('/user/booking')]
 class UserBookingController extends AbstractController
 {
-    #[Route('/new/{hotelId}', name: 'user_booking_new', methods: ['GET', 'POST'])]
+    #[Route('/new/{slug}', name: 'user_booking_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
         EntityManagerInterface $em,
-        int $hotelId,
+        Hotel $hotel,
         Security $security
     ): Response {
-        $hotel = $em->getRepository(Hotel::class)->find($hotelId);
-        if (!$hotel) {
-            throw $this->createNotFoundException('Hotel not found.');
-        }
 
         $user = $em->getRepository(\App\Entity\Users::class)->find(3); // ✅ Simulate user ID 3
         if (!$user) {

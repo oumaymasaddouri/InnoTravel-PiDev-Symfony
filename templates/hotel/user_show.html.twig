@@ -136,7 +136,7 @@
 
                     <div class="text-end mt-4">
                         <a href="{{ path('user_hotel_index') }}" class="btn btn-outline-primary">← Back to List</a>
-                        <a href="{{ path('user_booking_new', { hotelId: hotel.id }) }}" class="btn btn-primary">Book this Hotel</a>
+                        <a href="{{ path('user_booking_new', { slug: hotel.slug }) }}" class="btn btn-primary">Book this Hotel</a>
                     </div>
                 </div>
             </div>
