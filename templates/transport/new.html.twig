@@ -1,0 +1,270 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}New Transport{% endblock %}
+
+{% block section8 %}
+<div class="transport-form-wrapper">
+    <div class="transport-form-header">
+        <h1>Create New Transport</h1>
+        <a href="{{ path('app_transport_index') }}" class="back-btn">
+            <i class="ti-arrow-left"></i> Back to Transport List
+        </a>
+    </div>
+    
+    <div class="transport-form-container">
+        <div class="transport-form-icon">
+            <i class="ti-truck"></i>
+        </div>
+        {{ include('transport/_form.html.twig') }}
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <style>
+        .transport-form-wrapper {
+            padding: 50px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .transport-form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .transport-form-header h1 {
+            font-size: 32px;
+            color: #1D3557;
+            margin: 0;
+            font-weight: 700;
+            position: relative;
+        }
+        
+        .transport-form-header h1:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #457B9D, #1D3557);
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .back-btn:hover {
+            background-color: #1D3557;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 53, 87, 0.2);
+        }
+        
+        .transport-form-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+            padding: 50px 30px 30px;
+            position: relative;
+            margin-top: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .transport-form-container:hover {
+            box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+        }
+        
+        .transport-form-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #457B9D, #1D3557);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(29, 53, 87, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .transport-form-icon:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 6px 18px rgba(29, 53, 87, 0.4);
+        }
+        
+        /* Form Styling - ENHANCED */
+        form label {
+            font-weight: 600;
+            color: #1D3557;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+        
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="number"],
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #dde3ed;
+            border-radius: 10px;
+            margin-bottom: 22px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background-color: #f9fafc;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02) inset;
+        }
+        
+        form input:focus,
+        form select:focus,
+        form textarea:focus {
+            outline: none;
+            border-color: #457B9D;
+            box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.15);
+            background-color: #fff;
+        }
+        
+        form button[type="submit"],
+        .btn-primary {
+            background: linear-gradient(135deg, #457B9D, #1D3557);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-weight: 600;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(29, 53, 87, 0.2);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        form button[type="submit"]:hover,
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1D3557, #0A1D36);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(29, 53, 87, 0.3);
+        }
+        
+        /* Vehicle Type specific styling */
+        form select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23457B9D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 45px;
+            cursor: pointer;
+        }
+        
+        /* Form Fields Enhancement */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            position: relative;
+            padding-left: 5px;
+        }
+        
+        .form-group label:before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: #457B9D;
+            position: absolute;
+            left: -5px;
+            top: 2px;
+            border-radius: 3px;
+        }
+        
+        /* Save Button Styling */
+        .save-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        button[type="submit"],
+        .btn-save {
+            background: linear-gradient(135deg, #457B9D, #1D3557);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(29, 53, 87, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        button[type="submit"]:hover,
+        .btn-save:hover {
+            background: linear-gradient(135deg, #1D3557, #0A1D36);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(29, 53, 87, 0.3);
+        }
+        
+        button[type="submit"]::before,
+        .btn-save::before {
+            content: '\e64c'; /* Save icon from Themify icons */
+            font-family: 'themify';
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .transport-form-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .transport-form-container {
+                padding: 40px 20px 25px;
+            }
+            
+            .transport-form-header h1 {
+                font-size: 26px;
+            }
+            
+            button[type="submit"],
+            .btn-save {
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}

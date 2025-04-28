@@ -1,0 +1,268 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Edit transport{% endblock %}
+
+{% block section8 %}
+<div class="transport-edit-wrapper">
+    <div class="transport-edit-header">
+        <h1>Edit transport</h1>
+        <div class="header-actions">
+            <a href="{{ path('app_transport_index') }}" class="back-btn">
+                <i class="ti-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    
+    <div class="transport-edit-container">
+        <div class="transport-edit-icon">
+            <i class="ti-pencil"></i>
+        </div>
+        
+        <div class="form-container">
+            {{ include('transport/_form.html.twig') }}
+        </div>
+        
+        <div class="delete-container">
+            <hr class="divider">
+            <h3>Delete this transport</h3>
+            <p>This action cannot be undone. Please be certain.</p>
+            {{ include('transport/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+
+<style>
+    .transport-edit-wrapper {
+        padding: 60px 20px;
+        max-width: 800px;
+        margin: 0 auto;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .transport-edit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .transport-edit-header h1 {
+        font-size: 36px;
+        color: #263A5B;
+        margin: 0;
+        font-weight: 700;
+        position: relative;
+    }
+    
+    .transport-edit-header h1:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #4285F4, #34A853);
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 12px;
+    }
+    
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #555;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        padding: 10px 20px;
+        border-radius: 50px;
+        background-color: #f8f8f8;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .back-btn:hover {
+        background-color: #263A5B;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(38, 58, 91, 0.2);
+    }
+    
+    .transport-edit-container {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        padding: 40px 30px;
+        position: relative;
+        margin-top: 40px;
+        transition: all 0.3s ease;
+    }
+    
+    .transport-edit-container:hover {
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    
+    .transport-edit-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #4285F4, #34A853);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 30px;
+        box-shadow: 0 5px 20px rgba(66, 133, 244, 0.4);
+        transition: all 0.3s ease;
+    }
+    
+    .transport-edit-icon:hover {
+        transform: translateX(-50%) scale(1.05);
+    }
+    
+    .form-container {
+        margin-top: 20px;
+    }
+    
+    /* Form Styling */
+    form label {
+        font-weight: 600;
+        color: #263A5B;
+        margin-bottom: 10px;
+        display: block;
+        font-size: 15px;
+    }
+    
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="number"],
+    form select,
+    form textarea {
+        width: 100%;
+        padding: 14px 18px;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        margin-bottom: 24px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background-color: #f9f9f9;
+    }
+    
+    form input:focus,
+    form select:focus,
+    form textarea:focus {
+        outline: none;
+        border-color: #4285F4;
+        box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.15);
+        background-color: #fff;
+    }
+    
+    form button[type="submit"] {
+        background: linear-gradient(135deg, #4285F4, #34A853);
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        font-size: 16px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+        font-weight: 600;
+        margin-top: 15px;
+        box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+    }
+    
+    form button[type="submit"]:hover {
+        background: linear-gradient(135deg, #34A853, #2b8a44);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(52, 168, 83, 0.3);
+    }
+    
+    .divider {
+            margin: -25px 0 25px;
+            border: none;
+            border-top: 2px solid #f0f0f0;
+        }
+    
+    .delete-container {
+        margin-top: 30px;
+        padding: 25px;
+        background-color: #fff8f8;
+        border-radius: 12px;
+        border-left: 4px solid #dc3545;
+    }
+    
+    .delete-container h3 {
+        color: #dc3545;
+        font-size: 20px;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+    
+    .delete-container p {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 15px;
+        line-height: 1.5;
+    }
+    
+    /* Delete Form Styling */
+    form.delete-form button {
+        background-color: #fff;
+        color: #dc3545;
+        border: 2px solid #dc3545;
+        padding: 12px 24px;
+        font-size: 15px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    form.delete-form button:hover {
+        background-color: #dc3545;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+    }
+    
+    /* Add icon to delete button */
+    form.delete-form button:before {
+        content: "\e646"; /* ti-trash icon code */
+        font-family: 'themify';
+        font-size: 15px;
+    }
+    
+    @media (max-width: 768px) {
+        .transport-edit-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        
+        .transport-edit-container {
+            padding: 30px 20px;
+        }
+        
+        .transport-edit-header h1 {
+            font-size: 28px;
+        }
+        
+        .delete-container {
+            padding: 20px 15px;
+        }
+    }
+</style>
+{% endblock %}

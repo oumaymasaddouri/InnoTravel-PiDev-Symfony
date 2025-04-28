@@ -1,0 +1,23 @@
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="custom-save-btn">
+        {{ button_label|default('Save') }}
+    </button>
+{{ form_end(form) }}
+
+<style>
+.custom-save-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.custom-save-btn:hover {
+    background-color: #45a049;
+}
+</style>

@@ -1,0 +1,227 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Create transport{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Add New transport</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_transport_admin_index') }}">transports</a></li>
+                    <li class="breadcrumb-item active">Add New</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Custom Tabs -->
+                <div class="card card-primary card-outline card-tabs">
+                    <div class="card-header p-0 pt-1 border-bottom-0">
+                        <ul class="nav nav-tabs" id="transport-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="vehicle-details-tab" data-toggle="pill" href="#vehicle-details" role="tab">
+                                    <i class="fas fa-car"></i> Vehicle Information
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="tab-content" id="transport-tabs-content">
+                            <!-- transport Details Tab -->
+                            <div class="tab-pane fade show active" id="vehicle-details" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-primary text-white">
+                                                <h3 class="card-title mb-0"><i class="fas fa-car-side mr-2"></i>Vehicle Information</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6">
+                                                        {{ form_label(form.carModel) }}
+                                                        {{ form_widget(form.carModel, {'attr': {'class': 'form-control', 'placeholder': 'Enter car model'}}) }}
+                                                        {{ form_errors(form.carModel) }}
+                                                        <small class="form-text text-muted">Example: Toyota Camry, Honda Accord</small>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        {{ form_label(form.carColor) }}
+                                                        {{ form_widget(form.carColor, {'attr': {'class': 'form-control', 'placeholder': 'Enter car color'}}) }}
+                                                        {{ form_errors(form.carColor) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6">
+                                                        {{ form_label(form.licensePlate) }}
+                                                        {{ form_widget(form.licensePlate, {'attr': {'class': 'form-control', 'placeholder': 'Enter license plate'}}) }}
+                                                        {{ form_errors(form.licensePlate) }}
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        {{ form_label(form.maxLuggage) }}
+                                                        {{ form_widget(form.maxLuggage, {'attr': {'class': 'form-control', 'placeholder': 'Enter max luggage capacity'}}) }}
+                                                        {{ form_errors(form.maxLuggage) }}
+                                                        <small class="form-text text-muted">Number of standard suitcases</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer d-flex justify-content-between bg-light">
+                                                <a href="{{ path('app_transport_admin_index') }}" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-arrow-left mr-1"></i> Cancel
+                                                </a>
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-check-circle mr-1"></i> Save transport
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {{ form_end(form) }}
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="card border-info shadow-sm">
+                                            <div class="card-header bg-info text-white">
+                                                <h3 class="card-title mb-0"><i class="fas fa-info-circle mr-2"></i>transport Requirements</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="callout callout-info">
+                                                    <h5><i class="fas fa-clipboard-list mr-2"></i>Required Documentation</h5>
+                                                    <ul class="mb-0">
+                                                        <li>Valid driving license</li>
+                                                        <li>Vehicle registration</li>
+                                                        <li>Insurance documentation</li>
+                                                        <li>Background check clearance</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="info-box bg-gradient-success mt-3">
+                                                    <span class="info-box-icon"><i class="fas fa-check"></i></span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">transport Approval Process</span>
+                                                        <span class="info-box-number">Complete all fields for faster approval</span>
+                                                        <div class="progress">
+                                                            <div class="progress-bar" style="width: 70%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                        
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                     
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="float-right">
+                            <button type="button" class="btn btn-primary" id="save-transport">
+                                <i class="fas fa-save mr-2"></i> Save transport
+                            </button>
+                            <a href="{{ path('app_transport_admin_index') }}" class="btn btn-default ml-2">
+                                <i class="fas fa-times mr-2"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+$(function () {
+    // Initialize datepicker if it exists
+    if ($.fn.datetimepicker) {
+        $('#licenseDatetimepicker, #regDatetimepicker').datetimepicker({
+            format: 'L',
+            icons: {
+                time: 'far fa-clock',
+                date: 'far fa-calendar',
+                up: 'fas fa-arrow-up',
+                down: 'fas fa-arrow-down',
+                previous: 'fas fa-chevron-left',
+                next: 'fas fa-chevron-right',
+                today: 'far fa-calendar-check',
+                clear: 'far fa-trash-alt',
+                close: 'fas fa-times'
+            }
+        });
+    }
+    
+    // Custom file input
+    $(document).on('change', '.custom-file-input', function() {
+        var fileName = $(this).val().split('\\').pop();
+        $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+        
+        // Update progress bars when files are selected
+        let cardFooter = $(this).closest('.card-body').siblings('.card-footer');
+        let progressBar = cardFooter.find('.progress-bar');
+        progressBar.css('width', '75%').attr('aria-valuenow', 75).text('75%');
+    });
+    
+    // Save transport button functionality
+    $('#save-transport').on('click', function() {
+        // Add loading state
+        $(this).html('<i class="fas fa-spinner fa-spin mr-2"></i> Saving...');
+        $(this).prop('disabled', true);
+        
+        // Submit the actual form after a short delay to show the loading state
+        setTimeout(function() {
+            $('form').submit();
+        }, 800);
+    });
+    
+    // Make tabs clickable and retain state
+    $('#transport-tabs a').on('click', function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    
+    // Store active tab in localStorage
+    $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+        localStorage.setItem('activetransportTab', $(e.target).attr('href'));
+    });
+    
+    // Check for active tab in localStorage
+    var activeTab = localStorage.getItem('activetransportTab');
+    if (activeTab) {
+        $('#transport-tabs a[href="' + activeTab + '"]').tab('show');
+    }
+    
+    // Form validation
+    $('.needs-validation').on('submit', function(event) {
+        if (this.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        $(this).addClass('was-validated');
+    });
+    
+
+    // Add animation to cards on hover
+    $('.card').hover(
+        function() {
+            $(this).addClass('shadow');
+        },
+        function() {
+            $(this).removeClass('shadow');
+        }
+    );
+});
+</script>
+{% endblock %}

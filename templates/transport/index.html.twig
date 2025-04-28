@@ -1,0 +1,949 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}transport index{% endblock %}
+
+{% block section8 %}
+<div class="transport-index-wrapper">
+    <div class="transport-index-header">
+        <h1>transport Management</h1>
+        <a href="{{ path('app_transport_new') }}" class="create-btn">
+            <i class="ti-plus"></i> Create new transport
+        </a>
+    </div>
+    
+    <!-- Improved Search Bar Section -->
+    <div class="search-card">
+        <div class="search-bar-wrapper">
+            <div class="search-bar">
+                <i class="ti-search search-icon"></i>
+                <input type="text" id="transportSearch" placeholder="Search transports..." class="search-input">
+                <button id="clearSearch" class="clear-search-btn">
+                    <i class="ti-close"></i>
+                </button>
+            </div>
+            
+            <div class="search-actions">
+                <div class="filter-dropdown">
+                    <select id="filterOption" class="filter-select">
+                        <option value="all">All Fields</option>
+                        <option value="carModel">Car Model</option>
+                        <option value="carColor">Car Color</option>
+                        <option value="licensePlate">License Plate</option>
+                    </select>
+                    <i class="ti-angle-down select-icon"></i>
+                </div>
+                
+                <button id="advancedFilterBtn" class="advanced-filter-btn">
+                    <i class="ti-sliders"></i> Advanced
+                </button>
+            </div>
+        </div>
+        
+        <!-- Advanced Filter Panel (Hidden by default) -->
+        <div id="advancedFilterPanel" class="advanced-filter-panel">
+            <div class="filter-panel-header">
+                <h3>Advanced Filters</h3>
+                <button id="closeAdvancedFilter" class="close-panel-btn">
+                    <i class="ti-close"></i>
+                </button>
+            </div>
+            <div class="filter-groups">
+                <div class="filter-group">
+                    <label for="maxLuggageFilter">Max Luggage Capacity</label>
+                    <div class="range-slider-container">
+                        <div class="range-inputs">
+                            <div class="range-input-group">
+                                <span class="range-label">Min</span>
+                                <input type="number" id="minLuggage" placeholder="0" class="filter-input" min="0">
+                            </div>
+                            <div class="range-separator"></div>
+                            <div class="range-input-group">
+                                <span class="range-label">Max</span>
+                                <input type="number" id="maxLuggage" placeholder="100" class="filter-input" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button id="resetFilters" class="reset-filter-btn">Reset</button>
+                <button id="applyFilters" class="apply-filter-btn">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="transport-table-container">
+        <div class="table-icon">
+            <i class="ti-car"></i>
+        </div>
+        
+        {% if transports|length > 0 %}
+        <div class="table-responsive">
+            <div class="table-header">
+                <div id="searchResultInfo" class="search-result-info">
+                    <div class="result-count-badge">
+                        <span id="resultCount">{{ transports|length }}</span>
+                    </div>
+                    <span class="result-text">transports found</span>
+                </div>
+                <div class="table-actions">
+                    <button id="refreshTable" class="refresh-btn">
+                        <i class="ti-reload"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Car Model</th>
+                        <th>Car Color</th>
+                        <th>License Plate</th>
+                        <th>Max Luggage</th>
+                        <th class="actions-column">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="transportTableBody">
+                {% for transport in transports %}
+                    <tr class="transport-row">
+                        <td>{{ transport.id }}</td>
+                        <td>{{ transport.carModel }}</td>
+                        <td>{{ transport.carColor }}</td>
+                        <td>{{ transport.licensePlate }}</td>
+                        <td>{{ transport.maxLuggage }}</td>
+                        <td class="actions-column">
+                            <div class="action-buttons">
+                                <a href="{{ path('app_transport_show', {'id': transport.id}) }}" class="view-btn">
+                                    <i class="ti-eye"></i> View
+                                </a>
+                                <a href="{{ path('app_transport_edit', {'id': transport.id}) }}" class="edit-btn">
+                                    <i class="ti-pencil"></i> Edit
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="noSearchResults" class="no-records" style="display: none;">
+            <div class="no-results-content">
+                <div class="no-records-icon">
+                    <i class="ti-search"></i>
+                </div>
+                <h3>No matching transports</h3>
+                <p>We couldn't find any transports matching your search criteria.</p>
+                <button id="resetSearch" class="reset-search-btn">
+                    <i class="ti-reload"></i> Reset Search
+                </button>
+            </div>
+        </div>
+        {% else %}
+        <div class="no-records">
+            <div class="no-records-icon">
+                <i class="ti-alert"></i>
+            </div>
+            <h3>No transports found</h3>
+            <p>There are no transport records in the system.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .transport-index-wrapper {
+        padding: 60px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+    
+    .transport-index-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .transport-index-header h1 {
+        font-size: 32px;
+        color: #263A5B;
+        margin: 0;
+        font-weight: 700;
+        position: relative;
+    }
+    
+    .transport-index-header h1:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #4285F4, #34A853);
+    }
+    
+    /* Improved Search Bar Styles */
+    .search-card {
+        background-color: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+        margin-bottom: 30px;
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(66, 133, 244, 0.1);
+    }
+    
+    .search-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+    }
+    
+    .search-bar-wrapper {
+        padding: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        border-bottom: 1px dashed rgba(0,0,0,0.06);
+    }
+    
+    .search-bar {
+        flex: 1;
+        min-width: 280px;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        color: #4285F4;
+        font-size: 18px;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 16px 46px;
+        border: 2px solid #eaeef5;
+        border-radius: 12px;
+        font-size: 15px;
+        font-family: inherit;
+        transition: all 0.3s;
+        color: #333;
+        background-color: #f8f9fc;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #4285F4;
+        background-color: white;
+        box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.12);
+    }
+    
+    .search-input::placeholder {
+        color: #a0a8b5;
+        font-weight: 400;
+    }
+    
+    .clear-search-btn {
+        position: absolute;
+        right: 20px;
+        background: rgba(66, 133, 244, 0.1);
+        border: none;
+        color: #4285F4;
+        cursor: pointer;
+        display: none;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    
+    .clear-search-btn:hover {
+        background: rgba(66, 133, 244, 0.2);
+    }
+    
+    .search-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+    
+    /* Filter Dropdown */
+    .filter-dropdown {
+        position: relative;
+    }
+    
+    .filter-select {
+        padding: 14px 40px 14px 16px;
+        border: 2px solid #eaeef5;
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 14px;
+        color: #445069;
+        background-color: #f8f9fc;
+        cursor: pointer;
+        transition: all 0.3s;
+        min-width: 140px;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+    
+    .filter-select:focus {
+        outline: none;
+        border-color: #4285F4;
+        background-color: white;
+    }
+    
+    .select-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0a8b5;
+        pointer-events: none;
+    }
+    
+    /* Advanced Filter Button */
+    .advanced-filter-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        background-color: #f1f5ff;
+        border: 2px solid #e3ebfc;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #4285F4;
+    }
+    
+    .advanced-filter-btn:hover {
+        background-color: #e3ebfc;
+    }
+    
+    /* Advanced Filter Panel */
+    .advanced-filter-panel {
+        display: none;
+        padding: 24px;
+        border-top: 1px solid #eaeef5;
+        background-color: #fafbfd;
+    }
+    
+    .filter-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .filter-panel-header h3 {
+        color: #263A5B;
+        font-size: 16px;
+        margin: 0;
+        font-weight: 600;
+    }
+    
+    .close-panel-btn {
+        background: none;
+        border: none;
+        color: #a0a8b5;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        transition: all 0.2s;
+    }
+    
+    .close-panel-btn:hover {
+        background-color: #eaeef5;
+        color: #445069;
+    }
+    
+    .filter-groups {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+    
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .filter-group label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #445069;
+    }
+    
+    .range-slider-container {
+        background-color: white;
+        border-radius: 10px;
+        padding: 16px;
+        border: 1px solid #eaeef5;
+    }
+    
+    .range-inputs {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .range-input-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .range-label {
+        font-size: 12px;
+        color: #a0a8b5;
+        font-weight: 500;
+    }
+    
+    .range-separator {
+        width: 15px;
+        height: 2px;
+        background-color: #eaeef5;
+    }
+    
+    .filter-input {
+        padding: 10px 12px;
+        border: 1px solid #eaeef5;
+        border-radius: 8px;
+        font-size: 14px;
+        width: 100%;
+        background-color: #f8f9fc;
+        transition: all 0.3s;
+    }
+    
+    .filter-input:focus {
+        outline: none;
+        border-color: #4285F4;
+        background-color: white;
+    }
+    
+    .filter-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+    
+    .apply-filter-btn, .reset-filter-btn {
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .apply-filter-btn {
+        background: linear-gradient(135deg, #4285F4, #34A853);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+    }
+    
+    .apply-filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(66, 133, 244, 0.4);
+    }
+    
+    .reset-filter-btn {
+        background-color: white;
+        color: #445069;
+        border: 1px solid #eaeef5;
+    }
+    
+    .reset-filter-btn:hover {
+        background-color: #f8f9fc;
+    }
+    
+    /* Table Container */
+    .transport-table-container {
+        background-color: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        padding: 40px 30px;
+        position: relative;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(66, 133, 244, 0.1);
+    }
+    
+    .transport-table-container:hover {
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    
+    .table-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #4285F4, #34A853);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 30px;
+        box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
+        transition: all 0.3s ease;
+        border: 5px solid white;
+    }
+    
+    .table-icon:hover {
+        transform: translateX(-50%) scale(1.05);
+    }
+    
+    /* Table Header */
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eaeef5;
+    }
+    
+    .search-result-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .result-count-badge {
+        background: linear-gradient(135deg, #4285F4, #34A853);
+        color: white;
+        border-radius: 50px;
+        min-width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 0 12px;
+    }
+    
+    .result-text {
+        color: #445069;
+        font-size: 15px;
+    }
+    
+    .table-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .refresh-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background-color: #f8f9fc;
+        border: 1px solid #eaeef5;
+        border-radius: 8px;
+        color: #445069;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .refresh-btn:hover {
+        background-color: #eaeef5;
+    }
+    
+    /* Table Styles */
+    .table-responsive {
+        overflow-x: auto;
+        border-radius: 12px;
+        border: 1px solid #eaeef5;
+    }
+    
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 0;
+    }
+    
+    .table thead tr {
+        background: #f8f9fc;
+    }
+    
+    .table th {
+        padding: 16px 20px;
+        text-align: left;
+        font-weight: 600;
+        color: #263A5B;
+        font-size: 14px;
+        border-bottom: 2px solid #eaeef5;
+        white-space: nowrap;
+    }
+    
+    .table td {
+        padding: 16px 20px;
+        font-size: 14px;
+        color: #445069;
+        border-bottom: 1px solid #eaeef5;
+        transition: all 0.2s ease;
+    }
+    
+    .table tbody tr:hover td {
+        background-color: #f8f9fc;
+    }
+    
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .actions-column {
+        width: 200px;
+        text-align: right;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+    
+    .view-btn, .edit-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .view-btn {
+        background-color: #f0f5ff;
+        color: #4285F4;
+    }
+    
+    .view-btn:hover {
+        background-color: #4285F4;
+        color: white;
+    }
+    
+    .edit-btn {
+        background-color: #e8f5e9;
+        color: #34A853;
+    }
+    
+    .edit-btn:hover {
+        background-color: #34A853;
+        color: white;
+    }
+    
+    /* No Records */
+    .no-records {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 60px 20px;
+        text-align: center;
+    }
+    
+    .no-results-content {
+        max-width: 400px;
+    }
+    
+    .no-records-icon {
+        width: 90px;
+        height: 90px;
+        background-color: #f5f8ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 34px;
+        color: #4285F4;
+        margin-bottom: 24px;
+        box-shadow: 0 10px 25px rgba(66, 133, 244, 0.15);
+    }
+    
+    .no-records h3 {
+        font-size: 24px;
+        color: #263A5B;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+    
+    .no-records p {
+        color: #667085;
+        margin-bottom: 24px;
+        line-height: 1.6;
+    }
+    
+    .reset-search-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #4285F4, #34A853);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+    }
+    
+    .reset-search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
+    }
+    
+    /* Create Button */
+    .create-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #4285F4, #34A853);
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        padding: 14px 28px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+    }
+    
+    .create-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+        .transport-index-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        
+        .actions-column {
+            width: auto;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        
+        .search-bar-wrapper {
+            flex-direction: column;
+        }
+        
+        .search-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
+        
+        .table-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .filter-groups {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .transport-table-container {
+            padding: 30px 15px;
+        }
+        
+        .table th, .table td {
+            padding: 12px 10px;
+        }
+        
+        .transport-index-header h1 {
+            font-size: 26px;
+        }
+        
+        .filter-select, .advanced-filter-btn {
+            padding: 12px 16px;
+        }
+        
+        .search-input {
+            padding: 14px 40px;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // DOM Elements
+        const searchInput = document.getElementById('transportSearch');
+        const filterSelect = document.getElementById('filterOption');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        const advancedFilterBtn = document.getElementById('advancedFilterBtn');
+        const closeAdvancedFilterBtn = document.getElementById('closeAdvancedFilter');
+        const advancedFilterPanel = document.getElementById('advancedFilterPanel');
+        const applyFiltersBtn = document.getElementById('applyFilters');
+        const resetFiltersBtn = document.getElementById('resetFilters');
+        const resetSearchBtn = document.getElementById('resetSearch');
+        const refreshTableBtn = document.getElementById('refreshTable');
+        const tableBody = document.getElementById('transportTableBody');
+        const noSearchResults = document.getElementById('noSearchResults');
+        const resultCount = document.getElementById('resultCount');
+        const searchResultInfo = document.getElementById('searchResultInfo');
+        
+        const transportRows = document.querySelectorAll('.transport-row');
+        let minLuggage, maxLuggage;
+        let advancedFilterOpen = false;
+        
+        // Show/hide clear button based on search input
+        searchInput.addEventListener('input', function() {
+            clearSearchBtn.style.display = this.value.length > 0 ? 'flex' : 'none';
+            filterTable();
+        });
+        
+        // Clear search input
+        clearSearchBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            clearSearchBtn.style.display = 'none';
+            filterTable();
+        });
+        
+        // Reset search from no results message
+        if (resetSearchBtn) {
+            resetSearchBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                clearSearchBtn.style.display = 'none';
+                
+                // Reset advanced filters
+                if (document.getElementById('minLuggage')) {
+                    document.getElementById('minLuggage').value = '';
+                }
+                if (document.getElementById('maxLuggage')) {
+                    document.getElementById('maxLuggage').value = '';
+                }
+                
+                minLuggage = '';
+                maxLuggage = '';
+                filterTable();
+            });
+        }
+        
+        // Toggle advanced filter panel
+        advancedFilterBtn.addEventListener('click', function() {
+            advancedFilterOpen = !advancedFilterOpen;
+            advancedFilterPanel.style.display = advancedFilterOpen ? 'block' : 'none';
+            
+            // Add slide-down animation
+            if (advancedFilterOpen) {
+                advancedFilterPanel.style.height = '0';
+                advancedFilterPanel.style.opacity = '0';
+                setTimeout(() => {
+                    advancedFilterPanel.style.height = 'auto';
+                    advancedFilterPanel.style.opacity = '1';
+                }, 10);
+            }
+        });
+        
+        // Close advanced filter panel with close button
+        if (closeAdvancedFilterBtn) {
+            closeAdvancedFilterBtn.addEventListener('click', function() {
+                advancedFilterOpen = false;
+                advancedFilterPanel.style.display = 'none';
+            });
+        }
+        
+        // Apply advanced filters
+        if (applyFiltersBtn) {
+            applyFiltersBtn.addEventListener('click', function() {
+                minLuggage = document.getElementById('minLuggage').value;
+                maxLuggage = document.getElementById('maxLuggage').value;
+                advancedFilterOpen = false;
+                advancedFilterPanel.style.display = 'none';
+                filterTable();
+            });
+        }
+        
+        // Reset advanced filters
+        if (resetFiltersBtn) {
+            resetFiltersBtn.addEventListener('click', function() {
+                document.getElementById('minLuggage').value = '';
+                document.getElementById('maxLuggage').value = '';
+                minLuggage = '';
+                maxLuggage = '';
+                filterTable();
+            });
+        }
+        
+        // Refresh table button
+        if (refreshTableBtn) {
+            refreshTableBtn.addEventListener('click', function() {
+                // Add rotation animation to refresh icon
+                const refreshIcon = this.querySelector('i');
+                refreshIcon.style.transition = 'transform 0.5s ease';
+                refreshIcon.style.transform = 'rotate(360deg)';
+                
+                setTimeout(() => {
+                    refreshIcon.style.transition = 'none';
+                    refreshIcon.style.transform = 'rotate(0deg)';
+                    
+                    // Reset all filters and search
+                    searchInput.value = '';
+                    clearSearchBtn.style.display = 'none';
+                    
+                    if (document.getElementById('minLuggage')) {
+                        document.getElementById('minLuggage').value = '';
+                    }
+                    if (document.getElementById('maxLuggage')) {
+                        document.getElementById('maxLuggage').value = '';
+                    }
+                    
+                    minLuggage = '';
+                    maxLuggage = '';
+                    filterSelect.selectedIndex = 0;
+                    filterTable();
+                }, 500);
+            });
+        }
+        
+        // Filter option change
+        filterSelect.addEventListener('change', filterTable);
+        
+        // Main filter function
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filterType = filterSelect.value;
+            let visible = 0;
+            
+            transport

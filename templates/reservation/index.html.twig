@@ -1,0 +1,801 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}My Reservations{% endblock %}
+
+{% block section8 %}
+<div class="reservation-list-wrapper">
+    <div class="reservation-list-header">
+        <h1>My Reservations</h1>
+        <a href="{{ path('app_reservation_new') }}" class="theme-btn">
+            <i class="ti-plus"></i> New Reservation
+        </a>
+    </div>
+    
+<div class="reservation-filters">
+    <form id="search-form" method="get" action="{{ path(app.request.attributes.get('_route')) }}">
+        <div class="search-box">
+            <i class="ti-search search-icon"></i>
+            <input 
+                type="text" 
+                id="reservation-search" 
+                name="search"
+                placeholder="Search by pickup or destination..."
+                value="{{ searchTerm }}"
+                autocomplete="off"
+            >
+        </div>
+        
+        <div class="filter-options">
+            <select id="status-filter" name="status">
+                <option value="">All Statuses</option>
+                <option value="pending" {{ selectedStatus == 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="confirmed" {{ selectedStatus == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                <option value="cancelled" {{ selectedStatus == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+            </select>
+        </div>
+        
+        {# Hidden submit button for accessibility #}
+        <button type="submit" style="display: none">Search</button>
+    </form>
+</div>
+    
+    {% if reservations|length > 0 %}
+    <div class="reservation-grid">
+        {% for reservation in reservations %}
+        <div class="reservation-card" data-status="{{ reservation.status|lower }}">
+            <div class="reservation-card-header status-{{ reservation.status|lower }}">
+                <span class="status-indicator"></span>
+                <span class="status-text">{{ reservation.status }}</span>
+                <span class="reservation-date">{{ reservation.createdAt ? reservation.createdAt|date('M d, Y') : 'N/A' }}</span>
+            </div>
+            
+            <div class="reservation-card-body">
+                <div class="journey-info">
+                    <div class="location pickup">
+                        <i class="ti-location-pin"></i>
+                        <span>{{ reservation.pickupAddress }}</span>
+                    </div>
+                    
+                    <div class="direction-icon">
+                        <i class="ti-arrow-down"></i>
+                    </div>
+                    
+                    <div class="location destination">
+                        <i class="ti-map-alt"></i>
+                        <span>{{ reservation.destinationAddress }}</span>
+                    </div>
+                </div>
+                
+                <div class="reservation-details">
+                    <div class="detail">
+                        <span class="detail-label">Price:</span>
+                        <span class="detail-value">{{ reservation.price ? reservation.price ~ ' TND' : 'N/A' }}</span>
+                    </div>
+                    
+                    <div class="detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">{{ reservation.estimatedDuration ?: 'N/A' }}</span>
+                    </div>
+                    
+                    {% if reservation.sepcialRequests %}
+                    <div class="detail special-requests">
+                        <span class="detail-label">Special:</span>
+                        <span class="detail-value">{{ reservation.sepcialRequests|length > 50 ? reservation.sepcialRequests|slice(0, 50) ~ '...' : reservation.sepcialRequests }}</span>
+                    </div>
+                    {% else %}
+                    <div class="detail special-requests">
+                        <span class="detail-label">Special:</span>
+                        <span class="detail-value">No special requests</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="reservation-card-footer">
+                <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}" class="btn-action view">
+                    <i class="ti-eye"></i> View
+                </a>
+                <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn-action edit">
+                    <i class="ti-pencil"></i> Edit
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {# Pagination #}
+    <div class="pagination-wrapper">
+    {{ knp_pagination_render(reservations, null, {}, {
+        'align': 'center',
+        'size': 'medium',
+        'rounded': true
+    }) }}
+</div>
+    {% else %}
+    <div class="no-reservations">
+        <img src="{{ asset('public/img/empty-state.svg') }}" alt="No reservations" class="empty-state-img">
+        <h3>No Reservations Found</h3>
+        <p>You haven't made any reservations yet. Create your first one now!</p>
+        <a href="{{ path('app_reservation_new') }}" class="btn-create-first">Create Your First Reservation</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+{% block css %}
+    {{ parent() }}
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #FF9F67;
+            --dark-color: #263A5B;
+            --light-color: #f8f9fa;
+            --pending-color: #FFC107;
+            --confirmed-color: #4CAF50;
+            --cancelled-color: #F44336;
+            --border-radius: 12px;
+            --card-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        .reservation-list-wrapper {
+            padding: 50px 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .reservation-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
+        }
+        
+        .reservation-list-header h1 {
+            font-size: 32px;
+            color: var(--dark-color);
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .theme-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--accent-color), #ff7e29);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(255, 159, 103, 0.3);
+        }
+        
+        .theme-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 159, 103, 0.4);
+        }
+        
+        .reservation-filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #72809d;
+            pointer-events: none;
+        }
+        
+        #reservation-search {
+            padding: 14px 15px 14px 45px;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 30px;
+            width: 100%;
+            font-size: 15px;
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+        
+        #reservation-search:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 159, 103, 0.1);
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .filter-options select {
+            padding: 14px 45px 14px 20px;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 30px;
+            background-color: white;
+            cursor: pointer;
+            font-size: 15px;
+            min-width: 160px;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2372809d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+        
+        .filter-options select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 159, 103, 0.1);
+        }
+        
+        .reservation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 25px;
+        }
+        
+        .reservation-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        
+        .reservation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .reservation-card-header {
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
+        }
+        
+        .status-pending .status-indicator::after,
+        .status-confirmed .status-indicator::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            z-index: 0;
+        }
+        
+        .status-pending .status-indicator::after {
+            border: 1px solid var(--pending-color);
+        }
+        
+        .status-confirmed .status-indicator::after {
+            border: 1px solid var(--confirmed-color);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+        
+        .status-text {
+            font-weight: 600;
+            text-transform: capitalize;
+            letter-spacing: 0.3px;
+        }
+        
+        .reservation-date {
+            color: #72809d;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--pending-color);
+        }
+        
+        .status-pending .status-indicator {
+            background-color: var(--pending-color);
+            box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2);
+        }
+        
+        .status-confirmed {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--confirmed-color);
+        }
+        
+        .status-confirmed .status-indicator {
+            background-color: var(--confirmed-color);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        
+        .status-cancelled {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--cancelled-color);
+        }
+        
+        .status-cancelled .status-indicator {
+            background-color: var(--cancelled-color);
+            box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2);
+        }
+        
+        .reservation-card-body {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .journey-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+            background-color: rgba(248, 249, 250, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .location {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .location i {
+            color: var(--accent-color);
+            font-size: 18px;
+            margin-top: 2px;
+        }
+        
+        .location.destination i {
+            color: var(--dark-color);
+        }
+        
+        .location span {
+            font-size: 15px;
+            color: #445272;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        
+        .direction-icon {
+            display: flex;
+            justify-content: center;
+            color: #c4c9d4;
+            font-size: 16px;
+            position: relative;
+            height: 20px;
+        }
+        
+        .direction-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 17px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-color), var(--dark-color));
+        }
+        
+        .reservation-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .detail {
+            flex: 1;
+            min-width: 100px;
+            background-color: rgba(248, 249, 250, 0.7);
+            padding: 12px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .detail:hover {
+            background-color: rgba(248, 249, 250, 0.9);
+        }
+        
+        .special-requests {
+            flex-basis: 100%;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #72809d;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            font-size: 15px;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        .reservation-card-footer {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition);
+            flex: 1;
+        }
+        
+        .btn-action.view {
+            color: var(--dark-color);
+            background-color: rgba(248, 249, 250, 0.9);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .btn-action.edit {
+            color: white;
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-action.view:hover {
+            background-color: rgba(236, 239, 241, 0.9);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        
+        .btn-action.edit:hover {
+            background: linear-gradient(135deg, #3f37c9, #332caa);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        .no-reservations {
+            text-align: center;
+            padding: 60px 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        
+        .empty-state-img {
+            max-width: 200px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+        
+        .no-reservations:hover .empty-state-img {
+            transform: scale(1.05);
+        }
+        
+        .no-reservations h3 {
+            font-size: 24px;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .no-reservations p {
+            color: #72809d;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        
+        .btn-create-first {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-color), #ff7e29);
+            color: white;
+            text-decoration: none;
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(255, 159, 103, 0.3);
+        }
+        
+        .btn-create-first:hover {
+            background: linear-gradient(135deg, #ff7e29, #ff6a00);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 159, 103, 0.4);
+        }
+        
+        @media (max-width: 992px) {
+            .reservation-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .reservation-list-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .reservation-filters {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .filter-options {
+                width: 100%;
+                justify-content: space-between;
+                gap: 10px;
+            }
+            
+            .filter-options select {
+                flex: 1;
+                min-width: 0;
+                padding-left: 15px;
+                padding-right: 30px;
+                font-size: 14px;
+            }
+            
+            .reservation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            #reservation-search {
+                padding: 12px 15px 12px 40px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .reservation-list-header h1 {
+                font-size: 28px;
+            }
+            
+            .theme-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .btn-action {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            
+            .detail {
+                flex: 1 0 100%;
+            }
+        }
+         .pagination-wrapper {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .pagination li {
+            display: inline-block;
+        }
+
+        .pagination li a,
+        .pagination li span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: var(--transition);
+        }
+
+        .pagination li.active a,
+        .pagination li.active span {
+            background: linear-gradient(135deg, var(--accent-color), #ff7e29);
+            color: white;
+        }
+
+        .pagination li a:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-2px);
+        }
+
+        .pagination li.active a:hover {
+            background: linear-gradient(135deg, #ff7e29, #ff6a00);
+        }
+
+        .pagination li.disabled span {
+            color: #ccc;
+            box-shadow: none;
+            background-color: #f9f9f9;
+        }
+
+        .pagination .page-item:first-child a,
+        .pagination .page-item:last-child a {
+            border-radius: 30px;
+            width: auto;
+            padding: 0 15px;
+        }
+
+        @media (max-width: 768px) {
+            .pagination li a,
+            .pagination li span {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+        }
+        .filter-options {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#search-form {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+@media (max-width: 768px) {
+    #search-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .search-box,
+    .filter-options select {
+        width: 100%;
+    }
+}
+.search-box {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+    box-shadow: 0 0 0 3px rgba(255, 159, 103, 0.2);
+}
+
+#status-filter {
+    transition: all 0.3s ease;
+}
+
+#status-filter:focus {
+    box-shadow: 0 0 0 3px rgba(255, 159, 103, 0.2);
+}
+.reservation-grid {
+    transition: opacity 0.2s ease;
+}
+
+.reservation-grid.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.search-box .search-icon {
+    transition: color 0.2s ease;
+}
+
+.search-box.searching .search-icon {
+    color: var(--accent-color);
+}
+    </style>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusFilter = document.getElementById('status-filter');
+            const searchInput = document.getElementById('reservation-search');
+            const searchForm = document.getElementById('search-form');
+            
+            // Track if we're already submitting to prevent duplicate requests
+            let isSubmitting = false;
+            
+            // Function to submit the form
+            function submitForm() {
+                if (isSubmitting) return;
+                
+                isSubmitting = true;
+                
+                // Reset to page 1 when filtering
+                const pageInput = document.createElement('input');
+                pageInput.type = 'hidden';
+                pageInput.name = 'page';
+                pageInput.value = '1';
+                
+                // Remove any existing page input
+                const existingPageInput = searchForm.querySelector('input[name="page"]');
+                if (existingPageInput) {
+                    searchForm.removeChild(existingPageInput);
+                }
+                
+                searchForm.appendChild(pageInput);
+                searchForm.submit();
+            }
+            
+            // Submit form immediately when status changes
+            statusFilter.addEventListener('change', function() {
+                submitForm();
+            });
+            
+            // Submit form immediately when typing (no debounce)
+            searchInput.addEventListener('input', function() {
+                submitForm();
+            });
+            
+            // Handle form submission completion
+            searchForm.addEventListener('submit', function() {
+                setTimeout(() => {
+                    isSubmitting = false;
+                }, 500);
+            });
+        });
+    </script>
+{% endblock %}

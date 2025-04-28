@@ -1,0 +1,336 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}transport Details{% endblock %}
+
+{% block section8 %}
+<div class="transport-detail-wrapper">
+    <div class="transport-detail-header">
+        <h1>transport Details</h1>
+        <div class="header-actions">
+            <a href="{{ path('app_transport_index') }}" class="back-btn">
+                <i class="ti-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    
+    <div class="transport-detail-container">
+        <div class="detail-icon">
+            <i class="ti-car"></i>
+        </div>
+        
+        <div class="transport-info-card">
+            <div class="card-header">
+                <h2>{{ transport.carModel }}</h2>
+                <div class="license-plate">{{ transport.licensePlate }}</div>
+            </div>
+            
+            <div class="info-table-wrapper">
+                <table class="info-table">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td>{{ transport.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Car Model</th>
+                            <td>{{ transport.carModel }}</td>
+                        </tr>
+                        <tr>
+                            <th>Car Color</th>
+                            <td>
+                                <span class="color-dot" style="background-color: {{ transport.carColor }}"></span>
+                                {{ transport.carColor }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>License Plate</th>
+                            <td>{{ transport.licensePlate }}</td>
+                        </tr>
+                        <tr>
+                            <th>Max Luggage</th>
+                            <td>{{ transport.maxLuggage }} pieces</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{{ path('app_transport_edit', {'id': transport.id}) }}" class="edit-btn">
+                <i class="ti-pencil"></i> Edit transport
+            </a>
+            {{ include('transport/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+
+<style>
+    .transport-detail-wrapper {
+        padding: 60px 20px;
+        max-width: 900px;
+        margin: 0 auto;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .transport-detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .transport-detail-header h1 {
+        font-size: 36px;
+        color: #263A5B;
+        margin: 0;
+        font-weight: 700;
+        position: relative;
+    }
+    
+    .transport-detail-header h1:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #4285F4, #34A853);
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 12px;
+    }
+    
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #555;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        padding: 10px 20px;
+        border-radius: 50px;
+        background-color: #f8f8f8;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .back-btn:hover {
+        background-color: #263A5B;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(38, 58, 91, 0.2);
+    }
+    
+    .transport-detail-container {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        padding: 40px 30px;
+        position: relative;
+        margin-top: 40px;
+        transition: all 0.3s ease;
+    }
+    
+    .transport-detail-container:hover {
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    
+    .detail-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #4285F4, #34A853);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 30px;
+        box-shadow: 0 5px 20px rgba(66, 133, 244, 0.4);
+        transition: all 0.3s ease;
+    }
+    
+    .detail-icon:hover {
+        transform: translateX(-50%) scale(1.05);
+    }
+    
+    .transport-info-card {
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+    
+    .card-header {
+        background: linear-gradient(90deg, #f0f0f0, #f8f8f8);
+        padding: 20px 25px;
+        border-bottom: 1px solid #eaeaea;
+        position: relative;
+    }
+    
+    .card-header h2 {
+        margin: 0;
+        font-size: 24px;
+        color: #263A5B;
+        font-weight: 600;
+    }
+    
+    .license-plate {
+        display: inline-block;
+        background: #263A5B;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 16px;
+        margin-top: 10px;
+        letter-spacing: 1px;
+        border: 2px solid #fff;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    
+    .info-table-wrapper {
+        padding: 15px 25px;
+    }
+    
+    .info-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    .info-table th {
+        width: 180px;
+        padding: 16px 10px 16px 0;
+        text-align: left;
+        font-weight: 600;
+        color: #555;
+        font-size: 15px;
+        border-bottom: 1px solid #eaeaea;
+        vertical-align: top;
+    }
+    
+    .info-table td {
+        padding: 16px 0;
+        font-size: 15px;
+        color: #333;
+        border-bottom: 1px solid #eaeaea;
+    }
+    
+    .info-table tr:last-child th,
+    .info-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .color-dot {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        margin-right: 8px;
+        vertical-align: middle;
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+    
+    .edit-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #34A853, #2b8a44);
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        padding: 12px 24px;
+        border-radius: 50px;
+        box-shadow: 0 5px 15px rgba(52, 168, 83, 0.3);
+    }
+    
+    .edit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(52, 168, 83, 0.4);
+    }
+    
+    /* Delete Form Button Styling */
+    form.delete-form button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #fff;
+        color: #dc3545;
+        border: 2px solid #dc3545;
+        padding: 12px 24px;
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    form.delete-form button:hover {
+        background-color: #dc3545;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+    }
+    
+    /* Add icon to delete button */
+    form.delete-form button:before {
+        content: "\e646"; /* ti-trash icon code */
+        font-family: 'themify';
+        font-size: 15px;
+        margin-right: 8px;
+    }
+    
+    @media (max-width: 768px) {
+        .transport-detail-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        
+        .transport-detail-container {
+            padding: 30px 15px;
+        }
+        
+        .info-table th {
+            width: 120px;
+            padding: 12px 10px 12px 0;
+        }
+        
+        .info-table td {
+            padding: 12px 0;
+        }
+        
+        .transport-detail-header h1 {
+            font-size: 28px;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .edit-btn, form.delete-form button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}

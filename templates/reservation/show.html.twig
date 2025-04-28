@@ -1,0 +1,572 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Reservation Details{% endblock %}
+
+{% block section8 %}
+<div class="reservation-detail-wrapper">
+    <div class="reservation-detail-header">
+        <h1>Reservation Details</h1>
+        <div class="header-actions">
+            <a href="{{ path('app_reservation_index') }}" class="btn btn-secondary">
+                <i class="ti-arrow-left"></i> Back to Reservations
+            </a>
+            <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn btn-primary">
+                <i class="ti-pencil"></i> Edit
+            </a>
+        </div>
+    </div>
+    
+    <div class="reservation-detail-card">
+        <div class="reservation-status {{ reservation.status|lower }}">
+            <div class="status-container">
+                <span class="status-badge">{{ reservation.status }}</span>
+                <span class="status-indicator"></span>
+            </div>
+            <span class="reservation-id">#{{ reservation.id }}</span>
+        </div>
+        
+        <div class="reservation-detail-body">
+            <div class="journey-section">
+                <h3 class="section-title"><i class="ti-map-alt"></i> Journey Details</h3>
+                
+                <div class="journey-info">
+                    <div class="location-container">
+                        <div class="location">
+                            <div class="location-icon pickup">
+                                <i class="ti-location-pin"></i>
+                            </div>
+                            <div class="location-details">
+                                <span class="label">From</span>
+                                <h4>{{ reservation.pickupAddress }}</h4>
+                            </div>
+                        </div>
+                        
+                        <div class="route-line">
+                            <span class="dot start"></span>
+                            <span class="line"></span>
+                            <span class="dot end"></span>
+                        </div>
+                        
+                        <div class="location">
+                            <div class="location-icon destination">
+                                <i class="ti-map-alt"></i>
+                            </div>
+                            <div class="location-details">
+                                <span class="label">To</span>
+                                <h4>{{ reservation.destinationAddress }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="details-section">
+                <h3 class="section-title"><i class="ti-info-alt"></i> Additional Information</h3>
+                
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Price</span>
+                        <span class="detail-value price">{{ reservation.price ? reservation.price ~ ' TND' : 'Not specified' }}</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value status {{ reservation.status|lower }}">{{ reservation.status }}</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Created On</span>
+                        <span class="detail-value">{{ reservation.createdAt ? reservation.createdAt|date('M d, Y - H:i') : 'Not available' }}</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Estimated Duration</span>
+                        <span class="detail-value">{{ reservation.estimatedDuration ?: 'Not specified' }}</span>
+                    </div>
+                    
+                    {% if reservation.sepcialRequests %}
+                    <div class="detail-item full-width special-requests-container">
+                        <span class="detail-label">Special Requests</span>
+                        <div class="detail-value special-requests">
+                            {{ reservation.sepcialRequests }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="delete-section">
+                <h3 class="section-title danger"><i class="ti-trash"></i> Delete Reservation</h3>
+                <p class="delete-warning">This action cannot be undone. Please be certain.</p>
+                {{ include('reservation/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --dark-color: #1e2a45;
+            --light-color: #f8f9fa;
+            --success-color: #38b000;
+            --warning-color: #f77f00;
+            --danger-color: #d90429;
+            --pending-color: #f77f00;
+            --confirmed-color: #38b000;
+            --cancelled-color: #d90429;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --border-radius: 12px;
+        }
+        
+        .reservation-detail-wrapper {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .reservation-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
+        }
+        
+        .reservation-detail-header h1 {
+            font-size: 2rem;
+            color: var(--dark-color);
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-secondary {
+            color: var(--dark-color);
+            background-color: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .btn-primary {
+            color: white;
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #eaecef;
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .reservation-detail-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .reservation-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            color: white;
+            position: relative;
+        }
+        
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+        }
+        
+        .reservation-status.pending {
+            background: linear-gradient(135deg, var(--pending-color), #ffb700);
+        }
+        
+        .reservation-status.confirmed {
+            background: linear-gradient(135deg, var(--confirmed-color), #57cc99);
+        }
+        
+        .reservation-status.cancelled {
+            background: linear-gradient(135deg, var(--cancelled-color), #ef233c);
+        }
+        
+        .status-badge {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 16px;
+        }
+        
+        .reservation-id {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            font-size: 16px;
+        }
+        
+        .reservation-detail-body {
+            padding: 40px 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: var(--dark-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+        }
+        
+        .section-title i {
+            color: var(--accent-color);
+            font-size: 22px;
+        }
+        
+        .section-title.danger i {
+            color: var(--danger-color);
+        }
+        
+        .journey-section, .details-section {
+            margin-bottom: 45px;
+        }
+        
+        .journey-info {
+            background-color: rgba(248, 249, 250, 0.8);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.02);
+        }
+        
+        .location-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .location-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        
+        .location:hover .location-icon {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+        
+        .location-icon.pickup {
+            background: linear-gradient(135deg, #ff9f67, #ff7e29);
+        }
+        
+        .location-icon.destination {
+            background: linear-gradient(135deg, var(--dark-color), #354664);
+        }
+        
+        .location-details h4 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--dark-color);
+            line-height: 1.4;
+        }
+        
+        .label {
+            display: block;
+            font-size: 13px;
+            color: #72809d;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .route-line {
+            position: absolute;
+            left: 40px;
+            top: 50px;
+            bottom: 50px;
+            width: 3px;
+            background: linear-gradient(to bottom, #ff9f67, var(--dark-color));
+            border-radius: 3px;
+        }
+        
+        .route-line .dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            left: -4.5px;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.8);
+        }
+        
+        .dot.start {
+            top: -6px;
+            background-color: #ff9f67;
+        }
+        
+        .dot.end {
+            bottom: -6px;
+            background-color: var(--dark-color);
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .detail-item {
+            background-color: rgba(248, 249, 250, 0.8);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.02);
+            transition: var(--transition);
+        }
+        
+        .detail-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        }
+        
+        .detail-item.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .special-requests-container {
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .detail-label {
+            display: block;
+            font-size: 13px;
+            color: #72809d;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-color);
+            letter-spacing: -0.3px;
+        }
+        
+        .detail-value.price {
+            color: #ff9f67;
+            font-weight: 700;
+        }
+        
+        .detail-value.status {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 30px;
+            color: white;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+        }
+        
+        .detail-value.status.pending {
+            background-color: var(--pending-color);
+        }
+        
+        .detail-value.status.confirmed {
+            background-color: var(--confirmed-color);
+        }
+        
+        .detail-value.status.cancelled {
+            background-color: var(--cancelled-color);
+        }
+        
+        .detail-value.special-requests {
+            font-size: 16px;
+            line-height: 1.7;
+            white-space: pre-line;
+            font-weight: 400;
+            color: #445272;
+        }
+        
+        .delete-section {
+            border-top: 1px solid rgba(0,0,0,0.07);
+            padding-top: 35px;
+            margin-top: 35px;
+        }
+        
+        .section-title.danger {
+            color: var(--danger-color);
+        }
+        
+        .delete-warning {
+            color: #72809d;
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Delete Form Styling */
+        form.delete-form button {
+            background-color: #fff;
+            color: var(--danger-color);
+            border: 2px solid var(--danger-color);
+            padding: 12px 30px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        form.delete-form button:hover {
+            background-color: var(--danger-color);
+            color: white;
+            box-shadow: 0 5px 15px rgba(217, 4, 41, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Font improvements */
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        /* Responsive improvements */
+        @media (max-width: 992px) {
+            .reservation-detail-wrapper {
+                padding: 30px 15px;
+            }
+            
+            .reservation-detail-body {
+                padding: 30px 20px;
+            }
+            
+            .journey-info, .detail-item {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .reservation-detail-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .route-line {
+                left: 25px;
+            }
+            
+            .location {
+                gap: 15px;
+            }
+            
+            .location-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .reservation-status {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .reservation-detail-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}

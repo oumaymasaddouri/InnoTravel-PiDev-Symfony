@@ -1,11 +1,11 @@
 {
     "doctrine/doctrine-bundle": {
-        "version": "2.14",
+        "version": "2.13",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "2.10",
-            "ref": "c170ded8fc587d6bd670550c43dafcf093762245"
+            "ref": "d1778a69711a9b06bb4e202977ca6c4a0d16933d"
         },
         "files": [
             "./config/packages/doctrine.yaml",
@@ -14,7 +14,7 @@
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
-        "version": "3.4",
+        "version": "3.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -26,29 +26,8 @@
             "./migrations/.gitignore"
         ]
     },
-    "friendsofsymfony/jsrouting-bundle": {
-        "version": "3.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "2.3",
-            "ref": "a9f2e49180f75cdc71ae279a929c4b2e0638de84"
-        },
-        "files": [
-            "./config/routes/fos_js_routing.yaml"
-        ]
-    },
     "knplabs/knp-paginator-bundle": {
-        "version": "v6.7.0"
-    },
-    "mailjet/mailjet-bundle": {
-        "version": "2.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "1.0",
-            "ref": "48a7f92015372654b5056855da5e94d54bd8d948"
-        }
+        "version": "v6.8.0"
     },
     "phpunit/phpunit": {
         "version": "9.6",
@@ -104,7 +83,7 @@
         ]
     },
     "symfony/flex": {
-        "version": "2.5",
+        "version": "2.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -148,7 +127,7 @@
         ]
     },
     "symfony/maker-bundle": {
-        "version": "1.62",
+        "version": "1.61",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -193,7 +172,7 @@
         ]
     },
     "symfony/phpunit-bridge": {
-        "version": "7.2",
+        "version": "7.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -234,7 +213,7 @@
         ]
     },
     "symfony/stimulus-bundle": {
-        "version": "2.23",
+        "version": "2.21",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -273,8 +252,11 @@
             "./templates/base.html.twig"
         ]
     },
+    "symfony/ux-chartjs": {
+        "version": "v2.24.0"
+    },
     "symfony/ux-turbo": {
-        "version": "2.23",
+        "version": "2.21",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -307,7 +289,23 @@
             "./config/routes/web_profiler.yaml"
         ]
     },
+    "symfony/webpack-encore-bundle": {
+        "version": "2.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.0",
+            "ref": "9ef5412a4a2a8415aca3a3f2b4edd3866aab9a19"
+        },
+        "files": [
+            "./assets/app.js",
+            "./assets/styles/app.css",
+            "./config/packages/webpack_encore.yaml",
+            "./package.json",
+            "./webpack.config.js"
+        ]
+    },
     "twig/extra-bundle": {
-        "version": "v3.20.0"
+        "version": "v3.13.0"
     }
 }

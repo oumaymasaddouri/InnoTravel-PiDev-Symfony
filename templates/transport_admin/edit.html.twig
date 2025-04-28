@@ -1,0 +1,84 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Edit transport{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Edit transport</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_transport_admin_index') }}">transports</a></li>
+                    <li class="breadcrumb-item active">Edit</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-white">
+                        <h3 class="card-title"><i class="fas fa-edit mr-2"></i>Edit Vehicle Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                {{ form_label(form.carModel) }}
+                                {{ form_widget(form.carModel, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.carModel) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ form_label(form.carColor) }}
+                                {{ form_widget(form.carColor, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.carColor) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                {{ form_label(form.licensePlate) }}
+                                {{ form_widget(form.licensePlate, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.licensePlate) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ form_label(form.maxLuggage) }}
+                                {{ form_widget(form.maxLuggage, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.maxLuggage) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{{ path('app_transport_admin_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to list
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save mr-1"></i> Update transport
+                        </button>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h3 class="card-title"><i class="fas fa-trash-alt mr-2"></i>Delete transport</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">This action will permanently remove the transport record. Proceed with caution.</p>
+                        {{ include('transport_admin/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

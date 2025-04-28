@@ -1,0 +1,40 @@
+<form method="post" action="{{ path('app_reservation_delete', {'id': reservation.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.id) }}">
+    <button class="delete-btn"> <i class="ti-trash"></i> Delete</button>
+</form>
+<style>
+
+.delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(to right, #ff4b4b, #ff6b6b);
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255, 75, 75, 0.3);
+}
+
+.delete-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 75, 75, 0.4);
+    background: linear-gradient(to right, #ff3b3b, #ff5b5b);
+}
+
+.delete-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(255, 75, 75, 0.4);
+}
+
+.delete-btn i {
+    font-size: 16px;
+}
+    
+</style>

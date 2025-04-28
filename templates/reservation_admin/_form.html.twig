@@ -1,0 +1,100 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'reservation-form'}}) }}
+
+    <div class="form-section">
+        <h4 class="section-title"><i class="fas fa-map-marker-alt mr-2"></i>Trip Information</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form_label(form.pickup_address) }}
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
+                        </div>
+                        {{ form_widget(form.pickup_address, {'attr': {'class': 'form-control' ~ (form.pickup_address.vars.valid ? '' : ' is-invalid')}}) }}
+                    </div>
+                    {{ form_errors(form.pickup_address) }}
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form_label(form.destination_address) }}
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-flag"></i></span>
+                        </div>
+                        {{ form_widget(form.destination_address, {'attr': {'class': 'form-control' ~ (form.destination_address.vars.valid ? '' : ' is-invalid')}}) }}
+                    </div>
+                    {{ form_errors(form.destination_address) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-section">
+        <h4 class="section-title"><i class="fas fa-info-circle mr-2"></i>Additional Details</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    {{ form_label(form.sepcialRequests) }}
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-comment-alt"></i></span>
+                        </div>
+                        {{ form_widget(form.sepcialRequests, {'attr': {'class': 'form-control' ~ (form.sepcialRequests.vars.valid ? '' : ' is-invalid')}}) }}
+                    </div>
+                    {{ form_errors(form.sepcialRequests) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% set renderedFields = ['pickup_address', 'destination_address', 'sepcialRequests', '_token'] %}
+    
+    {% if form|filter(field => field.vars.name not in renderedFields)|length > 0 %}
+    <div class="form-section">
+        <h4 class="section-title"><i class="fas fa-cog mr-2"></i>Other Information</h4>
+        <div class="row">
+            {% for field in form %}
+                {% if field.vars.name not in renderedFields %}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(field) }}
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        {% if field.vars.name matches '/date|time/i' %}
+                                            <i class="fas fa-calendar-alt"></i>
+                                        {% elseif field.vars.name matches '/price|cost/i' %}
+                                            <i class="fas fa-dollar-sign"></i>
+                                        {% elseif field.vars.name matches '/status/i' %}
+                                            <i class="fas fa-tag"></i>
+                                        {% elseif field.vars.name matches '/customer|client/i' %}
+                                            <i class="fas fa-user"></i>
+                                        {% elseif field.vars.name matches '/driver/i' %}
+                                            <i class="fas fa-car"></i>
+                                        {% else %}
+                                            <i class="fas fa-pen"></i>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                {{ form_widget(field, {'attr': {'class': 'form-control' ~ (field.vars.valid ? '' : ' is-invalid')}}) }}
+                            </div>
+                            {{ form_errors(field) }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="form-actions">
+        <a href="{{ path('app_reservation_admin_index') }}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+        <button type="submit" class="btn-save">
+            <i class="fas fa-save"></i> {{ button_label|default('Save') }}
+        </button>
+    </div>
+{{ form_end(form) }}

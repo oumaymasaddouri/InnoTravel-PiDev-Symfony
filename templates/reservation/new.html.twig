@@ -1,0 +1,190 @@
+{# new.html.twig #}
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}New Reservation{% endblock %}
+
+
+{% block section8 %}
+<div class="reservation-form-wrapper">
+    <div class="reservation-form-header">
+        <h1>Create New Reservation</h1>
+        <a href="{{ path('app_reservation_index') }}" class="back-btn">
+            <i class="ti-arrow-left"></i> Back to Reservations
+        </a>
+    </div>
+    
+    <div class="reservation-form-container">
+        <div class="reservation-form-icon">
+            <i class="ti-pencil-alt"></i>
+        </div>
+        {{ include('reservation/_form.html.twig') }}
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <style>
+        .reservation-form-wrapper {
+            padding: 60px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .reservation-form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .reservation-form-header h1 {
+            font-size: 36px;
+            color: #263A5B;
+            margin: 0;
+            font-weight: 700;
+            position: relative;
+        }
+        
+        .reservation-form-header h1:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #FF9F67, #ff7e33);
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background-color: #f8f8f8;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .back-btn:hover {
+            background-color: #263A5B;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(38, 58, 91, 0.2);
+        }
+        
+        .reservation-form-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 40px 30px;
+            position: relative;
+            margin-top: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .reservation-form-container:hover {
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+        
+        .reservation-form-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #35c759, #2a9e48);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 30px;
+            box-shadow: 0 5px 20px rgba(42, 158, 72, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .reservation-form-icon:hover {
+            transform: translateX(-50%) scale(1.05);
+        }
+        
+        /* Form Styling */
+        form label {
+            font-weight: 600;
+            color: #263A5B;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 15px;
+        }
+        
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="number"],
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+        
+        form input:focus,
+        form select:focus,
+        form textarea:focus {
+            outline: none;
+            border-color: #FF9F67;
+            box-shadow: 0 0 0 4px rgba(255, 159, 103, 0.15);
+            background-color: #fff;
+        }
+        
+        form button[type="submit"] {
+            background: linear-gradient(135deg, #FF9F67, #ff7e33);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-weight: 600;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(255, 159, 103, 0.3);
+        }
+        
+        form button[type="submit"]:hover {
+            background: linear-gradient(135deg, #263A5B, #1a2a43);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(38, 58, 91, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .reservation-form-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .reservation-form-container {
+                padding: 30px 20px;
+            }
+            
+            .reservation-form-header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+{% endblock %}
