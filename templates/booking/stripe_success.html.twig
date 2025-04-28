@@ -5,106 +5,80 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    .success-container {
-        max-width: 800px;
-        margin: 50px auto;
-        padding: 40px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        text-align: center;
-        animation: fadeIn 0.8s ease-in-out;
+    .card-title {
+        font-weight: 700;
+        font-size: 1.8rem;
     }
-    
-    .success-icon {
-        font-size: 80px;
-        color: #28a745;
-        margin-bottom: 20px;
-    }
-    
-    .success-title {
-        font-size: 32px;
-        color: #333;
-        margin-bottom: 20px;
-    }
-    
-    .success-message {
-        font-size: 18px;
-        color: #666;
-        margin-bottom: 30px;
-    }
-    
-    .booking-details {
-        background-color: #f8f9fa;
+    .btn {
         border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 30px;
-        text-align: left;
+        padding: 0.75rem 1.5rem;
     }
-    
-    .booking-details h3 {
-        color: #007bff;
-        margin-bottom: 15px;
-        font-size: 20px;
-        border-bottom: 2px solid #007bff;
-        padding-bottom: 10px;
+    .badge {
+        font-size: 1rem;
     }
-    
-    .booking-details p {
-        margin-bottom: 10px;
-    }
-    
-    .btn-view-bookings {
-        background-color: #007bff;
-        color: white;
-        padding: 12px 30px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: inline-block;
-    }
-    
-    .btn-view-bookings:hover {
-        background-color: #0069d9;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-    }
-    
+    /* Animation effects */
     @keyframes fadeIn {
         0% { opacity: 0; transform: translateY(20px); }
         100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+        0% { transform: scale(0.5); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    .scale-in {
+        animation: scaleIn 0.5s ease-in-out;
     }
 </style>
 {% endblock %}
 
 {% block section8 %}
-<div class="container">
-    <div class="success-container">
-        <div class="success-icon">
-            <i class="fas fa-check-circle"></i>
-        </div>
-        
-        <h1 class="success-title">Payment Successful!</h1>
-        
-        <p class="success-message">
-            Your booking has been confirmed and your payment has been processed successfully.
-            A confirmation email will be sent to your registered email address.
-        </p>
-        
-        {% if booking %}
-        <div class="booking-details">
-            <h3>Booking Details</h3>
-            <p><strong>Hotel:</strong> {{ booking.hotelId.name }}</p>
-            <p><strong>Check-in Date:</strong> {{ booking.startdate|date('Y-m-d') }}</p>
-            <p><strong>Check-out Date:</strong> {{ booking.enddate|date('Y-m-d') }}</p>
-            <p><strong>Status:</strong> <span class="badge bg-success">Confirmed</span></p>
-        </div>
-        {% endif %}
-        
-        <a href="{{ path('user_booking_index') }}" class="btn-view-bookings">
-            View My Bookings
-        </a>
+<div class="container py-5">
+
+    <div class="text-center fade-in">
+        <i class="fas fa-check-circle fa-5x text-success scale-in"></i>
+        <h1 class="my-4 fw-bold">Payment Successful!</h1>
+        <p class="lead">Thank you for your booking. A confirmation email has been sent to you. We look forward to welcoming you!</p>
     </div>
+
+    <div class="card shadow-lg border-0 mt-5 mx-auto fade-in" style="max-width: 700px;">
+        <div class="card-body p-4">
+            <h4 class="card-title mb-4 text-center">Booking Details</h4>
+
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item"><strong>Hotel:</strong> {{ booking.hotelId.name }}</li>
+                <li class="list-group-item"><strong>Check-in Date:</strong> {{ booking.startdate|date('Y-m-d') }}</li>
+                <li class="list-group-item"><strong>Check-out Date:</strong> {{ booking.enddate|date('Y-m-d') }}</li>
+                <li class="list-group-item"><strong>Duration:</strong>
+                    {% set calculatedNights = nights|default(((booking.enddate|date('U') - booking.startdate|date('U')) // 86400)) %}
+                    {{ calculatedNights }} {{ calculatedNights == 1 ? 'night' : 'nights' }}
+                </li>
+                <li class="list-group-item"><strong>Price per Night:</strong> ${{ booking.hotelId.pricepernight|number_format(2, '.', ',') }}</li>
+                <li class="list-group-item"><strong>Total Amount:</strong> <span class="text-success fw-bold">${{ totalAmount|default(booking.hotelId.pricepernight * calculatedNights)|number_format(2, '.', ',') }}</span></li>
+                <li class="list-group-item"><strong>Status:</strong>
+                    <span class="badge bg-success">{{ booking.status|capitalize }}</span>
+                </li>
+                <li class="list-group-item"><strong>Booking ID:</strong> #{{ booking.id }}</li>
+            </ul>
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="{{ path('user_booking_index') }}" class="btn btn-primary">
+                    <i class="fas fa-calendar-alt me-1"></i> View My Bookings
+                </a>
+                <a href="{{ path('booking_invoice_download', {id: booking.id}) }}" class="btn btn-outline-primary">
+                    <i class="fas fa-file-pdf me-1"></i> Download Invoice
+                </a>
+            </div>
+
+            <div class="text-center mt-5">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ url('booking_invoice_download', {id: booking.id}) }}" alt="Booking QR Code">
+                <p class="text-muted small mt-2">Scan to download your booking invoice (PDF)</p>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 {% endblock %}

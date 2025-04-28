@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Security;
 use Stripe\Exception\ApiErrorException;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/user/booking')]
 class UserBookingController extends AbstractController
@@ -105,4 +107,62 @@ class UserBookingController extends AbstractController
         ]);
     }
 
+    #[Route('/invoice/{id}', name: 'booking_invoice_download', methods: ['GET'])]
+    public function downloadInvoice(Booking $booking): Response
+    {
+        // Configure Dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+
+        // Instantiate Dompdf
+        $dompdf = new Dompdf($options);
+
+        // Get booking details
+        $hotel = $booking->getHotelId();
+        $user = $booking->getUserId();
+
+        // Calculate number of nights
+        $startDate = $booking->getStartdate();
+        $endDate = $booking->getEnddate();
+        $interval = $startDate->diff($endDate);
+        $nights = $interval->days;
+
+        // Calculate total amount
+        $pricePerNight = $hotel->getPricepernight();
+        $totalAmount = $pricePerNight * $nights;
+
+        // Generate invoice HTML
+        $html = $this->renderView('booking/invoice_pdf.html.twig', [
+            'booking' => $booking,
+            'hotel' => $hotel,
+            'user' => $user,
+            'nights' => $nights,
+            'totalAmount' => $totalAmount,
+            'invoiceNumber' => 'INV-' . date('Y') . '-' . str_pad($booking->getId(), 5, '0', STR_PAD_LEFT),
+            'invoiceDate' => new \DateTime(),
+        ]);
+
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+
+        // Set paper size and orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
+        $dompdf->render();
+
+        // Generate a filename
+        $filename = 'invoice-booking-' . $booking->getId() . '.pdf';
+
+        // Return the PDF as a response
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ]
+        );
+    }
 }

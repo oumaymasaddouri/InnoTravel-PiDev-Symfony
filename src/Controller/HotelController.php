@@ -18,12 +18,69 @@ final class HotelController extends AbstractController
     #[Route(name: 'app_hotel_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $hotels = $entityManager
-            ->getRepository(Hotel::class)
-            ->findAll();
+        $hotelRepository = $entityManager->getRepository(Hotel::class);
+        $bookingRepository = $entityManager->getRepository(\App\Entity\Booking::class);
+
+        // Get all hotels
+        $hotels = $hotelRepository->findAll();
+
+        // Calculate total hotels count
+        $totalHotels = count($hotels);
+
+        // Calculate average hotel price
+        $avgPrice = 0;
+        if ($totalHotels > 0) {
+            $totalPrice = 0;
+            foreach ($hotels as $hotel) {
+                $totalPrice += $hotel->getPricepernight();
+            }
+            $avgPrice = $totalPrice / $totalHotels;
+        }
+
+        // Get total bookings count
+        $totalBookings = count($bookingRepository->findAll());
+
+        // Get pending and confirmed bookings count
+        $pendingConfirmedBookings = count($bookingRepository->createQueryBuilder('b')
+            ->where('b.status = :pending OR b.status = :confirmed')
+            ->setParameter('pending', 'pending')
+            ->setParameter('confirmed', 'confirmed')
+            ->getQuery()
+            ->getResult());
+
+        // Get chart data
+        $bookingsByMonth = $bookingRepository->getBookingsByMonth();
+        $bookingsByStatus = $bookingRepository->getBookingsByStatus();
+        $revenuePerHotel = $hotelRepository->getRevenuePerHotel(5); // Top 5 hotels by revenue
+
+        // Prepare month labels for the line chart
+        $monthNames = [
+            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+        ];
 
         return $this->render('hotel/index.html.twig', [
             'hotels' => $hotels,
+            'totalHotels' => $totalHotels,
+            'totalBookings' => $totalBookings,
+            'pendingConfirmedBookings' => $pendingConfirmedBookings,
+            'avgPrice' => $avgPrice,
+            'chartData' => [
+                'bookingsByMonth' => [
+                    'labels' => array_values($monthNames),
+                    'data' => array_values($bookingsByMonth)
+                ],
+                'bookingsByStatus' => [
+                    'labels' => ['Pending', 'Confirmed', 'Cancelled'],
+                    'data' => [
+                        $bookingsByStatus['pending'],
+                        $bookingsByStatus['confirmed'],
+                        $bookingsByStatus['cancelled']
+                    ]
+                ],
+                'revenuePerHotel' => $revenuePerHotel
+            ]
         ]);
     }
 
@@ -70,7 +127,7 @@ final class HotelController extends AbstractController
     {
         return $this->render('hotel/show.html.twig', [
             'hotel' => $hotel,
-            
+
         ]);
     }
 
@@ -137,7 +194,7 @@ final class HotelController extends AbstractController
 
         return $this->redirectToRoute('app_hotel_index', [], Response::HTTP_SEE_OTHER);
     }
-    
-    
+
+
 }
 

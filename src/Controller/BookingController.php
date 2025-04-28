@@ -16,15 +16,73 @@ final class BookingController extends AbstractController
     #[Route('/',name: 'app_booking_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $bookings = $entityManager
-            ->getRepository(Booking::class)
-            ->findAll();
+        $bookingRepository = $entityManager->getRepository(Booking::class);
+        $hotelRepository = $entityManager->getRepository(\App\Entity\Hotel::class);
+
+        // Get all bookings
+        $bookings = $bookingRepository->findAll();
+
+        // Calculate total bookings count
+        $totalBookings = count($bookings);
+
+        // Get pending and confirmed bookings count
+        $pendingConfirmedBookings = count($bookingRepository->createQueryBuilder('b')
+            ->where('b.status = :pending OR b.status = :confirmed')
+            ->setParameter('pending', 'pending')
+            ->setParameter('confirmed', 'confirmed')
+            ->getQuery()
+            ->getResult());
+
+        // Get total hotels count
+        $totalHotels = count($hotelRepository->findAll());
+
+        // Calculate average hotel price
+        $hotels = $hotelRepository->findAll();
+        $avgPrice = 0;
+        if (count($hotels) > 0) {
+            $totalPrice = 0;
+            foreach ($hotels as $hotel) {
+                $totalPrice += $hotel->getPricepernight();
+            }
+            $avgPrice = $totalPrice / count($hotels);
+        }
+
+        // Get chart data
+        $bookingsByMonth = $bookingRepository->getBookingsByMonth();
+        $bookingsByStatus = $bookingRepository->getBookingsByStatus();
+        $revenuePerHotel = $hotelRepository->getRevenuePerHotel(5); // Top 5 hotels by revenue
+
+        // Prepare month labels for the line chart
+        $monthNames = [
+            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+        ];
 
         return $this->render('booking/index.html.twig', [
             'bookings' => $bookings,
+            'totalBookings' => $totalBookings,
+            'pendingConfirmedBookings' => $pendingConfirmedBookings,
+            'totalHotels' => $totalHotels,
+            'avgPrice' => $avgPrice,
+            'chartData' => [
+                'bookingsByMonth' => [
+                    'labels' => array_values($monthNames),
+                    'data' => array_values($bookingsByMonth)
+                ],
+                'bookingsByStatus' => [
+                    'labels' => ['Pending', 'Confirmed', 'Cancelled'],
+                    'data' => [
+                        $bookingsByStatus['pending'],
+                        $bookingsByStatus['confirmed'],
+                        $bookingsByStatus['cancelled']
+                    ]
+                ],
+                'revenuePerHotel' => $revenuePerHotel
+            ]
         ]);
     }
-    
+
 
 
     #[Route('/new', name: 'app_booking_new', methods: ['GET', 'POST'])]

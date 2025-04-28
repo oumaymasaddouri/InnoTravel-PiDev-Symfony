@@ -83,9 +83,20 @@ class StripeWebhookController extends AbstractController
             $entityManager->flush();
         }
 
+        // Calculate total amount
+        $startDate = $booking->getStartdate();
+        $endDate = $booking->getEnddate();
+        $interval = $startDate->diff($endDate);
+        $nights = $interval->days;
+
+        $pricePerNight = $booking->getHotelId()->getPricepernight();
+        $totalAmount = $pricePerNight * $nights;
+
         // Render the success page
         return $this->render('booking/stripe_success.html.twig', [
             'booking' => $booking,
+            'totalAmount' => $totalAmount,
+            'nights' => $nights,
         ]);
     }
 }

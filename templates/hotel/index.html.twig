@@ -2,6 +2,137 @@
 
 {% block title %}Hotel Management{% endblock %}
 
+{% block js %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Line Chart - Bookings by Month
+            var bookingsLineChartCanvas = document.getElementById('bookingsLineChart').getContext('2d');
+            var bookingsLineChartData = {
+                labels: {{ chartData.bookingsByMonth.labels|json_encode|raw }},
+                datasets: [{
+                    label: 'Bookings',
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: true,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: {{ chartData.bookingsByMonth.data|json_encode|raw }}
+                }]
+            };
+
+            var bookingsLineChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: true
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
+                    }]
+                },
+                animation: {
+                    duration: 1000
+                }
+            };
+
+            new Chart(bookingsLineChartCanvas, {
+                type: 'line',
+                data: bookingsLineChartData,
+                options: bookingsLineChartOptions
+            });
+
+            // Bar Chart - Revenue per Hotel
+            var revenueBarChartCanvas = document.getElementById('revenueBarChart').getContext('2d');
+            var revenueBarChartData = {
+                labels: {{ chartData.revenuePerHotel.labels|json_encode|raw }},
+                datasets: [{
+                    label: 'Revenue',
+                    backgroundColor: 'rgba(0, 166, 90, 0.9)',
+                    borderColor: 'rgba(0, 166, 90, 0.8)',
+                    pointRadius: false,
+                    pointColor: '#00a65a',
+                    pointStrokeColor: 'rgba(0, 166, 90, 1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(0, 166, 90, 1)',
+                    data: {{ chartData.revenuePerHotel.data|json_encode|raw }}
+                }]
+            };
+
+            var revenueBarChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: true
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                animation: {
+                    duration: 1000
+                }
+            };
+
+            new Chart(revenueBarChartCanvas, {
+                type: 'bar',
+                data: revenueBarChartData,
+                options: revenueBarChartOptions
+            });
+
+            // Doughnut Chart - Booking Status
+            var bookingStatusChartCanvas = document.getElementById('bookingStatusChart').getContext('2d');
+            var bookingStatusChartData = {
+                labels: {{ chartData.bookingsByStatus.labels|json_encode|raw }},
+                datasets: [{
+                    data: {{ chartData.bookingsByStatus.data|json_encode|raw }},
+                    backgroundColor: ['#f39c12', '#00a65a', '#f56954'],
+                    borderWidth: 1
+                }]
+            };
+
+            var bookingStatusChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                animation: {
+                    duration: 1000
+                }
+            };
+
+            new Chart(bookingStatusChartCanvas, {
+                type: 'doughnut',
+                data: bookingStatusChartData,
+                options: bookingStatusChartOptions
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
 <div class="content-header">
     <div class="container-fluid">
@@ -21,8 +152,131 @@
 
 <section class="content">
     <div class="container-fluid">
+        <!-- Stats Dashboard -->
         <div class="row">
-            <div class="col-12">
+            <!-- Total Hotels Count (Blue box) -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info elevation-1"><i class="fas fa-hotel"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Hotels</span>
+                        <span class="info-box-number">
+                            {{ totalHotels }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Bookings Count (Green box) -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-calendar-check"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Bookings</span>
+                        <span class="info-box-number">{{ totalBookings }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending and Confirmed Bookings Count (Yellow box) -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                    <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-clock"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Active Bookings</span>
+                        <span class="info-box-number">{{ pendingConfirmedBookings }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Average Hotel Price (Red box) -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                    <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-dollar-sign"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Avg. Price/Night</span>
+                        <span class="info-box-number">
+                            {{ avgPrice|number_format(2, '.', ',') }}
+                            <small>USD</small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.Stats Dashboard -->
+
+        <!-- Charts Row -->
+        <div class="row">
+            <!-- Line Chart - Bookings over months -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-line mr-1"></i>
+                            Bookings by Month
+                        </h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart">
+                            <canvas id="bookingsLineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bar Chart - Revenue per hotel -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-bar mr-1"></i>
+                            Revenue per Hotel
+                        </h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart">
+                            <canvas id="revenueBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Doughnut Chart - Booking Status -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie mr-1"></i>
+                            Booking Status Distribution
+                        </h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart">
+                            <canvas id="bookingStatusChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hotels Table -->
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">All Hotels</h3>

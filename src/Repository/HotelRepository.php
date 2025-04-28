@@ -140,4 +140,44 @@ class HotelRepository extends ServiceEntityRepository
             ]
         ];
     }
+
+    /**
+     * Get revenue per hotel (based on bookings)
+     *
+     * @param int $limit Maximum number of hotels to return
+     * @return array Returns an array with hotel names and their revenue
+     */
+    public function getRevenuePerHotel(int $limit = 10): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT
+                h.name as hotel_name,
+                h.id as hotel_id,
+                COUNT(b.id) as booking_count,
+                SUM(h.pricepernight * DATEDIFF(b.enddate, b.startdate)) as revenue
+            FROM hotel h
+            LEFT JOIN booking b ON h.id = b.hotelId
+            GROUP BY h.id
+            ORDER BY revenue DESC
+            LIMIT :limit
+        ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('limit', $limit, \PDO::PARAM_INT);
+        $result = $stmt->executeQuery()->fetchAllAssociative();
+
+        $hotelNames = [];
+        $revenues = [];
+
+        foreach ($result as $row) {
+            $hotelNames[] = $row['hotel_name'];
+            $revenues[] = $row['revenue'] ? (float)$row['revenue'] : 0;
+        }
+
+        return [
+            'labels' => $hotelNames,
+            'data' => $revenues
+        ];
+    }
 }

@@ -56,4 +56,64 @@ class BookingRepository extends ServiceEntityRepository
             ]
         ];
     }
+
+    /**
+     * Get bookings grouped by month for the current year
+     *
+     * @return array Returns an array with months as keys and booking counts as values
+     */
+    public function getBookingsByMonth(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT
+                MONTH(b.startdate) as month,
+                COUNT(b.id) as count
+            FROM booking b
+            WHERE YEAR(b.startdate) = YEAR(CURRENT_DATE())
+            GROUP BY MONTH(b.startdate)
+            ORDER BY month ASC
+        ';
+
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery()->fetchAllAssociative();
+
+        // Initialize all months with 0 count
+        $bookingsByMonth = array_fill(1, 12, 0);
+
+        // Fill in actual counts
+        foreach ($result as $row) {
+            $bookingsByMonth[$row['month']] = (int)$row['count'];
+        }
+
+        return $bookingsByMonth;
+    }
+
+    /**
+     * Get booking counts by status
+     *
+     * @return array Returns an array with status counts
+     */
+    public function getBookingsByStatus(): array
+    {
+        $qb = $this->createQueryBuilder('b')
+                   ->select('b.status, COUNT(b.id) as count')
+                   ->groupBy('b.status');
+
+        $result = $qb->getQuery()->getResult();
+
+        // Initialize status counts
+        $statusCounts = [
+            'pending' => 0,
+            'confirmed' => 0,
+            'cancelled' => 0
+        ];
+
+        // Fill in actual counts
+        foreach ($result as $row) {
+            $statusCounts[$row['status']] = (int)$row['count'];
+        }
+
+        return $statusCounts;
+    }
 }
