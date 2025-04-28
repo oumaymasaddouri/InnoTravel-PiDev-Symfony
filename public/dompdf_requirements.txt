@@ -1,0 +1,18 @@
+Array
+(
+    [gd] => Loaded
+    [mbstring] => Loaded
+    [dom] => Loaded
+    [xml] => Loaded
+    [libxml] => Loaded
+    [fileinfo] => Loaded
+    [iconv] => Loaded
+    [GD Version] => bundled (2.1.0 compatible)
+    [FreeType Support] => Yes
+    [JPEG Support] => Yes
+    [PNG Support] => Yes
+    [dompdf directory exists] => Yes
+    [dompdf directory writable] => Yes
+    [temp directory] => C:\Users\THINKP~1\AppData\Local\Temp
+    [temp directory writable] => Yes
+)

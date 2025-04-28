@@ -6,118 +6,124 @@
 {{ parent() }}
 <style>
     .booking-form {
-        max-width: 800px;
+        max-width: 850px;
         margin: 0 auto;
-        padding: 30px;
+        padding: 40px 30px;
         background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         animation: fadeIn 0.6s ease-in-out;
     }
-    
+
     .booking-form h1 {
-        color: #333;
-        margin-bottom: 30px;
         text-align: center;
         font-weight: 700;
+        color: #333;
+        margin-bottom: 20px;
     }
-    
+
     .booking-form h2 {
-        color: #007bff;
-        font-size: 1.5rem;
-        margin-bottom: 30px;
         text-align: center;
+        font-size: 1.5rem;
+        color: #007bff;
+        margin-bottom: 30px;
         border-bottom: 2px solid #007bff;
         padding-bottom: 10px;
     }
-    
+
     .form-group {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
-    
+
     .form-control {
-        height: 50px;
+        height: 48px;
         font-size: 16px;
-    }
-    
-    .payment-options {
-        margin: 30px 0;
-        padding: 20px;
-        background-color: #f8f9fa;
         border-radius: 8px;
-        border-left: 4px solid #007bff;
+        padding-left: 15px;
     }
-    
-    .payment-options label {
-        display: block;
-        padding: 10px 15px;
-        margin-bottom: 10px;
-        background-color: #fff;
-        border-radius: 5px;
-        border: 1px solid #ddd;
+
+    .card-hotel {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+        transition: all 0.3s ease;
+    }
+
+    .card-hotel:hover {
+        transform: translateY(-5px);
+    }
+
+    .payment-options {
+        margin-top: 25px;
+    }
+
+    .payment-method-card {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .payment-method-card label {
+        flex: 1;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
     }
-    
-    .payment-options label:hover {
+
+    .payment-method-card label:hover {
         border-color: #007bff;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+        background-color: #e9f2ff;
     }
-    
-    .payment-options input[type="radio"]:checked + label {
+
+    .payment-method-card input[type="radio"] {
+        display: none;
+    }
+
+    .payment-method-card input[type="radio"]:checked + label {
         border-color: #007bff;
-        background-color: #f0f7ff;
+        background-color: #e0f0ff;
+        font-weight: bold;
+        color: #007bff;
+        box-shadow: 0 4px 12px rgba(0,123,255,0.2);
     }
-    
-    .btn-primary {
+
+    .btn-submit {
+        width: 100%;
         height: 50px;
         font-size: 18px;
-        font-weight: 600;
-        width: 100%;
-        margin-top: 20px;
+        font-weight: bold;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #0062cc, #007bff);
+        border: none;
+        color: #fff;
+        margin-top: 30px;
+        transition: all 0.3s ease;
     }
-    
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #0056b3, #006fe6);
+    }
+
     .back-link {
         display: block;
         text-align: center;
-        margin-top: 20px;
+        margin-top: 25px;
         color: #6c757d;
         text-decoration: none;
-        transition: color 0.3s ease;
     }
-    
+
     .back-link:hover {
         color: #007bff;
     }
-    
+
     @keyframes fadeIn {
-        0% { opacity: 0; transform: translateY(20px); }
+        0% { opacity: 0; transform: translateY(30px); }
         100% { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Payment method styling */
-    .payment-method-selector {
-        margin-top: 20px;
-    }
-    
-    .payment-method-selector .form-check {
-        padding: 15px;
-        margin-bottom: 10px;
-        background-color: #f8f9fa;
-        border-radius: 5px;
-        border: 1px solid #dee2e6;
-        transition: all 0.3s ease;
-    }
-    
-    .payment-method-selector .form-check:hover {
-        background-color: #e9ecef;
-        border-color: #adb5bd;
-    }
-    
-    .payment-method-selector .form-check-input:checked ~ .form-check-label {
-        font-weight: bold;
-        color: #007bff;
     }
 </style>
 {% endblock %}
@@ -125,59 +131,62 @@
 {% block section8 %}
 <div class="container py-5">
     <div class="booking-form">
-        <h1>Create New Booking</h1>
-        
-        <h2>You're booking: <strong>{{ hotel.name }}</strong></h2>
-        
-        <div class="row">
+        <h1>Create Your Booking</h1>
+        <h2>Booking for: <strong>{{ hotel.name }}</strong></h2>
+
+        <div class="row g-4">
             <div class="col-md-6">
-                <div class="card mb-4">
+                <div class="card card-hotel">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Hotel Details</h5>
+                        <h5 class="mb-0"><i class="fas fa-hotel"></i> Hotel Details</h5>
                     </div>
                     <div class="card-body">
-                        <p><strong>Location:</strong> {{ hotel.location }}</p>
-                        <p><strong>Price per night:</strong> ${{ hotel.pricepernight }}</p>
-                        <p><strong>Rating:</strong> {{ hotel.rating }} / 5</p>
+                        <p><i class="fas fa-map-marker-alt me-1"></i> <strong>Location:</strong> {{ hotel.location }}</p>
+                        <p><i class="fas fa-dollar-sign me-1"></i> <strong>Price/Night:</strong> ${{ hotel.pricepernight }}</p>
+                        <p><i class="fas fa-star me-1"></i> <strong>Rating:</strong> {{ hotel.rating }}/5</p>
                         {% if hotel.ecocertification %}
-                            <p><span class="badge bg-success">Eco Certified</span></p>
+                            <p><span class="badge bg-success"><i class="fas fa-leaf me-1"></i> Eco Certified</span></p>
                         {% endif %}
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-6">
                 {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
-                    <div class="form-group">
-                        {{ form_label(form.startdate) }}
-                        {{ form_widget(form.startdate) }}
-                        {{ form_errors(form.startdate) }}
-                    </div>
-                    
-                    <div class="form-group">
-                        {{ form_label(form.enddate) }}
-                        {{ form_widget(form.enddate) }}
-                        {{ form_errors(form.enddate) }}
-                    </div>
-                    
-                    <div class="payment-options">
-                        <h5>Select Payment Method</h5>
-                        {{ form_widget(form.paymentMethod) }}
-                        {{ form_errors(form.paymentMethod) }}
-                    </div>
-                    
-                    <div style="display:none;">
-                        {{ form_widget(form.status, {'attr': {'type': 'hidden'}}) }}
-                        {{ form_widget(form.hotelId, {'attr': {'type': 'hidden'}}) }}
-                        {{ form_widget(form.userId, {'attr': {'type': 'hidden'}}) }}
-                    </div>
-                    
-                    {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-block'}}) }}
+                
+                <div class="form-group">
+                    {{ form_label(form.startdate, 'Check-in Date') }}
+                    {{ form_widget(form.startdate, {'attr': {'class': 'form-control', 'placeholder': 'Select check-in date'}}) }}
+                    {{ form_errors(form.startdate) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.enddate, 'Check-out Date') }}
+                    {{ form_widget(form.enddate, {'attr': {'class': 'form-control', 'placeholder': 'Select check-out date'}}) }}
+                    {{ form_errors(form.enddate) }}
+                </div>
+
+                <div class="payment-options">
+                    <h5 class="mb-3"><i class="fas fa-credit-card me-1"></i> Payment Method</h5>
+                   
+                    {{ form_errors(form.paymentMethod) }}
+                </div>
+
+                <div style="display:none;">
+                    {{ form_widget(form.status) }}
+                    {{ form_widget(form.hotelId) }}
+                    {{ form_widget(form.userId) }}
+                </div>
+
+              
+
                 {{ form_end(form) }}
             </div>
         </div>
-        
-        <a href="{{ path('user_booking_index') }}" class="back-link">← Back to My Bookings</a>
+
+        <a href="{{ path('user_booking_index') }}" class="back-link">
+            ← Back to My Bookings
+        </a>
     </div>
 </div>
 {% endblock %}
