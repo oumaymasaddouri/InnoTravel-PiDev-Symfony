@@ -22,7 +22,6 @@
                 <span class="status-badge">{{ reservation.status }}</span>
                 <span class="status-indicator"></span>
             </div>
-            <span class="reservation-id">#{{ reservation.id }}</span>
         </div>
         
         <div class="reservation-detail-body">
@@ -95,14 +94,18 @@
                 </div>
             </div>
             
-            <div class="delete-section">
-                <h3 class="section-title danger"><i class="ti-trash"></i> Delete Reservation</h3>
-                <p class="delete-warning">This action cannot be undone. Please be certain.</p>
+            <div class="action-buttons">
+                <a href="{{ path('app_reservation_ticket', {'id': reservation.id}) }}" class="btn btn-ticket" target="_blank">
+                    <i class="ti-ticket"></i> Download Ticket
+                </a>
+                <div class="delete-section">
                 {{ include('reservation/_delete_form.html.twig') }}
+                 </div>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block css %}
@@ -110,6 +113,7 @@
     <style>
         :root {
             --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
             --secondary-color: #3f37c9;
             --accent-color: #4895ef;
             --dark-color: #1e2a45;
@@ -117,12 +121,15 @@
             --success-color: #38b000;
             --warning-color: #f77f00;
             --danger-color: #d90429;
+            --danger-hover: #c20324;
             --pending-color: #f77f00;
             --confirmed-color: #38b000;
             --cancelled-color: #d90429;
-            --transition: all 0.3s ease;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-hover: 0 10px 30px rgba(0,0,0,0.15);
             --border-radius: 12px;
+            --button-radius: 30px;
         }
         
         .reservation-detail-wrapper {
@@ -154,41 +161,101 @@
             gap: 15px;
         }
         
+        /* Improved Button Styles */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 30px;
+            padding: 12px 24px;
+            border-radius: var(--button-radius);
             transition: var(--transition);
             border: none;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 0;
+            padding-bottom: 120%;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .btn:hover:after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .btn i {
+            font-size: 18px;
         }
         
         .btn-secondary {
             color: var(--dark-color);
             background-color: var(--light-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
         }
         
         .btn-primary {
             color: white;
             background-color: var(--primary-color);
-            box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
         }
         
         .btn-secondary:hover {
-            background-color: #eaecef;
-            transform: translateY(-2px);
+            background-color: #f0f2f5;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
         
         .btn-primary:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn-ticket {
+            color: white;
+            background: linear-gradient(135deg, #4895ef, #4cc9f0);
+            box-shadow: 0 4px 15px rgba(76, 201, 240, 0.3);
+        }
+        
+        .btn-ticket:hover {
+            background: linear-gradient(135deg, #3d89e0, #3db8e6);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 201, 240, 0.4);
+        }
+        
+        .btn-danger {
+            color: white;
+            background-color: var(--danger-color);
+            box-shadow: 0 4px 15px rgba(217, 4, 41, 0.2);
+        }
+        
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(217, 4, 41, 0.3);
         }
         
         .reservation-detail-card {
@@ -196,13 +263,19 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 30px;
+        }
+        
+        .reservation-detail-card:hover {
+            box-shadow: var(--shadow-hover);
         }
         
         .reservation-status {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 30px;
+            padding: 25px 30px;
             color: white;
             position: relative;
         }
@@ -210,7 +283,7 @@
         .status-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
         
         .status-indicator {
@@ -223,8 +296,8 @@
         }
         
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
-            70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+            0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(255,255,255,0); }
             100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
         }
         
@@ -272,10 +345,6 @@
             font-size: 22px;
         }
         
-        .section-title.danger i {
-            color: var(--danger-color);
-        }
-        
         .journey-section, .details-section {
             margin-bottom: 45px;
         }
@@ -286,6 +355,12 @@
             border-radius: var(--border-radius);
             border: 1px solid rgba(0,0,0,0.03);
             box-shadow: 0 2px 15px rgba(0,0,0,0.02);
+            transition: var(--transition);
+        }
+        
+        .journey-info:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
         }
         
         .location-container {
@@ -316,7 +391,7 @@
         }
         
         .location:hover .location-icon {
-            transform: scale(1.05);
+            transform: scale(1.05) rotate(5deg);
             box-shadow: 0 8px 15px rgba(0,0,0,0.15);
         }
         
@@ -452,42 +527,76 @@
             color: #445272;
         }
         
-        .delete-section {
-            border-top: 1px solid rgba(0,0,0,0.07);
+        /* New Action Buttons Section */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
             padding-top: 35px;
-            margin-top: 35px;
+            border-top: 1px solid rgba(0,0,0,0.07);
         }
         
-        .section-title.danger {
-            color: var(--danger-color);
+        /* Delete Section Improvements */
+        .delete-section {
+            position: relative;
+        }
+        
+        .delete-confirmation {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            width: 300px;
+            border: 1px solid rgba(217, 4, 41, 0.2);
+            z-index: 10;
+        }
+        
+        .delete-confirmation:before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 20px;
+            width: 15px;
+            height: 15px;
+            background: white;
+            transform: rotate(45deg);
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.05);
+            z-index: -1;
         }
         
         .delete-warning {
             color: #72809d;
             margin-bottom: 20px;
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.6;
         }
         
         /* Delete Form Styling */
         form.delete-form button {
-            background-color: #fff;
-            color: var(--danger-color);
-            border: 2px solid var(--danger-color);
-            padding: 12px 30px;
-            font-size: 15px;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
             font-weight: 600;
-            border-radius: 30px;
+            border-radius: var(--button-radius);
             cursor: pointer;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            width: 100%;
+            justify-content: center;
         }
         
         form.delete-form button:hover {
-            background-color: var(--danger-color);
-            color: white;
+            background-color: var(--danger-hover);
             box-shadow: 0 5px 15px rgba(217, 4, 41, 0.3);
             transform: translateY(-2px);
         }
@@ -509,6 +618,16 @@
             
             .journey-info, .detail-item {
                 padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+            
+            .btn-ticket {
+                text-align: center;
             }
         }
         
@@ -546,6 +665,12 @@
                 height: 40px;
                 font-size: 16px;
             }
+            
+            .delete-confirmation {
+                width: 100%;
+                right: 0;
+                left: 0;
+            }
         }
         
         @media (max-width: 480px) {
@@ -570,3 +695,4 @@
         }
     </style>
 {% endblock %}
+

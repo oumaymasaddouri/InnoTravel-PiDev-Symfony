@@ -218,25 +218,39 @@
             </div>
         </div>
 
-        <!-- transport Statistics Graphs -->
-        <div class="row">
-            <div class="col-md-6">
-    <h5 class="card-header bg-primary text-white">Car Color Distribution</h5>
-    <div class="card-body">
-        {{ render_chart(chart_transport_statistics) }}
-    </div>
-</div>
-
-<div class="col-md-6">
-    <h5 class="card-header bg-info text-white">Top Vehicles by Max Luggage</h5>
-    <div class="card-body">
-        {{ render_chart(chart_top_vehicles) }}
-    </div>
-</div>
-
+        <div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-4 text-primary">Transport Dashboard</h1>
         </div>
-
     </div>
+    
+    <div class="row g-4">
+        <!-- Bar Chart: Top Vehicles by Luggage -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm rounded-lg">
+                <div class="card-header bg-white border-0">
+                    <h5 class="card-title mb-0">Top Vehicles by Luggage Capacity</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="barChart" height="180"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pie Chart: Car Color Distribution -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm rounded-lg">
+                <div class="card-header bg-white border-0">
+                    <h5 class="card-title mb-0">Car Color Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="pieChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </section>
 
 <!-- Delete Modals -->
@@ -269,17 +283,133 @@
 {% endfor %}
 {% endblock %}
 
-{% block javascripts %}
+
+{% block css %}
+    {{ parent() }}
+    <style>
+.card {
+        transition: transform 0.2s ease-in-out;
+        border: none;
+        background: white;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-header {
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        color: #344767;
+        font-weight: 600;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+    }
+
+    h1 {
+        font-weight: 700;
+        background: linear-gradient(45deg, #344767, #667eea);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    </style>
+{% endblock %}
+
+
+{% block js %}
 {{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip();
-    $('input[name="table_search"]').on('keyup', function() {
-      let value = $(this).val().toLowerCase();
-      $('tbody tr').filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
+document.addEventListener('DOMContentLoaded', function () {
+    const colors = [
+        'rgba(54, 162, 235, 0.8)', // Blue
+        'rgba(75, 192, 192, 0.8)', // Teal
+        'rgba(153, 102, 255, 0.8)', // Purple
+        'rgba(255, 159, 64, 0.8)',  // Orange
+        'rgba(255, 205, 86, 0.8)',  // Yellow
+        'rgba(201, 90, 90, 0.8)',   // Darker Red
+        'rgba(100, 149, 237, 0.8)', // Cornflower Blue
+        'rgba(0, 123, 255, 0.8)',   // Stronger Blue
+        'rgba(255, 99, 132, 0.8)'
+        'rgba(0, 0, 0, 0.8)'   // black
+        'rgba(255, 255, 255, 0.8)' //White
+    ];
+
+    // Bar Chart: Top Vehicles
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ topVehicles|map(v => v.getCarModel())|json_encode|raw }},
+            datasets: [{
+                label: 'Luggage Capacity (kg)',
+                data: {{ topVehicles|map(v => v.getMaxLuggage())|json_encode|raw }},
+                backgroundColor: colors,
+                borderColor: colors.map(c => c.replace('0.8', '1')),
+                borderWidth: 1,
+                borderRadius: 5,
+                maxBarThickness: 50
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Capacity (kg)'
+                    }
+                }
+            }
+        }
     });
-  });
+
+    // Pie Chart: Car Color Distribution
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ colorLabels|json_encode|raw }},
+            datasets: [{
+                data: {{ colorData|json_encode|raw }},
+                backgroundColor: colors,
+                borderColor: colors.map(c => c.replace('0.8', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const value = context.raw;
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${context.label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            cutout: '60%'
+        }
+    });
+});
 </script>
 {% endblock %}
+

@@ -11,6 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use App\Service\QrCodeService;
 
 final class ReservationController extends AbstractController
 {
@@ -120,4 +123,33 @@ public function index(
 
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/reservation/{id}/ticket', name: 'app_reservation_ticket')]
+public function generateTicket(Reservation $reservation, QrCodeService $qrCodeService): Response
+{
+
+
+    $qrCodeImage = $qrCodeService->createQrCode($reservation->getPickupAddress(), $reservation->getDestinationAddress(),$reservation->getStatus());
+
+    $html = $this->renderView('reservation/ticket_pdf.html.twig', [
+        'reservation' => $reservation,
+        'qrCode' => $qrCodeImage,
+    ]);
+
+    $options = new Options();
+    $options->set('defaultFont', 'Arial');
+    $dompdf = new Dompdf($options);
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    return new Response(
+        $dompdf->output(),
+        200,
+        [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="ticket.pdf"',
+        ]
+    );
+}
 }

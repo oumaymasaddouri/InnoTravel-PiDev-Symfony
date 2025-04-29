@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Reservation Ticket</title>
+    <style>
+        /* Simple, reliable styling */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .ticket {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ticket-header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        
+        .ticket-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background-color: #2ecc71;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        
+        .ticket-body {
+            padding: 20px;
+        }
+        
+        .trip-info {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .info-icon {
+            flex: 0 0 40px;
+            height: 40px;
+            background-color: #f1f8fe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #3498db;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 3px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #ecf0f1;
+            margin: 20px 0;
+        }
+        
+        .details-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            flex-basis: 48%;
+            margin-bottom: 15px;
+        }
+        
+        .price-box {
+            background-color: #f1f8fe;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .price-label {
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+        
+        .price-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .qr-section {
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+        .qr-code {
+            display: inline-block;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ecf0f1;
+            border-radius: 8px;
+        }
+        
+        .qr-code img {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .qr-label {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .ticket-footer {
+            background-color: #f1f8fe;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #7f8c8d;
+            border-top: 1px dashed #3498db;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .ticket {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket">
+        <div class="ticket-header">
+            <h1>Transport Reservation</h1>
+            <div class="status-badge">{{ reservation.status }}</div>
+        </div>
+        
+        <div class="ticket-body">
+            <div class="trip-info">
+                <div class="info-content">
+                    <div class="info-label">FROM</div>
+                    <div class="info-value">{{ reservation.pickupAddress }}</div>
+                </div>
+            </div>
+            
+            <div class="trip-info">
+                <div class="info-content">
+                    <div class="info-label">TO</div>
+                    <div class="info-value">{{ reservation.destinationAddress }}</div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="info-label">DATE</div>
+                    <div class="info-value">{{ reservation.createdAt|date('Y-m-d') }}</div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="info-label">TIME</div>
+                    <div class="info-value">{{ reservation.createdAt|date('H:i') }}</div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="info-label">RESERVATION ID</div>
+                    <div class="info-value">TRN-{{ '12345'|slice(0, 5) }}</div>
+                </div>
+            </div>
+            
+            <div class="price-box">
+                <div class="price-label">TOTAL PRICE</div>
+                <div class="price-value">{{ reservation.price }} TND</div>
+            </div>
+            
+            <div class="qr-section">
+                <div class="qr-code">
+                    <img src="{{ qrCode }}" alt="QR Code">
+                </div>
+                <div class="qr-label">SCAN FOR VERIFICATION</div>
+            </div>
+        </div>
+        
+        <div class="ticket-footer">
+            Thank you for choosing our transport service!
+        </div>
+    </div>
+</body>
+</html>

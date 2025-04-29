@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
-use Symfony\UX\Chartjs\Model\Chart;
 
 
 
@@ -20,85 +18,50 @@ use Symfony\UX\Chartjs\Model\Chart;
 final class transportAdminController extends AbstractController
 {
     #[Route(name: 'app_transport_admin_index', methods: ['GET'])]
-    public function index(TransportRepository $transportRepository, ChartBuilderInterface $chartBuilder, PaginatorInterface $paginator, Request $request): Response
-    {
-        $searchTerm = $request->query->get('search');
+public function index(TransportRepository $transportRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    $searchTerm = $request->query->get('search');
+    $queryBuilder = $transportRepository->createSearchQueryBuilder($searchTerm);
 
-        $queryBuilder = $transportRepository->createSearchQueryBuilder($searchTerm);
+    $pagination = $paginator->paginate(
+        $queryBuilder,
+        $request->query->getInt('page', 1),
+        5,
+        [
+            'pageParameterName' => 'page',
+            'sortFieldParameterName' => 'sort',
+            'sortDirectionParameterName' => 'direction'
+        ]
+    );
 
-        $pagination = $paginator->paginate(
-            $queryBuilder,
-            $request->query->getInt('page', 1),
-            5,
-            [
-                'pageParameterName' => 'page',
-                'sortFieldParameterName' => 'sort',
-                'sortDirectionParameterName' => 'direction'
-            ]
-        );
+    // Get all transports for statistics
+    $transports = $transportRepository->findAll();
 
-        $transports = $transportRepository->findAll();
-
-        // First chart
-        $chart = $chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
-        $colors = array_count_values(array_map(fn($transport) => $transport->getCarColor(), $transports));
-        $chart->setData([
-            'labels' => array_keys($colors),
-            'datasets' => [
-                [
-                    'label' => 'Number of Cars',
-                    'backgroundColor' => ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
-                    'data' => array_values($colors),
-                ],
-            ],
-        ]);
-        $chart->setOptions([
-            'plugins' => [
-                'legend' => [
-                    'position' => 'bottom'
-                ],
-            ],
-        ]);
-
-        // Second chart
-        $chart2 = $chartBuilder->createChart(Chart::TYPE_BAR);
-        $topVehicles = array_slice(
-            array_filter($transports, fn($t) => $t->getMaxLuggage() !== null),
-            0,
-            5
-        );
-
-        $chart2->setData([
-            'labels' => array_map(fn($t) => $t->getVehicleType(), $topVehicles),
-            'datasets' => [
-                [
-                    'label' => 'Max Luggage',
-                    'backgroundColor' => 'rgba(75, 192, 192, 0.7)',
-                    'borderColor' => 'rgba(75, 192, 192, 1)',
-                    'borderWidth' => 1,
-                    'data' => array_map(fn($t) => $t->getMaxLuggage(), $topVehicles),
-                ],
-            ],
-        ]);
-        $chart2->setOptions([
-            'scales' => [
-                'y' => [
-                    'beginAtZero' => true,
-                ],
-                'x' => [ // Added this to make Chart.js 3+ happy
-                    'beginAtZero' => true,
-                ],
-            ],
-        ]);
-
-        return $this->render('transport_admin/index.html.twig', [
-            'pagination' => $pagination,
-            'searchTerm' => $searchTerm,
-            'transports' => $transports,
-            'chart_transport_statistics' => $chart,
-            'chart_top_vehicles' => $chart2,
-        ]);
+    // Prepare color statistics
+    $colorStats = [];
+    foreach ($transports as $transport) {
+        $color = $transport->getCarColor() ?? 'Unknown';
+        $colorStats[$color] = ($colorStats[$color] ?? 0) + 1;
     }
+    $colorLabels = array_keys($colorStats);
+    $colorData = array_values($colorStats);
+
+    // Prepare top vehicles by luggage
+    $topVehicles = array_filter($transports, fn($t) => $t->getMaxLuggage() !== null);
+    shuffle($topVehicles); // <<< RANDOMIZE the vehicles
+    $topVehicles = array_slice($topVehicles, 0, 25); // Keep only 25 random vehicles
+
+    return $this->render('transport_admin/index.html.twig', [
+        'pagination' => $pagination,
+        'searchTerm' => $searchTerm,
+        'colorStats' => $colorStats,
+        'topVehicles' => $topVehicles,
+        'transports' => $transports,
+        'colorLabels' => $colorLabels,
+        'colorData' => $colorData,
+    ]);
+}
+
 
     #[Route('/new', name: 'app_transport_admin_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
