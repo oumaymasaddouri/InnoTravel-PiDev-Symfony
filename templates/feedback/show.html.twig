@@ -1,0 +1,49 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Consult Feedback{% endblock %}
+
+{% block section8 %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-body p-4">
+                    <h2 class="text-center text-primary mb-4">👁️ Consult Your Feedback</h2>
+
+                    <div class="mb-4 text-center">
+                        <h5 class="fw-bold">⭐ Rating:</h5>
+                        <div class="text-warning fs-3">
+                            {% for i in 1..5 %}
+                                {% if i <= feedback.rating %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold">📝 Content:</h5>
+                        <p class="border rounded p-3 bg-light">{{ feedback.content }}</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('feedback_edit', { id: feedback.id }) }}" class="btn btn-outline-primary px-4">
+                            ✏️ Edit
+                        </a>
+                        <a href="{{ path('feedback_delete', { id: feedback.id }) }}" class="btn btn-outline-danger px-4"
+                           onclick="return confirm('Are you sure you want to delete your feedback?')">
+                            🗑️ Delete
+                        </a>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <a href="{{ path('user_account') }}" class="btn btn-secondary">← Back to Account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
