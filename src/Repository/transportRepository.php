@@ -34,4 +34,9 @@ class transportRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('t')
             ->orderBy('t.id', 'ASC');
     }
+
+    public function getCountByStatus(string $status): int
+    {
+        return $this->count(['status' => $status]);
+    }
 }

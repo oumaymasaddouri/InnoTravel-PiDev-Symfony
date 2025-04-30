@@ -77,10 +77,10 @@
                         <span class="detail-value">{{ reservation.estimatedDuration ?: 'N/A' }}</span>
                     </div>
                     
-                    {% if reservation.sepcialRequests %}
+                    {% if reservation.specialRequests %}
                     <div class="detail special-requests">
                         <span class="detail-label">Special:</span>
-                        <span class="detail-value">{{ reservation.sepcialRequests|length > 50 ? reservation.sepcialRequests|slice(0, 50) ~ '...' : reservation.sepcialRequests }}</span>
+                        <span class="detail-value">{{ reservation.specialRequests|length > 50 ? reservation.specialRequests|slice(0, 50) ~ '...' : reservation.specialRequests }}</span>
                     </div>
                     {% else %}
                     <div class="detail special-requests">

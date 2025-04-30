@@ -14,58 +14,64 @@ use Symfony\Component\Routing\Attribute\Route;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Service\QrCodeService;
+use Psr\Log\LoggerInterface;
 
 final class ReservationController extends AbstractController
 {
-   // src/Controller/ReservationController.php
+    private $logger;
 
-#[Route('/', name: 'homepage')]
-public function home(
-    ReservationRepository $reservationRepository, 
-    PaginatorInterface $paginator, 
-    Request $request
-): Response {
-    $searchTerm = $request->query->get('search');
-    $status = $request->query->get('status');
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
-    $query = $reservationRepository->searchAndFilter($searchTerm, $status);
+    #[Route('/', name: 'homepage')]
+    public function home(
+        ReservationRepository $reservationRepository, 
+        PaginatorInterface $paginator, 
+        Request $request
+    ): Response {
+        $searchTerm = $request->query->get('search');
+        $status = $request->query->get('status');
 
-    $reservations = $paginator->paginate(
-        $query,
-        $request->query->getInt('page', 1),
-        6
-    );
+        $query = $reservationRepository->searchAndFilter($searchTerm, $status);
 
-    return $this->render('reservation/index.html.twig', [
-        'reservations' => $reservations,
-        'searchTerm' => $searchTerm,
-        'selectedStatus' => $status
-    ]);
-}
+        $reservations = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
+        );
 
-#[Route('/reservation', name: 'app_reservation_index', methods: ['GET'])]
-public function index(
-    ReservationRepository $reservationRepository, 
-    PaginatorInterface $paginator, 
-    Request $request
-): Response {
-    $searchTerm = $request->query->get('search');
-    $status = $request->query->get('status');
+        return $this->render('reservation/index.html.twig', [
+            'reservations' => $reservations,
+            'searchTerm' => $searchTerm,
+            'selectedStatus' => $status
+        ]);
+    }
 
-    $query = $reservationRepository->searchAndFilter($searchTerm, $status);
+    #[Route('/reservation', name: 'app_reservation_index', methods: ['GET'])]
+    public function index(
+        ReservationRepository $reservationRepository, 
+        PaginatorInterface $paginator, 
+        Request $request
+    ): Response {
+        $searchTerm = $request->query->get('search');
+        $status = $request->query->get('status');
 
-    $reservations = $paginator->paginate(
-        $query,
-        $request->query->getInt('page', 1),
-        6
-    );
+        $query = $reservationRepository->searchAndFilter($searchTerm, $status);
 
-    return $this->render('reservation/index.html.twig', [
-        'reservations' => $reservations,
-        'searchTerm' => $searchTerm,
-        'selectedStatus' => $status
-    ]);
-}
+        $reservations = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        return $this->render('reservation/index.html.twig', [
+            'reservations' => $reservations,
+            'searchTerm' => $searchTerm,
+            'selectedStatus' => $status
+        ]);
+    }
 
     #[Route('/reservation/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -78,12 +84,14 @@ public function index(
             $entityManager->persist($reservation);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Reservation created successfully!');
+
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('reservation/new.html.twig', [
             'reservation' => $reservation,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -109,7 +117,7 @@ public function index(
 
         return $this->render('reservation/edit.html.twig', [
             'reservation' => $reservation,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -125,31 +133,38 @@ public function index(
     }
 
     #[Route('/reservation/{id}/ticket', name: 'app_reservation_ticket')]
-public function generateTicket(Reservation $reservation, QrCodeService $qrCodeService): Response
-{
+    public function generateTicket(Reservation $reservation, QrCodeService $qrCodeService): Response
+    {
+        $qrCodeImage = $qrCodeService->createQrCode(
+            $reservation->getPickupAddress(), 
+            $reservation->getDestinationAddress(),
+            $reservation->getStatus()
+        );
 
+        $html = $this->renderView('reservation/ticket_pdf.html.twig', [
+            'reservation' => $reservation,
+            'qrCode' => $qrCodeImage,
+        ]);
 
-    $qrCodeImage = $qrCodeService->createQrCode($reservation->getPickupAddress(), $reservation->getDestinationAddress(),$reservation->getStatus());
+        // Configure Dompdf options
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $options->set('isPhpEnabled', false);
 
-    $html = $this->renderView('reservation/ticket_pdf.html.twig', [
-        'reservation' => $reservation,
-        'qrCode' => $qrCodeImage,
-    ]);
+        $dompdf = new Dompdf($options);
 
-    $options = new Options();
-    $options->set('defaultFont', 'Arial');
-    $dompdf = new Dompdf($options);
-    $dompdf->loadHtml($html);
-    $dompdf->setPaper('A4', 'portrait');
-    $dompdf->render();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
 
-    return new Response(
-        $dompdf->output(),
-        200,
-        [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="ticket.pdf"',
-        ]
-    );
-}
+        return new Response(
+            $dompdf->output(),
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="ticket.pdf"',
+            ]
+        );
+    }
 }

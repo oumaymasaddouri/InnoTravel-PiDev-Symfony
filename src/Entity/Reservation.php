@@ -41,7 +41,63 @@ class Reservation
     private ?int $estimatedDuration = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $sepcialRequests = null;
+    private ?string $specialRequests = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pickupLatitude = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pickupLongitude = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $destinationLatitude = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $destinationLongitude = null;
+
+    public function getPickupLatitude(): ?float
+    {
+        return $this->pickupLatitude;
+    }
+
+    public function setPickupLatitude(?float $pickupLatitude): self
+    {
+        $this->pickupLatitude = $pickupLatitude;
+        return $this;
+    }
+
+    public function getPickupLongitude(): ?float
+    {
+        return $this->pickupLongitude;
+    }
+
+    public function setPickupLongitude(?float $pickupLongitude): self
+    {
+        $this->pickupLongitude = $pickupLongitude;
+        return $this;
+    }
+
+    public function getDestinationLatitude(): ?float
+    {
+        return $this->destinationLatitude;
+    }
+
+    public function setDestinationLatitude(?float $destinationLatitude): self
+    {
+        $this->destinationLatitude = $destinationLatitude;
+        return $this;
+    }
+
+    public function getDestinationLongitude(): ?float
+    {
+        return $this->destinationLongitude;
+    }
+
+    public function setDestinationLongitude(?float $destinationLongitude): self
+    {
+        $this->destinationLongitude = $destinationLongitude;
+        return $this;
+    }
 
     #[ORM\PrePersist]
     public function onPrePersist(): void
@@ -68,7 +124,6 @@ class Reservation
     public function settransport(?transport $transport): static
     {
         $this->transport = $transport;
-
         return $this;
     }
 
@@ -80,7 +135,6 @@ class Reservation
     public function setPickupAddress(string $pickup_address): static
     {
         $this->pickup_address = $pickup_address;
-
         return $this;
     }
 
@@ -92,7 +146,6 @@ class Reservation
     public function setDestinationAddress(string $destination_address): static
     {
         $this->destination_address = $destination_address;
-
         return $this;
     }
 
@@ -104,7 +157,6 @@ class Reservation
     public function setPrice(?float $price): static
     {
         $this->price = $price;
-
         return $this;
     }
 
@@ -116,7 +168,6 @@ class Reservation
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -128,7 +179,6 @@ class Reservation
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -140,19 +190,17 @@ class Reservation
     public function setEstimatedDuration(?int $estimatedDuration): static
     {
         $this->estimatedDuration = $estimatedDuration;
-
         return $this;
     }
 
-    public function getSepcialRequests(): ?string
+    public function getSpecialRequests(): ?string
     {
-        return $this->sepcialRequests;
+        return $this->specialRequests;
     }
 
-    public function setSepcialRequests(?string $sepcialRequests): static
+    public function setSpecialRequests(?string $specialRequests): static
     {
-        $this->sepcialRequests = $sepcialRequests;
-
+        $this->specialRequests = $specialRequests;
         return $this;
     }
 }

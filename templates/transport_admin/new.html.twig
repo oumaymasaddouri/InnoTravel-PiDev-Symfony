@@ -1,18 +1,19 @@
 {% extends 'basebackoffice.html.twig' %}
 
-{% block title %}Create transport{% endblock %}
+{% block title %}Create Transport{% endblock %}
 
 {% block content %}
 <div class="content-header">
     <div class="container-fluid">
-        <div class="row mb-2">
+        <div class="row mb-4">
             <div class="col-sm-6">
-                <h1 class="m-0">Add New transport</h1>
+                <h1 class="m-0">Add New Transport</h1>
+                <p class="text-muted">Create a new transport entry in the system</p>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('app_transport_admin_index') }}">transports</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_transport_admin_index') }}">Transports</a></li>
                     <li class="breadcrumb-item active">Add New</li>
                 </ol>
             </div>
@@ -23,115 +24,176 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12">
-                <!-- Custom Tabs -->
-                <div class="card card-primary card-outline card-tabs">
-                    <div class="card-header p-0 pt-1 border-bottom-0">
-                        <ul class="nav nav-tabs" id="transport-tabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="vehicle-details-tab" data-toggle="pill" href="#vehicle-details" role="tab">
-                                    <i class="fas fa-car"></i> Vehicle Information
-                                </a>
-                            </li>
-                        </ul>
+            <div class="col-md-8">
+                <!-- Main Form Card -->
+                <div class="card card-primary shadow-lg border-0">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-car-side mr-2"></i>Vehicle Information
+                        </h3>
+                        <div class="card-tools">
+                            <span class="badge badge-primary">Step 1 of 1</span>
+                        </div>
                     </div>
                     
                     <div class="card-body">
-                        <div class="tab-content" id="transport-tabs-content">
-                            <!-- transport Details Tab -->
-                            <div class="tab-pane fade show active" id="vehicle-details" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
-                                        <div class="card shadow-sm">
-                                            <div class="card-header bg-primary text-white">
-                                                <h3 class="card-title mb-0"><i class="fas fa-car-side mr-2"></i>Vehicle Information</h3>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="form-row">
-                                                    <div class="form-group col-md-6">
-                                                        {{ form_label(form.carModel) }}
-                                                        {{ form_widget(form.carModel, {'attr': {'class': 'form-control', 'placeholder': 'Enter car model'}}) }}
-                                                        {{ form_errors(form.carModel) }}
-                                                        <small class="form-text text-muted">Example: Toyota Camry, Honda Accord</small>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        {{ form_label(form.carColor) }}
-                                                        {{ form_widget(form.carColor, {'attr': {'class': 'form-control', 'placeholder': 'Enter car color'}}) }}
-                                                        {{ form_errors(form.carColor) }}
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="form-group col-md-6">
-                                                        {{ form_label(form.licensePlate) }}
-                                                        {{ form_widget(form.licensePlate, {'attr': {'class': 'form-control', 'placeholder': 'Enter license plate'}}) }}
-                                                        {{ form_errors(form.licensePlate) }}
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        {{ form_label(form.maxLuggage) }}
-                                                        {{ form_widget(form.maxLuggage, {'attr': {'class': 'form-control', 'placeholder': 'Enter max luggage capacity'}}) }}
-                                                        {{ form_errors(form.maxLuggage) }}
-                                                        <small class="form-text text-muted">Number of standard suitcases</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-footer d-flex justify-content-between bg-light">
-                                                <a href="{{ path('app_transport_admin_index') }}" class="btn btn-outline-secondary">
-                                                    <i class="fas fa-arrow-left mr-1"></i> Cancel
-                                                </a>
-                                                <button type="submit" class="btn btn-success">
-                                                    <i class="fas fa-check-circle mr-1"></i> Save transport
-                                                </button>
-                                            </div>
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
+                        
+                        <div class="progress mb-4" style="height: 5px;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="form-progress"></div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.carModel, 'Car Model', {'label_attr': {'class': 'form-label'}}) }}
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-car"></i></span>
                                         </div>
-                                        {{ form_end(form) }}
+                                        {{ form_widget(form.carModel, {'attr': {'class': 'form-control form-control-lg shadow-sm', 'placeholder': 'Enter car model', 'data-field': 'model'}}) }}
                                     </div>
-
-                                    <div class="col-md-4">
-                                        <div class="card border-info shadow-sm">
-                                            <div class="card-header bg-info text-white">
-                                                <h3 class="card-title mb-0"><i class="fas fa-info-circle mr-2"></i>transport Requirements</h3>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="callout callout-info">
-                                                    <h5><i class="fas fa-clipboard-list mr-2"></i>Required Documentation</h5>
-                                                    <ul class="mb-0">
-                                                        <li>Valid driving license</li>
-                                                        <li>Vehicle registration</li>
-                                                        <li>Insurance documentation</li>
-                                                        <li>Background check clearance</li>
-                                                    </ul>
-                                                </div>
-                                                <div class="info-box bg-gradient-success mt-3">
-                                                    <span class="info-box-icon"><i class="fas fa-check"></i></span>
-                                                    <div class="info-box-content">
-                                                        <span class="info-box-text">transport Approval Process</span>
-                                                        <span class="info-box-number">Complete all fields for faster approval</span>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" style="width: 70%"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                        
-                                            </div>
+                                    {{ form_errors(form.carModel) }}
+                                    <small class="form-text text-muted">Example: Toyota Camry, Honda Accord</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.carColor, 'Car Color', {'label_attr': {'class': 'form-label'}}) }}
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-palette"></i></span>
+                                        </div>
+                                        {{ form_widget(form.carColor, {'attr': {'class': 'form-control form-control-lg shadow-sm', 'placeholder': 'Enter car color', 'data-field': 'color'}}) }}
+                                    </div>
+                                    {{ form_errors(form.carColor) }}
+                                    <div class="color-preview mt-2" id="color-preview"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.licensePlate, 'License Plate', {'label_attr': {'class': 'form-label'}}) }}
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                        </div>
+                                        {{ form_widget(form.licensePlate, {'attr': {'class': 'form-control form-control-lg shadow-sm', 'placeholder': 'Enter license plate', 'data-field': 'license'}}) }}
+                                    </div>
+                                    {{ form_errors(form.licensePlate) }}
+                                    <div class="license-plate-preview mt-2" id="license-preview">
+                                        <div class="license-plate">
+                                            <span class="plate-text">Enter License</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                     
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.maxLuggage, 'Max Luggage Capacity', {'label_attr': {'class': 'form-label'}}) }}
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-suitcase"></i></span>
+                                        </div>
+                                        {{ form_widget(form.maxLuggage, {'attr': {'class': 'form-control form-control-lg shadow-sm', 'placeholder': 'Enter max luggage capacity', 'data-field': 'luggage', 'min': '0', 'max': '10'}}) }}
+                                    </div>
+                                    {{ form_errors(form.maxLuggage) }}
+                                    <div class="luggage-preview mt-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="luggage-icons" id="luggage-icons"></div>
+                                            <small class="text-muted ml-2">Number of standard suitcases</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="card-footer">
-                        <div class="float-right">
-                            <button type="button" class="btn btn-primary" id="save-transport">
-                                <i class="fas fa-save mr-2"></i> Save transport
-                            </button>
-                            <a href="{{ path('app_transport_admin_index') }}" class="btn btn-default ml-2">
-                                <i class="fas fa-times mr-2"></i> Cancel
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('app_transport_admin_index') }}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left mr-2"></i> Back to List
                             </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="save-btn">
+                                <i class="fas fa-save mr-2"></i> Save Transport
+                            </button>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <!-- Sidebar Card -->
+                <div class="card card-info shadow-lg border-0">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle mr-2"></i>Transport Requirements
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="status-tracker mb-4">
+                            <h5 class="mb-3">Completion Status</h5>
+                            <div class="progress-steps">
+                                <div class="progress-step active">
+                                    <div class="step-icon"><i class="fas fa-car"></i></div>
+                                    <div class="step-label">Vehicle Info</div>
+                                </div>
+                                <div class="progress-step">
+                                    <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                                    <div class="step-label">Review</div>
+                                </div>
+                                <div class="progress-step">
+                                    <div class="step-icon"><i class="fas fa-flag-checkered"></i></div>
+                                    <div class="step-label">Done</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="callout callout-info mb-4">
+                            <h5><i class="fas fa-clipboard-list mr-2"></i>Required Documentation</h5>
+                            <ul class="requirements-list">
+                                <li class="requirement-item">
+                                    <i class="fas fa-check-circle text-success mr-2"></i>
+                                    <span>Valid driving license</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <i class="fas fa-check-circle text-success mr-2"></i>
+                                    <span>Vehicle registration</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <i class="fas fa-check-circle text-success mr-2"></i>
+                                    <span>Insurance documentation</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <i class="fas fa-check-circle text-success mr-2"></i>
+                                    <span>Background check clearance</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-box bg-gradient-success mb-4">
+                            <span class="info-box-icon"><i class="fas fa-check"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Transport Approval Process</span>
+                                <span class="info-box-number">Complete all fields for faster approval</span>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 0%" id="approval-progress"></div>
+                                </div>
+                                <span class="progress-description" id="approval-text">
+                                    0% complete
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="card bg-gradient-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Tips for Approval</h5>
+                                <p class="card-text">Ensure all vehicle information is accurate and matches your documentation for faster approval.</p>
+                                <p class="card-text mb-0">All fields must be completed before submission.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -141,10 +203,482 @@
 </section>
 {% endblock %}
 
+{% block css %}
+{{ parent() }}
+<style>
+/* Base Styling */
+body {
+    font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    font-weight: 700;
+    font-size: 2.2rem;
+    background: linear-gradient(45deg, #344767, #4b6cb7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+label.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #4b6cb7;
+    box-shadow: 0 0 0 0.2rem rgba(75, 108, 183, 0.25);
+}
+
+.form-control-lg {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+}
+
+.input-group-text {
+    border-radius: 0.5rem 0 0 0.5rem;
+    background-color: #f8f9fa;
+    border-right: none;
+}
+
+.input-group .form-control {
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+/* Card Styling */
+.card {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.25rem 1.5rem;
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #344767;
+    display: flex;
+    align-items: center;
+}
+
+.card-info .card-header {
+    background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+    color: white;
+}
+
+.card-primary .card-header {
+    background: linear-gradient(45deg, #4b6cb7, #182848);
+    color: white;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-footer {
+    background-color: #fff;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.25rem 1.5rem;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Interactive Elements */
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #4b6cb7, #182848);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #3a5a9d, #0c1526);
+    box-shadow: 0 5px 15px rgba(27, 40, 72, 0.3);
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Form Progress */
+.progress {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background-color: #e9ecef;
+    height: 0.5rem;
+}
+
+.progress-bar {
+    background: linear-gradient(45deg, #4b6cb7, #182848);
+    transition: width 0.5s ease;
+}
+
+/* Progress Steps */
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+}
+
+.progress-step:not(:first-child):before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: -50%;
+    width: 100%;
+    height: 2px;
+    background-color: #ddd;
+    z-index: 0;
+}
+
+.progress-step.active:not(:first-child):before {
+    background-color: #4b6cb7;
+}
+
+.progress-step .step-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.progress-step.active .step-icon {
+    background-color: #4b6cb7;
+}
+
+.progress-step .step-label {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.progress-step.active .step-label {
+    color: #4b6cb7;
+    font-weight: 600;
+}
+
+/* Requirements List */
+.requirements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.requirement-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.requirement-item:last-child {
+    border-bottom: none;
+}
+
+/* Vehicle Preview */
+.vehicle-preview {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.car-illustration {
+    margin: 1rem 0;
+}
+
+/* License Plate Preview */
+.license-plate-preview {
+    display: flex;
+    justify-content: center;
+}
+
+.license-plate {
+    background-color: #fff;
+    border: 2px solid #000;
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    display: inline-block;
+    min-width: 150px;
+    text-align: center;
+}
+
+/* Color Preview */
+.color-preview {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.color-preview::before {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    background-color: #cccccc;
+}
+
+/* Luggage Icons */
+.luggage-icons {
+    display: flex;
+    align-items: center;
+}
+
+.luggage-icon {
+    color: #4b6cb7;
+    margin-right: 5px;
+}
+
+/* Callout Styling */
+.callout {
+    border-radius: 0.5rem;
+    border-left: 5px solid;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+}
+
+.callout-info {
+    border-left-color: #17a2b8;
+}
+
+.callout h5 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+/* Info Box */
+.info-box {
+    border-radius: 0.5rem;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.info-box-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    font-size: 1.5rem;
+}
+
+.info-box-content {
+    padding: 0.75rem 1rem;
+}
+
+.info-box-text {
+    font-weight: 600;
+}
+
+.info-box-number {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(45deg, #4b6cb7, #182848);
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .progress-steps {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .progress-step {
+        margin-bottom: 1rem;
+        flex-direction: row;
+        width: 100%;
+    }
+    
+    .progress-step:not(:first-child):before {
+        display: none;
+    }
+    
+    .progress-step .step-label {
+        margin-top: 0;
+        margin-left: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
 {% block javascripts %}
 {{ parent() }}
 <script>
 $(function () {
+    // Initialize form validation
+    const formInputs = document.querySelectorAll('input[data-field], select[data-field], textarea[data-field]');
+    const progressBar = document.getElementById('form-progress');
+    const approvalProgress = document.getElementById('approval-progress');
+    const approvalText = document.getElementById('approval-text');
+    const saveBtn = document.getElementById('save-btn');
+    
+    // Track form completion progress
+    function updateProgress() {
+        const totalFields = formInputs.length;
+        let completedFields = 0;
+        
+        formInputs.forEach(input => {
+            if (input.value.trim() !== '') {
+                completedFields++;
+            }
+        });
+        
+        const percentComplete = totalFields > 0 ? Math.round((completedFields / totalFields) * 100) : 0;
+        
+        progressBar.style.width = `${percentComplete}%`;
+        progressBar.setAttribute('aria-valuenow', percentComplete);
+        
+        approvalProgress.style.width = `${percentComplete}%`;
+        approvalText.textContent = `${percentComplete}% complete`;
+        
+        if (percentComplete === 100) {
+            saveBtn.classList.remove('btn-primary');
+            saveBtn.classList.add('btn-success');
+            saveBtn.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Save Transport';
+        }
+    }
+    
+    // Color preview
+    const colorInput = document.querySelector('[data-field="color"]');
+    const colorPreview = document.getElementById('color-preview');
+    
+    if (colorInput && colorPreview) {
+        colorInput.addEventListener('input', function() {
+            let color = this.value.toLowerCase();
+            let hexColor = getColorHex(color);
+            colorPreview.innerHTML = '';
+            
+            const colorSwatch = document.createElement('div');
+            colorSwatch.style.width = '30px';
+            colorSwatch.style.height = '30px';
+            colorSwatch.style.backgroundColor = hexColor;
+            colorSwatch.style.borderRadius = '50%';
+            colorSwatch.style.border = '1px solid #ddd';
+            colorSwatch.style.display = 'inline-block';
+            
+            const colorName = document.createElement('span');
+            colorName.textContent = color;
+            colorName.style.marginLeft = '10px';
+            colorName.style.color = '#495057';
+            
+            colorPreview.appendChild(colorSwatch);
+            colorPreview.appendChild(colorName);
+            
+            // Update car color
+            const carBody = document.querySelector('.car-body');
+            if (carBody) {
+                carBody.setAttribute('fill', hexColor);
+            }
+        });
+    }
+    
+    // License plate preview
+    const licensePlateInput = document.querySelector('[data-field="license"]');
+    const licensePlatePreview = document.getElementById('license-preview');
+    
+    if (licensePlateInput && licensePlatePreview) {
+        licensePlateInput.addEventListener('input', function() {
+            const plateText = document.querySelector('.plate-text');
+            if (plateText) {
+                plateText.textContent = this.value || 'Enter License';
+            }
+        });
+    }
+    
+    // Luggage capacity preview
+    const luggageInput = document.querySelector('[data-field="luggage"]');
+    const luggageIcons = document.getElementById('luggage-icons');
+    
+    if (luggageInput && luggageIcons) {
+        luggageInput.addEventListener('input', function() {
+            const count = parseInt(this.value) || 0;
+            luggageIcons.innerHTML = '';
+            
+            for (let i = 0; i < Math.min(count, 5); i++) {
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-suitcase luggage-icon';
+                luggageIcons.appendChild(icon);
+            }
+            
+            if (count > 5) {
+                const extraText = document.createElement('span');
+                extraText.textContent = `+${count - 5} more`;
+                extraText.style.marginLeft = '5px';
+                extraText.style.color = '#6c757d';
+                luggageIcons.appendChild(extraText);
+            }
+        });
+    }
+    
+    // Car model preview
+    const carModelInput = document.querySelector('[data-field="model"]');
+    const carModelDisplay = document.getElementById('car-model-display');
+    
+    if (carModelInput && carModelDisplay) {
+        carModelInput.addEventListener('input', function() {
+            carModelDisplay.textContent = this.value ? `Model: ${this.value}` : 'Model: Not specified';
+        });
+    }
+    
     // Initialize datepicker if it exists
     if ($.fn.datetimepicker) {
         $('#licenseDatetimepicker, #regDatetimepicker').datetimepicker({
@@ -167,59 +701,70 @@ $(function () {
     $(document).on('change', '.custom-file-input', function() {
         var fileName = $(this).val().split('\\').pop();
         $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
-        
-        // Update progress bars when files are selected
-        let cardFooter = $(this).closest('.card-body').siblings('.card-footer');
-        let progressBar = cardFooter.find('.progress-bar');
-        progressBar.css('width', '75%').attr('aria-valuenow', 75).text('75%');
     });
     
     // Save transport button functionality
-    $('#save-transport').on('click', function() {
-        // Add loading state
+    saveBtn.addEventListener('click', function(e) {
+        // Don't submit the form - let the form submit handle that
+        // This just adds the loading state to the button
         $(this).html('<i class="fas fa-spinner fa-spin mr-2"></i> Saving...');
         $(this).prop('disabled', true);
         
-        // Submit the actual form after a short delay to show the loading state
-        setTimeout(function() {
-            $('form').submit();
-        }, 800);
+        // Form will be submitted naturally
     });
-    
-    // Make tabs clickable and retain state
-    $('#transport-tabs a').on('click', function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    });
-    
-    // Store active tab in localStorage
-    $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
-        localStorage.setItem('activetransportTab', $(e.target).attr('href'));
-    });
-    
-    // Check for active tab in localStorage
-    var activeTab = localStorage.getItem('activetransportTab');
-    if (activeTab) {
-        $('#transport-tabs a[href="' + activeTab + '"]').tab('show');
-    }
     
     // Form validation
     $('.needs-validation').on('submit', function(event) {
         if (this.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
+            
+            // Re-enable the save button if form is invalid
+            saveBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Save Transport';
+            saveBtn.disabled = false;
         }
         $(this).addClass('was-validated');
     });
     
-
-    // Add animation to cards on hover
+    // Color helper function
+    function getColorHex(colorName) {
+        const colorMap = {
+            'red': '#ff0000',
+            'blue': '#0000ff',
+            'green': '#008000',
+            'yellow': '#ffff00',
+            'black': '#000000',
+            'white': '#ffffff',
+            'silver': '#c0c0c0',
+            'gray': '#808080',
+            'orange': '#ffa500',
+            'purple': '#800080',
+            'pink': '#ffc0cb',
+            'brown': '#a52a2a',
+            'beige': '#f5f5dc',
+            'gold': '#ffd700',
+            'navy': '#000080',
+            'teal': '#008080'
+        };
+        
+        return colorMap[colorName] || '#cccccc';
+    }
+    
+    // Initialize progress on load
+    updateProgress();
+    
+    // Update progress when form fields change
+    formInputs.forEach(input => {
+        input.addEventListener('input', updateProgress);
+    });
+    
+    // Add animation to cards
     $('.card').hover(
         function() {
-            $(this).addClass('shadow');
+            $(this).addClass('shadow-lg');
         },
         function() {
-            $(this).removeClass('shadow');
+            $(this).removeClass('shadow-lg');
         }
     );
 });

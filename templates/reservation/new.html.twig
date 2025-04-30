@@ -1,8 +1,6 @@
-{# new.html.twig #}
 {% extends 'basefrontoffice.html.twig' %}
 
 {% block title %}New Reservation{% endblock %}
-
 
 {% block section8 %}
 <div class="reservation-form-wrapper">
@@ -17,6 +15,7 @@
         <div class="reservation-form-icon">
             <i class="ti-pencil-alt"></i>
         </div>
+
         {{ include('reservation/_form.html.twig') }}
     </div>
 </div>
@@ -89,6 +88,7 @@
             position: relative;
             margin-top: 40px;
             transition: all 0.3s ease;
+            overflow: visible;
         }
         
         .reservation-form-container:hover {
@@ -117,7 +117,6 @@
             transform: translateX(-50%) scale(1.05);
         }
         
-        /* Form Styling */
         form label {
             font-weight: 600;
             color: #263A5B;
@@ -139,6 +138,15 @@
             font-size: 15px;
             transition: all 0.3s ease;
             background-color: #f9f9f9;
+        }
+        
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            position: relative;
+            margin: 20px 0;
         }
         
         form input:focus,
@@ -171,6 +179,42 @@
             box-shadow: 0 8px 20px rgba(38, 58, 91, 0.3);
         }
         
+        .map-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .map-toggle button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .map-toggle .pickup-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .map-toggle .pickup-btn.active {
+            background-color: #388E3C;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+        
+        .map-toggle .destination-btn {
+            background-color: #F44336;
+            color: white;
+        }
+        
+        .map-toggle .destination-btn.active {
+            background-color: #D32F2F;
+            box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.3);
+        }
+        
         @media (max-width: 768px) {
             .reservation-form-header {
                 flex-direction: column;
@@ -185,6 +229,188 @@
             .reservation-form-header h1 {
                 font-size: 28px;
             }
+            
+            .map-toggle {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) {
+                console.error('Map container not found!');
+                return;
+            }
+
+            const map = L.map('map').setView([36.8065, 10.1815], 13); // Default center: Tunis
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19,
+            }).addTo(map);
+
+            // Custom icons for pickup (green) and destination (red) using CDN
+            const pickupIcon = L.icon({
+                iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+                iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41],
+                className: 'pickup-marker'
+            });
+
+            const destinationIcon = L.icon({
+                iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+                iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41],
+                className: 'destination-marker'
+            });
+
+            // Add default markers
+            let pickupMarker = L.marker([36.8065, 10.1815], { icon: pickupIcon }).addTo(map)
+                .bindPopup('Pickup: Tunis<br>Lat: 36.8065, Lng: 10.1815')
+                .openPopup();
+
+            let destinationMarker = null; // Destination marker starts as null
+            let polyline = null; // To draw a line between markers
+
+            // Set default coordinates in form fields
+            document.getElementById('{{ form.pickupLatitude.vars.id }}').value = 36.8065;
+            document.getElementById('{{ form.pickupLongitude.vars.id }}').value = 10.1815;
+
+            // Perform reverse geocoding for the default pickup location
+            reverseGeocode(36.8065, 10.1815, function(address) {
+                if (address) {
+                    document.getElementById('{{ form.pickup_address.vars.id }}').value = address;
+                }
+            });
+
+            // Toggle between pickup and destination selection
+            let selectingPickup = true; // Start with pickup selection
+
+            const pickupBtn = document.querySelector('.pickup-btn');
+            const destinationBtn = document.querySelector('.destination-btn');
+
+            pickupBtn.classList.add('active');
+
+            pickupBtn.addEventListener('click', function () {
+                selectingPickup = true;
+                pickupBtn.classList.add('active');
+                destinationBtn.classList.remove('active');
+            });
+
+            destinationBtn.addEventListener('click', function () {
+                selectingPickup = false;
+                destinationBtn.classList.add('active');
+                pickupBtn.classList.remove('active');
+            });
+
+            // Function to perform reverse geocoding using Nominatim API
+            function reverseGeocode(lat, lng, callback) {
+                const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=en`; // Request English names
+                
+                fetch(url, {
+                    headers: {
+                        'User-Agent': 'MyReservationApp/1.0 (contact@example.com)' // Required by Nominatim
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.display_name) {
+                        callback(data.display_name);
+                    } else {
+                        console.error('Reverse geocoding failed: No address found');
+                        callback(null);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during reverse geocoding:', error);
+                    callback(null);
+                });
+            }
+
+            // Update marker on click
+            map.on('click', function (e) {
+                const lat = e.latlng.lat.toFixed(6);
+                const lng = e.latlng.lng.toFixed(6);
+
+                if (selectingPickup) {
+                    pickupMarker.setLatLng([lat, lng])
+                        .bindPopup(`Pickup: Lat: ${lat}, Lng: ${lng}`)
+                        .openPopup();
+
+                    document.getElementById('{{ form.pickupLatitude.vars.id }}').value = lat;
+                    document.getElementById('{{ form.pickupLongitude.vars.id }}').value = lng;
+
+                    // Perform reverse geocoding for pickup location
+                    reverseGeocode(lat, lng, function(address) {
+                        if (address) {
+                            document.getElementById('{{ form.pickup_address.vars.id }}').value = address;
+                        } else {
+                            document.getElementById('{{ form.pickup_address.vars.id }}').value = 'Unknown location';
+                        }
+                    });
+                } else {
+                    if (destinationMarker) {
+                        destinationMarker.setLatLng([lat, lng]);
+                    } else {
+                        destinationMarker = L.marker([lat, lng], { icon: destinationIcon }).addTo(map);
+                    }
+                    destinationMarker.bindPopup(`Destination: Lat: ${lat}, Lng: ${lng}`).openPopup();
+
+                    document.getElementById('{{ form.destinationLatitude.vars.id }}').value = lat;
+                    document.getElementById('{{ form.destinationLongitude.vars.id }}').value = lng;
+
+                    // Perform reverse geocoding for destination location
+                    reverseGeocode(lat, lng, function(address) {
+                        if (address) {
+                            document.getElementById('{{ form.destination_address.vars.id }}').value = address;
+                        } else {
+                            document.getElementById('{{ form.destination_address.vars.id }}').value = 'Unknown location';
+                        }
+                    });
+                }
+
+                // Draw a line between the two markers if both exist
+                if (pickupMarker && destinationMarker) {
+                    const latlngs = [
+                        pickupMarker.getLatLng(),
+                        destinationMarker.getLatLng()
+                    ];
+
+                    if (polyline) {
+                        map.removeLayer(polyline);
+                    }
+
+                    polyline = L.polyline(latlngs, { color: '#263A5B', weight: 3 }).addTo(map);
+                }
+            });
+        });
+    </script>
+
+    <style>
+        /* Custom marker colors using CSS */
+        .pickup-marker {
+            filter: hue-rotate(120deg); /* Green */
+        }
+
+        .destination-marker {
+            filter: hue-rotate(0deg); /* Red */
         }
     </style>
 {% endblock %}

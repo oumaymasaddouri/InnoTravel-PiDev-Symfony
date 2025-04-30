@@ -16,17 +16,14 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ReservationAdminController extends AbstractController
 {
     
-     #[Route('/', name: 'app_reservation_admin_index', methods: ['GET'])]
-    public function index(
-        Request $request,
-        ReservationRepository $reservationRepository,
-        PaginatorInterface $paginator
-    ): Response {
+    #[Route('/', name: 'app_reservation_admin_index', methods: ['GET'])]
+    public function index(Request $request, ReservationRepository $reservationRepository, PaginatorInterface $paginator): Response 
+    {
         $searchTerm = $request->query->get('search');
         $status = $request->query->get('status');
-
+    
         $queryBuilder = $reservationRepository->createSearchQueryBuilder($searchTerm, $status);
-
+    
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -37,13 +34,20 @@ final class ReservationAdminController extends AbstractController
                 'sortDirectionParameterName' => 'direction'
             ]
         );
-
+    
         // Get counts for statistics
         $totalReservations = $reservationRepository->count([]);
         $confirmedCount = $reservationRepository->getCountByStatus('Confirmed');
         $pendingCount = $reservationRepository->getCountByStatus('Pending');
-        $cancelledCount = $reservationRepository->getCountByStatus('Cancelled');
-
+        $cancelledCount = $reservationRepository->getCountByStatus('Cancelled'); // Fix typo if needed
+        
+        // Create structured data for the chart
+        $statusStats = [
+            ['status' => 'Confirmed', 'count' => $confirmedCount],
+            ['status' => 'Pending', 'count' => $pendingCount],
+            ['status' => 'Cancelled', 'count' => $cancelledCount]
+        ];
+    
         return $this->render('reservation_admin/index.html.twig', [
             'pagination' => $pagination,
             'totalReservations' => $totalReservations,
@@ -51,7 +55,8 @@ final class ReservationAdminController extends AbstractController
             'pendingCount' => $pendingCount,
             'cancelledCount' => $cancelledCount,
             'searchTerm' => $searchTerm,
-            'selectedStatus' => $status
+            'selectedStatus' => $status,
+            'statusStats' => $statusStats, // Changed from topStatus to statusStats
         ]);
     }
     #[Route('/new', name: 'app_reservation_admin_new', methods: ['GET', 'POST'])]

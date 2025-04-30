@@ -16,6 +16,64 @@
                 </ol>
             </div>
         </div>
+         <div class="row mt-4">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ totalReservations }}</h3>
+                        <p>Total Reservations</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ confirmedCount }}</h3>
+                        <p>Confirmed</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ pendingCount }}</h3>
+                        <p>Pending</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ cancelledCount }}</h3>
+                        <p>Cancelled</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
     </div>
 </div>
 
@@ -87,9 +145,9 @@
                                     <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i') : '' }}</td>
                                     <td>{{ reservation.estimatedDuration }}</td>
                                     <td>
-                                        {% if reservation.sepcialRequests %}
+                                        {% if reservation.specialRequests %}
                                             <span class="text-primary">
-                                                <i class="fas fa-info-circle"></i> {{ reservation.sepcialRequests }}
+                                                <i class="fas fa-info-circle"></i> {{ reservation.specialRequests }}
                                             </span>
                                         {% else %}
                                             <span class="text-muted">None</span>
@@ -161,66 +219,26 @@
                 <!-- /.card -->
             </div>
         </div>
-        
-        <!-- Dashboard Statistics -->
-        <div class="row mt-4">
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>{{ totalReservations }}</h3>
-                        <p>Total Reservations</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
+        <div class="container-fluid py-4">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+                <h1 class="m-0">Reservation Dashboard</h1>
+            </div>
+    </div>
+    
+     <!-- Bar Chart: Top Vehicles by Luggage -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm rounded-lg">
+                <div class="card-header bg-white border-0">
+                    <h5 class="card-title mb-0">Status Dashboard</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="barChart" height="180"></canvas>
                 </div>
             </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>{{ confirmedCount }}</h3>
-                        <p>Confirmed</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>{{ pendingCount }}</h3>
-                        <p>Pending</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3>{{ cancelledCount }}</h3>
-                        <p>Cancelled</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-ban"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
         </div>
+</div>
     </div>
 </section>
 
@@ -272,14 +290,83 @@
         }
     </style>
 {% endblock %}
-
-
-{% block javascripts %}
+{% block js %}
 {{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-  $(function () {
-    // Add any custom JavaScript for the reservation page here
-    $('[data-toggle="tooltip"]').tooltip();
-  });
+document.addEventListener('DOMContentLoaded', function () {
+    const colors = [
+        'rgba(54, 162, 235, 0.8)', // Blue
+        'rgba(75, 192, 192, 0.8)', // Teal
+        'rgba(153, 102, 255, 0.8)', // Purple
+        'rgba(255, 159, 64, 0.8)',  // Orange
+        'rgba(255, 205, 86, 0.8)',  // Yellow
+        'rgba(201, 90, 90, 0.8)',   // Darker Red
+        'rgba(100, 149, 237, 0.8)', // Cornflower Blue
+        'rgba(0, 123, 255, 0.8)',   // Stronger Blue
+        'rgba(255, 99, 132, 0.8)'   // Red
+   
+    ];
+
+    // Bar Chart: Top Vehicles
+    const barCtx = document.getElementById('barChart').getContext('2d');
+new Chart(barCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ statusStats|map(v => v.status)|json_encode|raw }},
+        datasets: [{
+            label: 'Reservations by Status',
+            data: {{ statusStats|map(v => v.count)|json_encode|raw }},
+            backgroundColor: [
+                'rgba(75, 192, 192, 0.8)', // Confirmed - green
+                'rgba(255, 206, 86, 0.8)',  // Pending - yellow
+                'rgba(255, 99, 132, 0.8)'   // Cancelled - red
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(255, 99, 132, 1)'
+            ],
+            borderWidth: 1,
+            borderRadius: 5,
+            maxBarThickness: 50
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return `${context.parsed.y} ${context.label.toLowerCase()} reservations`;
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Number of Reservations'
+                },
+                ticks: {
+                    precision: 0,
+                    stepSize: 1
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Reservation Status'
+                }
+            }
+        }
+    }
+});
+
+});
 </script>
 {% endblock %}

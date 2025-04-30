@@ -44,7 +44,7 @@ class Reservation1Type extends AbstractType
                     'placeholder' => 'Enter destination address'
                 ]
             ])
-            ->add('sepcialRequests', TextareaType::class, [
+            ->add('specialRequests', TextareaType::class, [
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'Enter any special requests',

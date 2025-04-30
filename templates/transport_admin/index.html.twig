@@ -1,13 +1,13 @@
 {% extends 'basebackoffice.html.twig' %}
 
-{% block title %}transport Management{% endblock %}
+{% block title %}Transport Management{% endblock %}
 
 {% block content %}
 <div class="content-header">
     <div class="container-fluid">
-        <div class="row mb-2">
+        <div class="row mb-4">
             <div class="col-sm-6">
-                <h1 class="m-0">transport Management</h1>
+                <h1 class="m-0">Transport Management</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -21,67 +21,56 @@
 
 <section class="content">
     <div class="container-fluid">
-        <!-- transport Statistics Cards -->
-        <div class="row">
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>{{ transports|length }}</h3>
-                        <p>Total transports</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-user-tie"></i>
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-gradient-primary">
+                    <span class="info-box-icon"><i class="fas fa-taxi"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Vehicles</span>
+                        <span class="info-box-number">{{ pagination.totalItemCount }}</span>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>{{ transports|filter(d => d.isActive ?? true)|length }}</h3>
-                        <p>Active transports</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-check-circle"></i>
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-gradient-success">
+                    <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Active</span>
+                        <span class="info-box-number">{{ activeCount ?? '0' }}</span>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>{{ transports|filter(d => not (d.isActive ?? true))|length }}</h3>
-                        <p>Inactive transports</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-pause-circle"></i>
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-gradient-danger">
+                    <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Inactive</span>
+                        <span class="info-box-number">{{ inactiveCount ?? '0' }}</span>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3>0</h3>
-                        <p>Warnings</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-exclamation-triangle"></i>
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-gradient-info">
+                    <span class="info-box-icon"><i class="fas fa-suitcase"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Avg. Luggage Capacity</span>
+                        <span class="info-box-number">{{ avgLuggageCapacity ?? '0' }}</span>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- transport List Card -->
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card card-outline card-primary">
                     <div class="card-header">
                         <h3 class="card-title">All transports</h3>
                         <div class="card-tools">
                             <form method="get" action="{{ path('app_transport_admin_index') }}" class="form-inline">
                             <div class="input-group input-group-sm" style="width: 250px;">
-                                <input type="text" name="search" class="form-control float-right" placeholder="Search transports..." value="{{ app.request.query.get('search') }}" >
+                                <input type="text" name="search" class="form-control float-right" placeholder="Search transports..." value="{{ app.request.query.get('search') }}">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fas fa-search"></i>
@@ -98,11 +87,11 @@
                     </div>
                     
                     <div class="card-body table-responsive p-0">
-                        <table class="table table-hover text-nowrap">
-                            <thead>
+                        <table class="table table-hover text-nowrap table-striped">
+                            <thead class="thead-light">
                                 <tr>
                                     <th style="width: 60px">ID</th>
-                                    <th>transport Info</th>
+                                    <th>Transport Info</th>
                                     <th>Vehicle Details</th>
                                     <th>License Plate</th>
                                     <th>Max Luggage</th>
@@ -116,7 +105,7 @@
                                     <td>{{ transport.id }}</td>
                                     <td>
                                         <div class="user-block">
-                                            <img class="img-circle" src="{{ asset('backoffice/dist/img/avatar5.png') }}" alt="transport">
+                                            <img class="img-circle elevation-1" src="{{ asset('backoffice/dist/img/avatar5.png') }}" alt="transport">
                                             <span class="username">
                                                 <a href="#">{{ transport.user.fullName ?? 'transport #' ~ transport.id }}</a>
                                             </span>
@@ -126,8 +115,8 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge bg-secondary">{{ transport.carModel }}</span>
-                                        <span class="badge" style="background-color: {{ transport.carColor|lower }}; color: {{ transport.carColor|lower in ['white', 'yellow', 'beige'] ? '#000' : '#fff' }};">
+                                        <span class="badge bg-secondary text-sm">{{ transport.carModel }}</span>
+                                        <span class="badge ml-1" style="background-color: {{ transport.carColor|lower }}; color: {{ transport.carColor|lower in ['white', 'yellow', 'beige'] ? '#000' : '#fff' }};">
                                             {{ transport.carColor }}
                                         </span>
                                     </td>
@@ -171,10 +160,10 @@
                                 <tr>
                                     <td colspan="7" class="text-center py-5">
                                         <div class="empty-state">
-                                            <i class="fas fa-user-slash fa-3x text-muted"></i>
-                                            <p class="mt-3">No transports have been added to the system yet.</p>
-                                            <a href="{{ path('app_transport_admin_new') }}" class="btn btn-primary">
-                                                <i class="fas fa-plus"></i> Add First transport
+                                            <i class="fas fa-car-crash fa-4x text-muted mb-3"></i>
+                                            <p class="mt-3 text-muted">No transports have been added to the system yet.</p>
+                                            <a href="{{ path('app_transport_admin_new') }}" class="btn btn-primary btn-lg mt-3">
+                                                <i class="fas fa-plus mr-2"></i> Add First Transport
                                             </a>
                                         </div>
                                     </td>
@@ -184,73 +173,74 @@
                         </table>
                     </div>
 
-                    
-                    <div class="card-footer clearfix">
-    <ul class="pagination pagination-sm m-0 float-right">
-        {% if pagination.page > 1 %}
-            <li class="page-item">
-                <a class="page-link" href="{{ path('app_transport_admin_index', app.request.query.all|merge({'page': pagination.page-1})) }}">«</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">«</span>
-            </li>
-        {% endif %}
-        
-        {% for i in 1..pagination.pageCount %}
-            <li class="page-item {% if i == pagination.page %}active{% endif %}">
-                <a class="page-link" href="{{ path('app_transport_admin_index', app.request.query.all|merge({'page': i})) }}">{{ i }}</a>
-            </li>
-        {% endfor %}
-        
-        {% if pagination.page < pagination.pageCount %}
-            <li class="page-item">
-                <a class="page-link" href="{{ path('app_transport_admin_index', app.request.query.all|merge({'page': pagination.page+1})) }}">»</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">»</span>
-            </li>
-        {% endif %}
-    </ul>
-</div>
+                    <div class="card-footer clearfix bg-light">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                            {% if pagination.page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ path('app_transport_admin_index', app.request.query.all|merge({'page': pagination.page-1})) }}">«</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">«</span>
+                                </li>
+                            {% endif %}
+                            
+                            {% for i in 1..pagination.pageCount %}
+                                <li class="page-item {% if i == pagination.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ path('app_transport_admin_index', app.request.query.all|merge({'page': i})) }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            
+                            {% if pagination.page < pagination.pageCount %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ path('app_transport_admin_index', app.request.query.all|merge({'page': pagination.page+1})) }}">»</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">»</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="text-center mb-4 text-primary">Transport Dashboard</h1>
-        </div>
-    </div>
-    
-    <div class="row g-4">
-        <!-- Bar Chart: Top Vehicles by Luggage -->
-        <div class="col-lg-8">
-            <div class="card shadow-sm rounded-lg">
-                <div class="card-header bg-white border-0">
-                    <h5 class="card-title mb-0">Top Vehicles by Luggage Capacity</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="barChart" height="180"></canvas>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="callout callout-info">
+                    <h5><i class="fas fa-info-circle"></i> Transport Analytics Dashboard</h5>
+                    <p class="mb-0">View key metrics and analytics about your transport fleet below.</p>
                 </div>
             </div>
         </div>
-        
-        <!-- Pie Chart: Car Color Distribution -->
-        <div class="col-lg-4">
-            <div class="card shadow-sm rounded-lg">
-                <div class="card-header bg-white border-0">
-                    <h5 class="card-title mb-0">Car Color Distribution</h5>
+
+        <div class="row g-4">
+            <!-- Bar Chart: Top Vehicles by Luggage -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm rounded-lg">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="card-title mb-0"><i class="fas fa-chart-bar mr-2 text-primary"></i>Top Vehicles by Luggage Capacity</h5>
+                    </div>
+                    <div class="card-body px-4">
+                        <canvas id="barChart" height="200"></canvas>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <canvas id="pieChart" height="300"></canvas>
+            </div>
+            
+            <!-- Pie Chart: Car Color Distribution -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm rounded-lg">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="card-title mb-0"><i class="fas fa-palette mr-2 text-primary"></i>Car Color Distribution</h5>
+                    </div>
+                    <div class="card-body px-4">
+                        <canvas id="pieChart" height="300"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </section>
 
 <!-- Delete Modals -->
@@ -259,21 +249,30 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-danger">
-                    <h4 class="modal-title">Confirm transport Deletion</h4>
+                    <h4 class="modal-title">Confirm Transport Deletion</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete this transport record?</p>
-                    <p class="text-danger"><small>This action cannot be undone.</small></p>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-exclamation-triangle text-warning fa-2x mr-3"></i>
+                        <div>
+                            <p class="mb-1">Are you sure you want to delete this transport record?</p>
+                            <p class="text-danger mb-0"><small>This action cannot be undone.</small></p>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>Transport ID:</strong> #{{ transport.id }}<br>
+                        <strong>Vehicle:</strong> {{ transport.carModel }} ({{ transport.carColor }})
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <form method="post" action="{{ path('app_transport_admin_delete', {'id': transport.id}) }}" style="display:inline-block;">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ transport.id) }}">
                         <button type="submit" class="btn btn-danger">
-                            Delete
+                            <i class="fas fa-trash mr-1"></i> Delete
                         </button>
                     </form>
                 </div>
@@ -287,34 +286,192 @@
 {% block css %}
     {{ parent() }}
     <style>
-.card {
-        transition: transform 0.2s ease-in-out;
-        border: none;
-        background: white;
+    /* Base styling */
+    body {
+        font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif;
     }
-    
+
+    /* Page header styling */
+    .content-header {
+        padding: 15px 0;
+    }
+
+    h1 {
+        font-weight: 700;
+        background: linear-gradient(45deg, #344767, #4b6cb7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+        font-size: 2.2rem;
+    }
+
+    /* Card styling */
+    .card {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
     .card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .card-outline.card-primary {
+        border-top: 3px solid #4b6cb7;
     }
 
     .card-header {
-        padding: 1.5rem;
+        padding: 1.25rem 1.5rem;
+        background: #fff;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
     }
 
     .card-title {
         color: #344767;
         font-weight: 600;
+        margin: 0;
+        display: flex;
+        align-items: center;
     }
 
-    .shadow-sm {
-        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+    .card-body {
+        padding: 1.25rem;
     }
 
-    h1 {
-        font-weight: 700;
-        background: linear-gradient(45deg, #344767, #667eea);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+    /* Table styling */
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table thead th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        padding: 0.75rem 1rem;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-color: #f2f2f2;
+    }
+
+    /* Info boxes */
+    .info-box {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border-radius: 0.75rem;
+        height: 100%;
+    }
+
+    .info-box-icon {
+        border-radius: 0.75rem 0 0 0.75rem;
+        width: 80px;
+        font-size: 1.5rem;
+    }
+
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #4b6cb7, #182848);
+        color: white;
+    }
+
+    .bg-gradient-success {
+        background: linear-gradient(45deg, #28a745, #1e7e34);
+        color: white;
+    }
+
+    .bg-gradient-danger {
+        background: linear-gradient(45deg, #dc3545, #bd2130);
+        color: white;
+    }
+
+    .bg-gradient-info {
+        background: linear-gradient(45deg, #17a2b8, #117a8b);
+        color: white;
+    }
+
+    /* Badge styling */
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        border-radius: 0.375rem;
+    }
+
+    /* Progress bar */
+    .progress {
+        height: 6px;
+        border-radius: 3px;
+        background-color: #f0f0f0;
+        margin: 5px 0;
+    }
+
+    /* Button styling */
+    .btn {
+        border-radius: 0.5rem;
+        padding: 0.375rem 0.75rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-group .btn {
+        border-radius: 0.375rem;
+        box-shadow: none;
+        margin: 0 2px;
+    }
+
+    .btn-primary {
+        background: #4b6cb7;
+        border-color: #4b6cb7;
+    }
+
+    .btn-primary:hover {
+        background: #3c5aa5;
+        border-color: #3c5aa5;
+    }
+
+    /* Callout styling */
+    .callout {
+        border-radius: 0.5rem;
+        border-left: 5px solid #4b6cb7;
+    }
+
+    /* Empty state styling */
+    .empty-state {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    /* Pagination styling */
+    .pagination .page-link {
+        border-radius: 0.25rem;
+        margin: 0 2px;
+        color: #4b6cb7;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #4b6cb7;
+        border-color: #4b6cb7;
+    }
+
+    /* User block */
+    .user-block img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+
+    .user-block .username {
+        font-weight: 600;
+    }
+
+    .user-block .description {
+        color: #6c757d;
     }
     </style>
 {% endblock %}
@@ -326,21 +483,20 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Modern color palette
     const colors = [
-        'rgba(54, 162, 235, 0.8)', // Blue
-        'rgba(75, 192, 192, 0.8)', // Teal
-        'rgba(153, 102, 255, 0.8)', // Purple
-        'rgba(255, 159, 64, 0.8)',  // Orange
-        'rgba(255, 205, 86, 0.8)',  // Yellow
-        'rgba(201, 90, 90, 0.8)',   // Darker Red
-        'rgba(100, 149, 237, 0.8)', // Cornflower Blue
-        'rgba(0, 123, 255, 0.8)',   // Stronger Blue
-        'rgba(255, 99, 132, 0.8)'
-        'rgba(0, 0, 0, 0.8)'   // black
-        'rgba(255, 255, 255, 0.8)' //White
+        'rgba(59, 130, 246, 0.8)',  // Blue
+        'rgba(16, 185, 129, 0.8)',  // Green
+        'rgba(139, 92, 246, 0.8)',  // Purple
+        'rgba(249, 115, 22, 0.8)',  // Orange
+        'rgba(234, 179, 8, 0.8)',   // Yellow
+        'rgba(239, 68, 68, 0.8)',   // Red
+        'rgba(14, 165, 233, 0.8)',  // Light Blue
+        'rgba(79, 70, 229, 0.8)',   // Indigo
+        'rgba(236, 72, 153, 0.8)'   // Pink
     ];
 
-    // Bar Chart: Top Vehicles
+    // Bar Chart: Top Vehicles with improved aesthetics
     const barCtx = document.getElementById('barChart').getContext('2d');
     new Chart(barCtx, {
         type: 'bar',
@@ -352,28 +508,55 @@ document.addEventListener('DOMContentLoaded', function () {
                 backgroundColor: colors,
                 borderColor: colors.map(c => c.replace('0.8', '1')),
                 borderWidth: 1,
-                borderRadius: 5,
-                maxBarThickness: 50
+                borderRadius: 8,
+                maxBarThickness: 60
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
-                legend: { display: false }
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    bodyFont: { size: 14 },
+                    titleFont: { size: 16 },
+                    padding: 12,
+                    cornerRadius: 6
+                }
             },
             scales: {
                 y: {
                     beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        font: { size: 12 }
+                    },
                     title: {
                         display: true,
-                        text: 'Capacity (kg)'
+                        text: 'Capacity (kg)',
+                        font: { size: 14, weight: 'bold' }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: { size: 12 }
                     }
                 }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeOutQuart'
             }
         }
     });
 
-    // Pie Chart: Car Color Distribution
+    // Pie Chart: Car Color Distribution with improved aesthetics
     const pieCtx = document.getElementById('pieChart').getContext('2d');
     new Chart(pieCtx, {
         type: 'doughnut',
@@ -382,20 +565,28 @@ document.addEventListener('DOMContentLoaded', function () {
             datasets: [{
                 data: {{ colorData|json_encode|raw }},
                 backgroundColor: colors,
-                borderColor: colors.map(c => c.replace('0.8', '1')),
-                borderWidth: 1
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                hoverOffset: 10
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     position: 'bottom',
                     labels: {
-                        padding: 15
+                        padding: 20,
+                        font: { size: 12 }
                     }
                 },
                 tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    bodyFont: { size: 14 },
+                    titleFont: { size: 16 },
+                    padding: 12,
+                    cornerRadius: 6,
                     callbacks: {
                         label: function(context) {
                             const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -406,10 +597,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             },
-            cutout: '60%'
+            cutout: '65%',
+            animation: {
+                animateScale: true,
+                animateRotate: true,
+                duration: 2000,
+                easing: 'easeOutQuart'
+            }
         }
     });
 });
 </script>
 {% endblock %}
-

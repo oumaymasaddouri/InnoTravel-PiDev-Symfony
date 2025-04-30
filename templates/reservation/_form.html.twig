@@ -1,5 +1,18 @@
-{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
-    {{ form_widget(form) }}
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_errors(form) }} {# Display global form errors #}
+    {{ form_row(form.pickup_address) }}
+    {{ form_row(form.destination_address) }}
+    <label class="form-label">Select pickup and destination locations on the map</label>
+    <div class="map-toggle">
+        <button type="button" class="pickup-btn">Set Pickup Location</button>
+        <button type="button" class="destination-btn">Set Destination Location</button>
+    </div>
+    <div id="map"></div>
+    {{ form_widget(form.pickupLatitude) }}
+    {{ form_widget(form.pickupLongitude) }}
+    {{ form_widget(form.destinationLatitude) }}
+    {{ form_widget(form.destinationLongitude) }}
+    {{ form_row(form.specialRequests) }}
     <button type="submit" class="custom-save-btn">
         {{ button_label|default('Save') }}
     </button>
@@ -19,5 +32,21 @@
 
 .custom-save-btn:hover {
     background-color: #45a049;
+}
+
+.error-message {
+    color: #F44336;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+form .has-error {
+    color: #F44336;
+}
+
+form .has-error input,
+form .has-error textarea {
+    border-color: #F44336;
+    box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
 }
 </style>

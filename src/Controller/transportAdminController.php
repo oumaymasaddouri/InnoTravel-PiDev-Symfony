@@ -34,6 +34,10 @@ public function index(TransportRepository $transportRepository, PaginatorInterfa
         ]
     );
 
+
+    $activeCount = $transportRepository->getCountByStatus('Active');
+    $inactiveCount = $transportRepository->getCountByStatus('Inactive');
+
     // Get all transports for statistics
     $transports = $transportRepository->findAll();
 
@@ -59,8 +63,11 @@ public function index(TransportRepository $transportRepository, PaginatorInterfa
         'transports' => $transports,
         'colorLabels' => $colorLabels,
         'colorData' => $colorData,
+        'activeCount' => $activeCount,
+        'inactiveCount' => $inactiveCount,
     ]);
 }
+
 
 
     #[Route('/new', name: 'app_transport_admin_new', methods: ['GET', 'POST'])]
