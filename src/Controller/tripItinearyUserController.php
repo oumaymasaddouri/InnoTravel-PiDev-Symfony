@@ -152,7 +152,7 @@ class tripItinearyUserController extends AbstractController
                         'nameExpeditor' => 'saddouri oumayma',
                         'receiverList' => [
                                 'Email' => $admin->getEmail(), 
-                                'Name' =>  $admin->getFullName(),
+                                'Name' =>  $admin->getFirstname() . ' ' . $admin->getLastname(),
                             ],
                         'subject' => 'New Trip Created', 
                     ],

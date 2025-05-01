@@ -13,6 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,8 +39,12 @@ class AdminTripController extends AbstractController
     }
 
     #[Route('/admin/list-trip', name: 'list_trip')]
-    public function listitineraire(ManagerRegistry $doctrine, Request $request, PaginatorInterface $paginator): Response
+    public function listitineraire(ManagerRegistry $doctrine, Request $request, PaginatorInterface $paginator, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $em = $doctrine->getManager();
         $repo = $em->getRepository(Trip::class);
     
@@ -49,7 +54,7 @@ class AdminTripController extends AbstractController
     
         $search = $request->query->get('search');
         if ($search) {
-            $queryBuilder->where('u.fullName LIKE :search OR t.status LIKE :search OR t.id LIKE :search')
+            $queryBuilder->where('u.firstName LIKE :search OR t.status LIKE :search OR t.id LIKE :search')
                          ->setParameter('search', '%' . $search . '%');
         }
     
@@ -66,8 +71,12 @@ class AdminTripController extends AbstractController
     }
 
     #[Route('/admin/create-trip', name: 'create_trip')]
-    public function createTrip(Request $request, ManagerRegistry $doctrine): Response
+    public function createTrip(Request $request, ManagerRegistry $doctrine, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $em = $doctrine->getManager();
         $trip = new Trip();
         $form = $this->createForm(TripType::class, $trip);
@@ -108,8 +117,12 @@ class AdminTripController extends AbstractController
     } 
 
     #[Route('/admin/view-trip/{id}', name: 'view_trip')]
-    public function viewTrip(ManagerRegistry $doctrine, $id): Response
+    public function viewTrip(ManagerRegistry $doctrine, $id, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $trip = $doctrine->getRepository(Trip::class)->findOneBy(['id' => $id]);
        
         $itineraires = $doctrine->getRepository(Itineraire::class)->findAll();
@@ -135,8 +148,12 @@ class AdminTripController extends AbstractController
     }
 
     #[Route('/admin/update-trip/{id}', name: 'update_trip')]
-    public function updateTrip(Request $request, ManagerRegistry $doctrine, $id, MailService $mailService): Response
+    public function updateTrip(Request $request, ManagerRegistry $doctrine, $id, MailService $mailService, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $em = $doctrine->getManager();
         $trip = $doctrine->getRepository(Trip::class)->findOneBy(['id' => $id]);
     
@@ -188,7 +205,7 @@ class AdminTripController extends AbstractController
                             'nameExpeditor' => 'saddouri oumayma',
                             'receiverList' => [
                                 'Email' => $trip->getUser()->getEmail(), 
-                                'Name' =>  $trip->getUser()->getFullName(),
+                                'Name' =>  $trip->getUser()->getFirstName() . ' ' . $trip->getUser()->getLastName(),
                             ],
                             'subject' => 'Trip Status Changed', 
                         ],
@@ -203,7 +220,6 @@ class AdminTripController extends AbstractController
                 
                 $this->addFlash('success', 'Le voyage a été mis à jour avec succès.');
             } catch (\Exception $e) {
-                dd($e);
                 $this->addFlash('error', 'L`action a échoué. Veuillez réessayer.');
             }
     
@@ -219,8 +235,12 @@ class AdminTripController extends AbstractController
     }
     
     #[Route('/admin/delete-trip/{id}', name: 'delete_trip', methods: ['POST'])]
-    public function deleteTrip(EntityManagerInterface $entityManager, $id): Response
+    public function deleteTrip(EntityManagerInterface $entityManager, $id, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $trip = $entityManager->getRepository(Trip::class)->find($id);
 
         if (!$trip) {

@@ -68,7 +68,7 @@ class TripType extends AbstractType
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => function ($user) {
-                    return $user->getFullName();
+                    return $user->getEmail();
                 },
                 'placeholder' => 'Choose a user',
                 'required' => true,

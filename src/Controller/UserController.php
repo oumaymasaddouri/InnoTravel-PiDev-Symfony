@@ -135,7 +135,7 @@ class UserController extends AbstractController
 
             if ($email === 'admin@innotravel.tn' && $password === 'adminadmin123inno') {
                 $session->set('admin', true);
-                return $this->redirectToRoute('admin_home');
+                return $this->redirectToRoute('admin');
             }
 
             $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);

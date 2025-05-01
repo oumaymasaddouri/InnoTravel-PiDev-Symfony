@@ -48,7 +48,7 @@
                              {% for trip in pagination %}
                             <tr class="text-center">
                                 <td>{{ trip.id }}</td>
-                                <td class="title-text">{{ trip.user.fullName }}</td>
+                                <td class="title-text">{{ trip.user.email }}</td>
                                 <td class="title-text">{{ trip.budget }}</td>
                                 <td class="title-text">{{ trip.arrivalDate|date('y-m-d') }}</td>
                                 <td class="title-text">{{ trip.departure|date('y-m-d') }}</td>   

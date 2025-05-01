@@ -86,6 +86,22 @@
             <div class="sidebar">
                 <nav class="mt-2">
                     <ul id="navList" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-header">User</li>
+                        <li class="nav-item has-treeview">
+                        <li class="nav-item">
+                            <a href="{{ path('admin') }}" class="nav-link" id="specificNavLink">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>User</p>
+                            </a>
+                        </li>
+                        <li class="nav-header">FeedBack</li>
+                        <li class="nav-item has-treeview">
+                        <li class="nav-item">
+                            <a href="{{ path('admin_feedbacks') }}" class="nav-link" id="specificNavLink">
+                                <i class="nav-icon fas fa-comment-dots"></i>
+                                <p>Feedback</p>
+                            </a>
+                        </li>
                         <li class="nav-header">Trip & Itineraire</li>
                         <li class="nav-item has-treeview">
                         <li class="nav-item">
@@ -95,7 +111,7 @@
                                     Itineraire
                                 </p>
                             </a>
-                        
+                        </li>
                         <li class="nav-item">
                             <a href="{{ path('list_trip') }}" class="nav-link" id="specificNavLink">
                             <i class="nav-icon fas fa-plane"></i>
@@ -164,5 +180,16 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Symfony UX Chart.js Controller (for rendering the charts via Stimulus) -->
+    <script src="https://cdn.jsdelivr.net/npm/@symfony/ux-chartjs@2.5.0/dist/ux-chartjs.min.js"></script>
+    <script>
+        window.Stimulus = window.Stimulus || {};
+        Stimulus.application = Stimulus.Application.start();
+        Stimulus.application.register('symfony--ux-chartjs--chart', window['symfony--ux-chartjs--chart'].default);
+    </script>
+
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_link_tags('app') }}
 {% endblock %}
 </html>

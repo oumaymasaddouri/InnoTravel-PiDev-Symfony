@@ -5,18 +5,18 @@ namespace App\Controller;
 use App\Entity\Trip;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminController extends AbstractController
 {
-    #[Route('/admin', name: 'admin')]
-    public function index(ManagerRegistry $doctine): Response
+    #[Route('/admin-home', name: 'admin_home')]
+    public function index(ManagerRegistry $doctine, SessionInterface $session): Response
     {
-        $user = $this->getUser();
-        if (!$user) {
-            throw $this->createAccessDeniedException('You are not authorized to access this resource.');
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('Admin/index.html.twig', [

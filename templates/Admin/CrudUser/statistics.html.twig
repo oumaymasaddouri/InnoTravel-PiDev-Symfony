@@ -1,0 +1,29 @@
+{% extends 'Admin/base.html.twig' %}
+
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-5 mb-4 d-flex justify-content-center">
+            <div class="card shadow-sm p-3" style="width: 450px;">
+                <h5 class="text-center mb-3">🌍 Travelers by Country</h5>
+                <div style="height: 450px;">
+                    {{ render_chart(countryChart) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 mb-4 d-flex justify-content-center">
+            <div class="card shadow-sm p-3" style="width: 450px;">
+                <h5 class="text-center mb-3">🎂 Travelers by Age Group</h5>
+                <div style="height: 450px;">
+                    {{ render_chart(ageChart) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    {{ stimulus_controller('chart') }}
+{% endblock %}

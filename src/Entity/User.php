@@ -84,9 +84,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "boolean")]
     private bool $isBanned = false;
 
+    /**
+     * @var Collection<int, Trip>
+     */
+    #[ORM\OneToMany(targetEntity: Trip::class, mappedBy: 'user')]
+    private Collection $trips;
+
+
     public function __construct()
     {
         $this->feedbacks = new ArrayCollection();
+        $this->trips = new ArrayCollection();
     }
 
     public function getProfilePictureFile(): ?File
@@ -262,5 +270,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsBanned(bool $isBanned): void
     {
         $this->isBanned = $isBanned;
+    }
+
+    /**
+     * @return Collection<int, Trip>
+     */
+    public function getTrips(): Collection
+    {
+        return $this->trips;
+    }
+
+    public function addTrip(Trip $trip): static
+    {
+        if (!$this->trips->contains($trip)) {
+            $this->trips->add($trip);
+            $trip->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrip(Trip $trip): static
+    {
+        if ($this->trips->removeElement($trip)) {
+            // set the owning side to null (unless already changed)
+            if ($trip->getUser() === $this) {
+                $trip->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->id ?: $this->getFirstName();
     }
 }

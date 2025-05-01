@@ -10,14 +10,19 @@ use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminItineraireController extends AbstractController
 {
     #[Route('/admin/list-itineraire', name: 'list_itineraire')]
-    public function listitineraire(ManagerRegistry $doctrine, Request $request, PaginatorInterface $paginator): Response
+    public function listitineraire(ManagerRegistry $doctrine, Request $request, PaginatorInterface $paginator, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $em = $doctrine->getManager();
         $repo = $em->getRepository(Itineraire::class);
     
@@ -44,8 +49,12 @@ class AdminItineraireController extends AbstractController
     } 
 
     #[Route('/admin/create-itineraire', name: 'create_itineraire')]
-    public function createitineraire(Request $request, ManagerRegistry $doctrine): Response
+    public function createitineraire(Request $request, ManagerRegistry $doctrine, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $em = $doctrine->getManager();
         $itineraire = new Itineraire();
         $form = $this->createForm(ItineraireType::class, $itineraire);
@@ -71,8 +80,12 @@ class AdminItineraireController extends AbstractController
     } 
 
     #[Route('/admin/view-itineraire/{id}', name: 'view_itineraire')]
-    public function viewItineraire(ManagerRegistry $doctrine, $id): Response
+    public function viewItineraire(ManagerRegistry $doctrine, $id, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $itineraire = $doctrine->getRepository(Itineraire::class)->findOneBy(['id' => $id]);
        
         $form = $this->createForm(ItineraireType::class, $itineraire, [
@@ -85,8 +98,12 @@ class AdminItineraireController extends AbstractController
     }
 
     #[Route('/admin/update-itineraire/{id}', name: 'update_itineraire')]
-    public function updateItineraire(Request $request, ManagerRegistry $doctrine, $id): Response
+    public function updateItineraire(Request $request, ManagerRegistry $doctrine, $id, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $em = $doctrine->getManager();
         $itineraire = $doctrine->getRepository(Itineraire::class)->findOneBy(['id' => $id]);
        
@@ -112,8 +129,12 @@ class AdminItineraireController extends AbstractController
 
     
     #[Route('/admin/delete-itineraire/{id}', name: 'delete_itineraire', methods: ['POST'])]
-    public function deleteItineraire(EntityManagerInterface $entityManager, $id): Response
+    public function deleteItineraire(EntityManagerInterface $entityManager, $id, SessionInterface $session): Response
     {
+        if (!$session->get('admin')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $itineraire = $entityManager->getRepository(Itineraire::class)->find($id);
     
         if (!$itineraire) {
