@@ -24,13 +24,13 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8 mx-auto">
-                <div class="card card-light">
+                <div class="card card-outline card-primary">
                     <div class="card-header">
                         <h3 class="card-title">
-                            <i class="fas fa-calendar-plus mr-2"></i>Reservation Details
+                            <i class="fas fa-calendar-plus mr-1 text-primary"></i>
+                            Reservation Details
                         </h3>
                     </div>
-                    
                     <div class="card-body">
                         {{ include('reservation_admin/_form.html.twig', {'button_label': 'Create Reservation'}) }}
                     </div>
@@ -41,107 +41,198 @@
 </section>
 {% endblock %}
 
-{% block stylesheets %}
+{% block css %}
     {{ parent() }}
     <style>
-        /* Modern card styling */
-        .card-light {
+        /* Base styling for light mode */
+        body {
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+            font-size: 0.85rem;
+        }
+
+        /* Content header */
+        .content-header {
+            padding: 15px 0;
+        }
+
+        h1 {
+            font-weight: 700;
+            background: linear-gradient(45deg, #344767, #4b6cb7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+            line-height: 1.2;
+        }
+
+        .breadcrumb-item a {
+            color: #4b6cb7;
+            transition: color 0.2s ease;
+            font-size: 0.8rem;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #3b589e;
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+
+        /* Card */
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
+            background: #ffffff;
         }
-        
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-outline.card-primary {
+            border-top: 4px solid #4b6cb7;
+        }
+
         .card-header {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-bottom: none;
-            padding: 1.25rem 1.5rem;
+            padding: 0.75rem;
+            background: #ffffff;
+            border-bottom: 1px solid #e9ecef;
         }
-        
+
         .card-title {
+            color: #344767;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            font-size: 0.95rem;
         }
-        
+
+        .card-title i.text-primary {
+            color: #4b6cb7;
+            font-size: 1rem;
+        }
+
         .card-body {
-            padding: 2rem;
+            padding: 1rem;
         }
-        
-        /* Form layout improvements */
+
+        /* Form layout */
         .form-group {
-            margin-bottom: 1.75rem;
+            margin-bottom: 1.25rem;
+            position: relative;
         }
-        
+
         .form-group label {
             font-weight: 500;
             color: #4a5568;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
-        
+
         .form-control {
             border: 1px solid #e2e8f0;
             border-radius: 6px;
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
             box-shadow: none;
             height: auto;
+            background: #ffffff;
+            color: #344767;
         }
-        
+
         .form-control:focus {
-            border-color: #4299e1;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+            border-color: #4b6cb7;
+            box-shadow: 0 0 0 2px rgba(75, 108, 183, 0.15);
         }
-        
+
         textarea.form-control {
-            min-height: 120px;
+            min-height: 100px;
         }
-        
-        /* Button styling - Improved Save Button */
+
+        /* Floating label effect */
+        .form-group.focused label {
+            color: #4b6cb7;
+        }
+
+        /* Error styling */
+        .invalid-feedback {
+            margin-top: 0.4rem;
+            font-size: 0.75rem;
+            color: #dc3545;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+        .is-invalid:focus {
+            box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2) !important;
+        }
+
+        /* Form actions */
         .form-actions {
             display: flex;
             justify-content: flex-end;
-            margin-top: 2rem;
-            gap: 1rem;
+            margin-top: 1.5rem;
+            gap: 0.75rem;
         }
-        
-        .btn-save {
-            background: #4CAF50;
-            border: none;
-            color: white;
-            padding: 0.75rem 2rem;
+
+        /* Buttons */
+        .btn {
             border-radius: 6px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            display: inline-flex;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
             position: relative;
             overflow: hidden;
         }
-        
-        .btn-save:hover {
-            background: #43A047;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+
+        .btn-primary {
+            background: #4b6cb7;
+            border-color: #4b6cb7;
+            color: white;
         }
-        
-        .btn-save:active {
+
+        .btn-primary:hover {
+            background: #3b589e;
+            border-color: #3b589e;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:active {
             transform: translateY(0);
-            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
-        
-        .btn-save i {
-            margin-right: 0.75rem;
-            font-size: 1.1rem;
+
+        .btn-secondary {
+            background: #ecf0f1;
+            border-color: #dfe6e9;
+            color: #7f8c8d;
         }
-        
-        /* Ripple effect */
-        .btn-save:after {
+
+        .btn-secondary:hover {
+            background: #dfe6e9;
+            border-color: #ced4da;
+            color: #636e72;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Ripple effect for all buttons */
+        .btn-primary:after,
+        .btn-secondary:after {
             content: "";
             position: absolute;
             top: 50%;
@@ -154,11 +245,12 @@
             transform: scale(1, 1) translate(-50%);
             transform-origin: 50% 50%;
         }
-        
-        .btn-save:focus:not(:active)::after {
+
+        .btn-primary:focus:not(:active)::after,
+        .btn-secondary:focus:not(:active)::after {
             animation: ripple 0.6s ease-out;
         }
-        
+
         @keyframes ripple {
             0% {
                 transform: scale(0, 0);
@@ -169,65 +261,165 @@
                 opacity: 0;
             }
         }
-        
-        /* Back button */
-        .back-btn {
-            background: #f5f5f5;
-            color: #555;
-            border: none;
-            padding: 0.75rem 1.75rem;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            text-decoration: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+
+        .btn-primary.loading,
+        .btn-secondary.loading {
+            pointer-events: none;
         }
-        
-        .back-btn:hover {
-            background: #e0e0e0;
-            color: #333;
-            text-decoration: none;
+
+        /* Character counter */
+        .character-counter {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 0.4rem;
+            display: block;
         }
-        
-        /* Error styling */
-        .invalid-feedback {
-            margin-top: 0.5rem;
-            font-size: 0.85rem;
-            color: #e53e3e;
+
+        /* Dark Mode Adjustments */
+        body.dark-mode {
+            background-color: #1a1a1a;
         }
-        
-        .is-invalid {
-            border-color: #fc8181 !important;
+
+        body.dark-mode h1 {
+            background: linear-gradient(45deg, #6a89cc, #a3bffa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
-        .is-invalid:focus {
-            box-shadow: 0 0 0 3px rgba(252, 129, 129, 0.2) !important;
+
+        body.dark-mode .breadcrumb-item a {
+            color: #6a89cc;
         }
-        
-        /* Floating label effect */
-        .form-group {
-            position: relative;
+
+        body.dark-mode .breadcrumb-item a:hover {
+            color: #a3bffa;
         }
-        
-        .form-group.focused label {
-            color: #4299e1;
+
+        body.dark-mode .breadcrumb-item.active {
+            color: #a0a0a0;
         }
-        
+
+        body.dark-mode .card {
+            background: #2a2a2a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .card-outline.card-primary {
+            border-top-color: #6a89cc;
+        }
+
+        body.dark-mode .card-header {
+            background: #2a2a2a;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        body.dark-mode .card-title {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .card-title i.text-primary {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .form-group label {
+            color: #a0a0a0;
+        }
+
+        body.dark-mode .form-control {
+            background: #343434;
+            border-color: #4a4a4a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .form-control:focus {
+            border-color: #6a89cc;
+            box-shadow: 0 0 0 2px rgba(106, 137, 204, 0.25);
+        }
+
+        body.dark-mode .form-group.focused label {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .invalid-feedback {
+            color: #e4606d;
+        }
+
+        body.dark-mode .is-invalid:focus {
+            box-shadow: 0 0 0 2px rgba(228, 96, 109, 0.2) !important;
+        }
+
+        body.dark-mode .btn-primary {
+            background: #6a89cc;
+            border-color: #6a89cc;
+        }
+
+        body.dark-mode .btn-primary:hover {
+            background: #a3bffa;
+            border-color: #a3bffa;
+        }
+
+        body.dark-mode .btn-secondary {
+            background: #4a4a4a;
+            border-color: #4a4a4a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: #5a5a5a;
+            border-color: #5a5a5a;
+        }
+
+        body.dark-mode .character-counter {
+            color: #a0a0a0;
+        }
+
         /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .card-body {
-                padding: 1.5rem;
+        @media (max-width: 767.98px) {
+            body {
+                font-size: 0.75rem;
             }
-            
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card-body {
+                padding: 0.75rem;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-control {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .form-group label {
+                font-size: 0.75rem;
+            }
+
+            .invalid-feedback {
+                font-size: 0.65rem;
+            }
+
+            .btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
             .form-actions {
                 flex-direction: column;
+                gap: 0.5rem;
             }
-            
-            .back-btn, .btn-save {
+
+            .form-actions .btn {
                 width: 100%;
-                justify-content: center;
+                text-align: center;
             }
         }
     </style>
@@ -237,50 +429,59 @@
     {{ parent() }}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Enhanced focus effects
+            // Floating label effect
             const formControls = document.querySelectorAll('.form-control');
             formControls.forEach(input => {
                 input.addEventListener('focus', function() {
                     this.closest('.form-group').classList.add('focused');
                 });
-                
                 input.addEventListener('blur', function() {
-                    this.closest('.form-group').classList.remove('focused');
+                    if (!this.value) {
+                        this.closest('.form-group').classList.remove('focused');
+                    }
                 });
+                // Initialize focused state if input has value on page load
+                if (input.value) {
+                    input.closest('.form-group').classList.add('focused');
+                }
             });
-            
-            // Add character counter for textareas
+
+            // Character counter for textarea
             const textareas = document.querySelectorAll('textarea.form-control');
             textareas.forEach(textarea => {
                 const counter = document.createElement('small');
-                counter.className = 'text-muted float-right mt-1';
+                counter.className = 'character-counter';
                 counter.textContent = `${textarea.value.length}/500`;
                 textarea.parentNode.appendChild(counter);
-                
+
                 textarea.addEventListener('input', function() {
                     counter.textContent = `${this.value.length}/500`;
-                });
-            });
-            
-            // Save button loading state
-            const saveButton = document.querySelector('.btn-save');
-            if (saveButton) {
-                saveButton.addEventListener('click', function(e) {
-                    if (!this.classList.contains('loading')) {
-                        this.classList.add('loading');
-                        const originalHtml = this.innerHTML;
-                        this.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Saving...';
-                        
-                        // Reset after 2 seconds (for demo)
-                        setTimeout(() => {
-                            this.innerHTML = '<i class="fas fa-check mr-2"></i> Saved!';
-                            setTimeout(() => {
-                                this.innerHTML = originalHtml;
-                                this.classList.remove('loading');
-                            }, 1500);
-                        }, 2000);
+                    if (this.value.length > 500) {
+                        this.value = this.value.substring(0, 500);
+                        counter.textContent = '500/500';
                     }
                 });
+            });
+
+            // Save button loading state
+            const saveButton = document.querySelector('button[type="submit"]');
+            if (saveButton) {
+                saveButton.classList.add('btn', 'btn-primary');
+                saveButton.innerHTML = '<i class="fas fa-save mr-1"></i> ' + saveButton.textContent;
+            }
+
+            // Add back button dynamically
+            const formActions = document.createElement('div');
+            formActions.className = 'form-actions';
+            const backButton = document.createElement('a');
+            backButton.href = '{{ path('app_reservation_admin_index') }}';
+            backButton.className = 'btn btn-secondary';
+            backButton.innerHTML = '<i class="fas fa-arrow-left mr-1"></i> Back';
+            formActions.appendChild(backButton);
+            const submitButton = document.querySelector('button[type="submit"]');
+            if (submitButton) {
+                formActions.appendChild(submitButton);
+                submitButton.parentNode.insertBefore(formActions, submitButton.nextSibling);
             }
         });
     </script>

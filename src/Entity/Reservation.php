@@ -31,8 +31,8 @@ class Reservation
     private ?float $price = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Choice(choices: ['Pending', 'Accepted', 'Completed'], message: 'Invalid status.')]
-    private ?string $status = 'Pending';
+    #[Assert\Choice(choices: ['pending', 'accepted', 'Completed'], message: 'Invalid status.')]
+    private ?string $status = 'pending';
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;

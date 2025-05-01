@@ -1,7 +1,5 @@
 <?php
 
-// src/Repository/transportRepository.php
-
 namespace App\Repository;
 
 use App\Entity\transport;
@@ -23,7 +21,7 @@ class transportRepository extends ServiceEntityRepository
             ->orderBy('r.id');
 
         if ($searchTerm) {
-            $qb->andWhere('r.carModel LIKE :searchTerm ')
+            $qb->andWhere('r.carModel LIKE :searchTerm')
                ->setParameter('searchTerm', '%'.$searchTerm.'%');
         }
         return $qb;
@@ -38,5 +36,17 @@ class transportRepository extends ServiceEntityRepository
     public function getCountByStatus(string $status): int
     {
         return $this->count(['status' => $status]);
+    }
+
+    // New method to calculate average luggage capacity
+    public function getAverageLuggageCapacity(): ?float
+    {
+        $result = $this->createQueryBuilder('t')
+            ->select('AVG(t.maxLuggage) as avgLuggage')
+            ->where('t.maxLuggage IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result ? (float) $result : null;
     }
 }

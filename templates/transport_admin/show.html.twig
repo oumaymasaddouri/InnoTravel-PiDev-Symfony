@@ -1,235 +1,589 @@
 {% extends 'basebackoffice.html.twig' %}
 
-{% block title %}transport Details{% endblock %}
+{% block title %}Transport Details{% endblock %}
 
 {% block content %}
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">transport #{{ transport.id }}</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ path('app_transport_admin_index') }}">transports</a></li>
-                        <li class="breadcrumb-item active">Details</li>
-                    </ol>
-                </div>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Transport #{{ transport.id }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ path('app_transport_admin_index') }}">Transports</a></li>
+                    <li class="breadcrumb-item active">Details</li>
+                </ol>
             </div>
         </div>
     </div>
+</div>
 
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-car mr-1"></i>
-                                Vehicle Information
-                            </h3>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-car mr-1 text-primary"></i>
+                            Transport Details
+                        </h3>
+                        <div class="card-tools">
+                            <span class="status-circle status-{{ transport.status|lower }}">
+                                {{ transport.status }}
+                            </span>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12 col-md-6 d-flex align-items-stretch">
-                                    <div class="card bg-light d-flex flex-fill">
-                                        <div class="card-header text-muted border-bottom-0">
-                                            Vehicle Details
-                                        </div>
-                                        <div class="card-body pt-0">
-                                            <div class="row">
-                                                <div class="col-7">
-                                                    <h2 class="lead"><b>{{ transport.carModel }}</b></h2>
-                                                    <p class="text-muted text-sm">
-                                                        <b>Color: </b> {{ transport.carColor }}
-                                                    </p>
-                                                    <ul class="ml-4 mb-0 fa-ul text-muted">
-                                                        <li class="small">
-                                                            <span class="fa-li"><i class="fas fa-id-card"></i></span>
-                                                            License: {{ transport.licensePlate }}
-                                                        </li>
-                                                        <li class="small mt-2">
-                                                            <span class="fa-li"><i class="fas fa-suitcase"></i></span>
-                                                            Max Luggage: {{ transport.maxLuggage }}
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="col-5 text-center">
-                                                    <i class="fas fa-car-side fa-4x text-primary"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Accordion for Transport Details -->
+                        <div id="accordion">
+                            <!-- Vehicle Information -->
+                            <div class="card">
+                                <div class="card-header" id="headingVehicle">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseVehicle" aria-expanded="true" aria-controls="collapseVehicle">
+                                            Vehicle Information
+                                        </button>
+                                    </h5>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="card bg-gradient-light">
-                                        <div class="card-header border-bottom-0">
-                                            <h3 class="card-title">
-                                                <i class="fas fa-tachometer-alt mr-1"></i>
-                                                Performance Stats
-                                            </h3>
+                                <div id="collapseVehicle" class="collapse show" aria-labelledby="headingVehicle" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-car text-primary mr-1"></i>
+                                                    <span class="detail-label">Model:</span>
+                                                    <span class="detail-value">{{ transport.carModel }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-car text-primary mr-1"></i>
+                                                    <span class="detail-label">Vehicle:</span>
+                                                    <span class="detail-value">{{ transport.vehicleType }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                   <span class="detail-label">Color:</span>
+                                                   <span class="badge mr-1" style="background-color: {{ transport.carColor|lower }}; color: {{ transport.carColor|lower in ['white', 'yellow', 'beige'] ? '#000' : '#fff' }};">
+                                                   {{ transport.carColor }}
+                                                   </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                                                <p class="text-success text-xl">
-                                                    <i class="fas fa-thumbs-up"></i>
-                                                </p>
-                                                <p class="d-flex flex-column text-right">
-                                                    <span class="font-weight-bold">
-                                                        <i class="fas fa-star text-warning"></i> 4.8
-                                                    </span>
-                                                    <span class="text-muted">Average Rating</span>
-                                                </p>
+                                        <div class="row mt-2">
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-id-card text-info mr-1"></i>
+                                                    <span class="detail-label">License Plate:</span>
+                                                    <span class="detail-value">{{ transport.licensePlate }}</span>
+                                                </div>
                                             </div>
-                                            <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                                                <p class="text-primary text-xl">
-                                                    <i class="fas fa-route"></i>
-                                                </p>
-                                                <p class="d-flex flex-column text-right">
-                                                    <span class="font-weight-bold">23</span>
-                                                    <span class="text-muted">Total Rides</span>
-                                                </p>
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-suitcase text-warning mr-1"></i>
+                                                    <span class="detail-label">Max Luggage:</span>
+                                                    <span class="detail-value">{{ transport.maxLuggage }} pieces</span>
+                                                </div>
                                             </div>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <p class="text-danger text-xl">
-                                                    <i class="fas fa-clock"></i>
-                                                </p>
-                                                <p class="d-flex flex-column text-right">
-                                                    <span class="font-weight-bold">98%</span>
-                                                    <span class="text-muted">On-time Performance</span>
-                                                </p>
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-user text-primary mr-1"></i>
+                                                    <span class="detail-label">Driver:</span>
+                                                    <span class="detail-value">{{ transport.user.fullName ?? 'N/A' }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <div class="callout callout-info">
-                                        <h5><i class="fas fa-info-circle"></i> transport Service Area:</h5>
+                            <!-- Performance Stats -->
+                            <div class="card">
+                                <div class="card-header" id="headingPerformance">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePerformance" aria-expanded="false" aria-controls="collapsePerformance">
+                                            Performance Stats
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="collapsePerformance" class="collapse" aria-labelledby="headingPerformance" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-star text-warning mr-1"></i>
+                                                    <span class="detail-label">Average Rating:</span>
+                                                    <span class="detail-value">4.8</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-route text-primary mr-1"></i>
+                                                    <span class="detail-label">Total Rides:</span>
+                                                    <span class="detail-value">23</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-clock text-danger mr-1"></i>
+                                                    <span class="detail-label">On-time Performance:</span>
+                                                    <span class="detail-value">98%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Service Area -->
+                            <div class="card">
+                                <div class="card-header" id="headingService">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseService" aria-expanded="false" aria-controls="collapseService">
+                                            Service Area
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="collapseService" class="collapse" aria-labelledby="headingService" data-parent="#accordion">
+                                    <div class="card-body">
                                         <p>This transport primarily operates in the Central and North regions of the city.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="col-md-5">
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-calendar-check mr-1"></i>
-                                Recent Activity
-                            </h3>
-                        </div>
-                        <div class="card-body p-0">
-                            <ul class="products-list product-list-in-card pl-2 pr-2">
-                                <li class="item">
-                                    <div class="product-img">
-                                        <i class="fas fa-route fa-2x text-primary"></i>
-                                    </div>
-                                    <div class="product-info">
-                                        <a href="javascript:void(0)" class="product-title">
-                                            Trip #384
-                                            <span class="badge badge-success float-right">Completed</span>
-                                        </a>
-                                        <span class="product-description">
-                                            From manouba to lac - Today 09:15
-                                        </span>
-                                    </div>
-                                </li>
-                                <li class="item">
-                                    <div class="product-img">
-                                        <i class="fas fa-route fa-2x text-primary"></i>
-                                    </div>
-                                    <div class="product-info">
-                                        <a href="javascript:void(0)" class="product-title">
-                                            Trip #379
-                                            <span class="badge badge-success float-right">Completed</span>
-                                        </a>
-                                        <span class="product-description">
-                                            From airport to City Center - Yesterday 17:30
-                                        </span>
-                                    </div>
-                                </li>
-                                <li class="item">
-                                    <div class="product-img">
-                                        <i class="fas fa-route fa-2x text-primary"></i>
-                                    </div>
-                                    <div class="product-info">
-                                        <a href="javascript:void(0)" class="product-title">
-                                            Trip #365
-                                            <span class="badge badge-warning float-right">Pending</span>
-                                        </a>
-                                        <span class="product-description">
-                                            From Hotel Marina to Airport - Tomorrow 10:45
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-footer text-center">
-                            <a href="javascript:void(0)" class="uppercase">View All Activity</a>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-tools mr-1"></i>
-                                Actions
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="btn-group btn-block mb-3">
-                                <a href="{{ path('app_transport_admin_index') }}" class="btn btn-default">
-                                    <i class="fas fa-arrow-left mr-1"></i> Back to list
-                                </a>
-                                <a href="{{ path('app_transport_admin_edit', {'id': transport.id}) }}" class="btn btn-primary">
-                                    <i class="fas fa-edit mr-1"></i> Edit
-                                </a>
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal">
-                                    <i class="fas fa-trash mr-1"></i> Delete
-                                </button>
+                        <!-- Recent Activity -->
+                        <div class="mt-3">
+                            <h5 class="mb-2"><i class="fas fa-history mr-1 text-primary"></i> Recent Activity</h5>
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Trip ID</th>
+                                        <th>Route</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#384</td>
+                                        <td>From Manouba to Lac</td>
+                                        <td>Today 09:15</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#379</td>
+                                        <td>From Airport to City Center</td>
+                                        <td>Yesterday 17:30</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#365</td>
+                                        <td>From Hotel Marina to Airport</td>
+                                        <td>Tomorrow 10:45</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-center mt-2">
+                                <a href="javascript:void(0)" class="btn btn-link btn-sm">View All Activity</a>
                             </div>
-                            
-                            <div class="btn-group btn-block">
-                                <button type="button" class="btn btn-success">
-                                    <i class="fas fa-phone mr-1"></i> Contact
-                                </button>
-                                <button type="button" class="btn btn-info">
-                                    <i class="fas fa-car mr-1"></i> Assign Trip
-                                </button>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="mt-3">
+                            <h5 class="mb-2"><i class="fas fa-tools mr-1 text-primary"></i> Actions</h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <a href="{{ path('app_transport_admin_index') }}" class="btn btn-secondary btn-block mb-2">
+                                        <i class="fas fa-arrow-left mr-1"></i> Back
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{{ path('app_transport_admin_edit', {'id': transport.id}) }}" class="btn btn-primary btn-block mb-2">
+                                        <i class="fas fa-edit mr-1"></i> Edit
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-danger btn-block mb-2" data-toggle="modal" data-target="#delete-modal">
+                                        <i class="fas fa-trash mr-1"></i> Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Delete Modal -->
-    <div class="modal fade" id="delete-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h4 class="modal-title">Confirm transport Deletion</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this transport record?</p>
-                    <p class="text-danger"><small>This action cannot be undone.</small></p>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    {{ include('transport_admin/_delete_form.html.twig') }}
                 </div>
             </div>
         </div>
     </div>
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="delete-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title">Confirm Transport Deletion</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-exclamation-triangle text-warning fa-lg mr-2"></i>
+                    <div>
+                        <p class="mb-1">Are you sure you want to delete this transport record?</p>
+                        <p class="text-danger mb-0"><small>This action cannot be undone.</small></p>
+                    </div>
+                </div>
+                <div class="alert alert-warning">
+                    <strong>Transport ID:</strong> #{{ transport.id }}<br>
+                    <strong>Vehicle:</strong> {{ transport.carModel }} ({{ transport.carColor }})
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                {{ include('transport_admin/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <style>
+        /* Content header */
+        .content-header {
+            padding: 15px 0;
+        }
+
+        h1 {
+            font-weight: 700;
+            background: linear-gradient(45deg, #344767, #4b6cb7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+            line-height: 1.2;
+        }
+
+        .breadcrumb-item a {
+            color: #4b6cb7;
+            transition: color 0.2s ease;
+            font-size: 0.8rem;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #3b589e;
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+
+        /* Dark mode for content header */
+        body.dark-mode h1 {
+            background: linear-gradient(45deg, #e0e0e0, #6a89cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.dark-mode .breadcrumb-item a {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .breadcrumb-item a:hover {
+            color: #a3bffa;
+        }
+
+        body.dark-mode .breadcrumb-item.active {
+            color: #a0a0a0;
+        }
+
+        /* Card overrides */
+        .card-outline.card-primary {
+            border-top: 4px solid #4b6cb7;
+        }
+
+        body.dark-mode .card-outline.card-primary {
+            border-top: 4px solid #6a89cc;
+        }
+
+        .card-title i {
+            color: #4b6cb7;
+        }
+
+        body.dark-mode .card-title i {
+            color: #6a89cc;
+        }
+
+        /* Status circle */
+        .status-circle {
+            display: inline-block;
+            padding: 0.4em 0.8em;
+            font-weight: 500;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            border: 2px solid;
+        }
+
+        .status-active {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        /* Dark mode for status circle */
+        body.dark-mode .status-active {
+            background: #2e7d32;
+            border-color: #4caf50;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .status-inactive {
+            background: #d81b60;
+            border-color: #f06292;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .status-error {
+            background: #d81b60;
+            border-color: #f06292;
+            color: #e0e0e0;
+        }
+
+        /* Accordion */
+        .btn-link {
+            color: #4b6cb7;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 0;
+        }
+
+        .btn-link:hover {
+            color: #3b589e;
+            text-decoration: none;
+        }
+
+        .btn-link.collapsed::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: 4px;
+            font-size: 0.9rem;
+        }
+
+        .btn-link:not(.collapsed)::after {
+            content: '\f106';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* Dark mode for accordion */
+        body.dark-mode .btn-link {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .btn-link:hover {
+            color: #a3bffa;
+        }
+
+        /* Detail items */
+        .detail-item {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-item i {
+            font-size: 1rem;
+        }
+
+        .detail-item .badge {
+            font-size: 0.75rem;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #6c757d;
+            margin-right: 4px;
+            font-size: 0.8rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #344767;
+            font-size: 0.8rem;
+        }
+
+        /* Icon colors */
+        .detail-item i.fas.fa-car,
+        .detail-item i.fas.fa-user,
+        .detail-item i.fas.fa-route {
+            color: #4b6cb7;
+        }
+
+        .detail-item i.fas.fa-id-card {
+            color: #17a2b8;
+        }
+
+        .detail-item i.fas.fa-suitcase,
+        .detail-item i.fas.fa-star {
+            color: #ffc107;
+        }
+
+        .detail-item i.fas.fa-clock {
+            color: #dc3545;
+        }
+
+        /* Dark mode for detail items */
+        body.dark-mode .detail-label {
+            color: #a0a0a0;
+        }
+
+        body.dark-mode .detail-value {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .detail-item i.fas.fa-car,
+        body.dark-mode .detail-item i.fas.fa-user,
+        body.dark-mode .detail-item i.fas.fa-route {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .detail-item i.fas.fa-id-card {
+            color: #1ccad8;
+        }
+
+        body.dark-mode .detail-item i.fas.fa-suitcase,
+        body.dark-mode .detail-item i.fas.fa-star {
+            color: #ffd700;
+        }
+
+        body.dark-mode .detail-item i.fas.fa-clock {
+            color: #ef5350;
+        }
+
+        /* Recent activity table */
+        .table thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            padding: 0.5rem;
+        }
+
+        .table tbody td {
+            padding: 0.5rem;
+            vertical-align: middle;
+            font-size: 0.75rem;
+        }
+
+        /* Badges (already styled in base, just ensure consistency) */
+        .badge {
+            padding: 0.3em 0.5em;
+            font-weight: 500;
+            border-radius: 5px;
+            font-size: 0.65rem;
+        }
+
+        /* Modal */
+        .modal-header.bg-primary {
+            background: #4b6cb7;
+        }
+
+        .modal-header .modal-title {
+            font-size: 1rem;
+        }
+
+        .modal-body .text-danger {
+            color: #dc3545 !important;
+        }
+
+        .modal-body .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Dark mode for modal */
+        body.dark-mode .modal-header.bg-primary {
+            background: #6a89cc;
+        }
+
+        body.dark-mode .modal-body .text-danger {
+            color: #ef5350 !important;
+        }
+
+        body.dark-mode .modal-body .alert-warning {
+            background: #856404;
+            color: #e0e0e0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 767.98px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card-body {
+                padding: 0.75rem;
+            }
+
+            .table thead th,
+            .table tbody td {
+                font-size: 0.65rem;
+                padding: 0.4rem;
+            }
+
+            .badge {
+                font-size: 0.6rem;
+            }
+
+            .detail-item i {
+                font-size: 0.9rem;
+            }
+
+            .detail-label,
+            .detail-value {
+                font-size: 0.75rem;
+            }
+
+            .status-circle {
+                padding: 0.3em 0.6em;
+                font-size: 0.65rem;
+            }
+
+            .modal-body {
+                font-size: 0.8rem;
+            }
+
+            .modal-body .alert {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+
+            .modal-footer .btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
 {% endblock %}

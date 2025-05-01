@@ -3,173 +3,817 @@
 {% block title %}Reservation Details{% endblock %}
 
 {% block content %}
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Reservation #{{ reservation.id }}</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ path('app_reservation_admin_index') }}">Reservations</a></li>
-                        <li class="breadcrumb-item active">Details</li>
-                    </ol>
-                </div>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Reservation #{{ reservation.id }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ path('app_reservation_admin_index') }}">Reservations</a></li>
+                    <li class="breadcrumb-item active">Details</li>
+                </ol>
             </div>
         </div>
     </div>
+</div>
 
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                Reservation Information
-                            </h3>
-                            <div class="card-tools">
-                                <span class="badge badge-{{ reservation.status == 'Pending' ? 'warning' : (reservation.status == 'Confirmed' ? 'success' : 'secondary') }}">
-                                    {{ reservation.status }}
-                                </span>
-                            </div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle mr-1 text-primary"></i>
+                            Reservation Details
+                        </h3>
+                        <div class="card-tools">
+                            <span class="status-circle status-{{ reservation.status|lower }}">
+                                {{ reservation.status }}
+                            </span>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="info-box bg-light">
-                                        <span class="info-box-icon"><i class="fas fa-map-marker-alt text-primary"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Pickup Location</span>
-                                            <span class="info-box-number">{{ reservation.pickupAddress }}</span>
-                                        </div>
-                                    </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Accordion for Reservation Details -->
+                        <div id="accordion">
+                            <!-- General Info -->
+                            <div class="card">
+                                <div class="card-header" id="headingGeneral">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseGeneral" aria-expanded="true" aria-controls="collapseGeneral">
+                                            General Information
+                                        </button>
+                                    </h5>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="info-box bg-light">
-                                        <span class="info-box-icon"><i class="fas fa-flag-checkered text-danger"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Destination</span>
-                                            <span class="info-box-number">{{ reservation.destinationAddress }}</span>
+                                <div id="collapseGeneral" class="collapse show" aria-labelledby="headingGeneral" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-map-marker-alt text-primary mr-1"></i>
+                                                    <span class="detail-label">Pickup:</span>
+                                                    <span class="detail-value" data-tooltip="{{ reservation.pickupAddress }}">{{ reservation.pickupAddress }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-flag-checkered text-danger mr-1"></i>
+                                                    <span class="detail-label">Destination:</span>
+                                                    <span class="detail-value" data-tooltip="{{ reservation.destinationAddress }}">{{ reservation.destinationAddress }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-calendar-alt text-info mr-1"></i>
+                                                    <span class="detail-label">Created:</span>
+                                                    <span class="detail-value">{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i') : 'N/A' }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-clock text-warning mr-1"></i>
+                                                    <span class="detail-label">Duration:</span>
+                                                    <span class="detail-value">{{ reservation.estimatedDuration ? reservation.estimatedDuration ~ ' min' : 'N/A' }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="detail-item">
+                                                    <i class="fas fa-tag text-primary mr-1"></i>
+                                                    <span class="detail-label">Price:</span>
+                                                    <span class="detail-value">{{ reservation.price ? reservation.price ~ ' €' : 'N/A' }}</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row mt-3">
-                                <div class="col-md-4">
-                                    <div class="info-box bg-light">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-alt text-info"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Created At</span>
-                                            <span class="info-box-number">{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</span>
-                                        </div>
+                            <!-- Special Requests -->
+                            {% if reservation.specialRequests %}
+                            <div class="card">
+                                <div class="card-header" id="headingSpecial">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSpecial" aria-expanded="false" aria-controls="collapseSpecial">
+                                            Special Requests
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="collapseSpecial" class="collapse" aria-labelledby="headingSpecial" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <p>{{ reservation.specialRequests }}</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="info-box bg-light">
-                                        <span class="info-box-icon"><i class="fas fa-clock text-warning"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Est. Duration</span>
-                                            <span class="info-box-number">{{ reservation.estimatedDuration ? reservation.estimatedDuration : 'N/A' }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="info-box bg-light">
-                                        <span class="info-box-icon"><i class="fas fa-tag text-success"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Price</span>
-                                            <span class="info-box-number">{{ reservation.price ? reservation.price ~ ' €' : 'N/A' }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {% if reservation.sepcialRequests %}
-                            <div class="callout callout-info mt-3">
-                                <h5><i class="fas fa-info-circle"></i> Special Requests:</h5>
-                                <p>{{ reservation.sepcialRequests }}</p>
                             </div>
                             {% endif %}
                         </div>
-                    </div>
-                </div>
 
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-tools mr-1"></i>
-                                Actions
-                            </h3>
+                        <!-- Status Log -->
+                        <div class="mt-3">
+                            <h5 class="mb-2"><i class="fas fa-history mr-1 text-primary"></i> Status Log</h5>
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span class="badge badge-{{ reservation.status == 'pending' ? 'warning' : (reservation.status == 'accepted' ? 'success' : (reservation.status == 'Completed' ? 'primary' : 'secondary')) }}">
+                                                {{ reservation.status }}
+                                            </span>
+                                        </td>
+                                        <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i') : 'N/A' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <a href="{{ path('app_reservation_admin_index') }}" class="btn btn-default btn-block">
-                                    <i class="fas fa-arrow-left mr-1"></i> Back to list
-                                </a>
-                            </div>
-                            <div class="mb-3">
-                                <a href="{{ path('app_reservation_admin_edit', {'id': reservation.id}) }}" class="btn btn-primary btn-block">
-                                    <i class="fas fa-edit mr-1"></i> Edit reservation
-                                </a>
-                            </div>
-                            <div>
-                                <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#delete-modal">
-                                    <i class="fas fa-trash-alt mr-1"></i> Delete reservation
-                                </button>
+
+                        <!-- Actions -->
+                        <div class="mt-3">
+                            <h5 class="mb-2"><i class="fas fa-tools mr-1 text-primary"></i> Actions</h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <a href="{{ path('app_reservation_admin_index') }}" class="btn btn-secondary btn-block mb-2">
+                                        <i class="fas fa-arrow-left mr-1"></i> Back
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{{ path('app_reservation_admin_edit', {'id': reservation.id}) }}" class="btn btn-primary btn-block mb-2">
+                                        <i class="fas fa-edit mr-1"></i> Edit
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-danger btn-block mb-2" data-toggle="modal" data-target="#delete-modal">
+                                        <i class="fas fa-trash mr-1"></i> Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-history mr-1"></i>
-                                Status History
-                            </h3>
-                        </div>
-                        <div class="card-body p-0">
-                            <ul class="timeline timeline-inverse p-3">
-                                <li>
-                                    <i class="fas fa-circle bg-success"></i>
-                                    <div class="timeline-item">
-                                        <span class="time"><i class="fas fa-clock"></i> {{ reservation.createdAt ? reservation.createdAt|date('H:i') : '' }}</span>
-                                        <h3 class="timeline-header">Reservation Created</h3>
-                                        <div class="timeline-body">
-                                            Initial status: {{ reservation.status }}
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Delete Modal -->
-    <div class="modal fade" id="delete-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h4 class="modal-title">Confirm Deletion</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this reservation?</p>
-                    <p class="text-danger"><small>This action cannot be undone.</small></p>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    {{ include('reservation_admin/_delete_form.html.twig') }}
                 </div>
             </div>
         </div>
     </div>
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="delete-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title">Confirm Deletion</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-exclamation-triangle text-warning fa-lg mr-2"></i>
+                    <div>
+                        <p class="mb-1">Are you sure you want to delete this reservation?</p>
+                        <p class="text-danger mb-0"><small>This action cannot be undone.</small></p>
+                    </div>
+                </div>
+                <div class="alert alert-warning">
+                    <strong>ID:</strong> #{{ reservation.id }}<br>
+                    <strong>Pickup:</strong> {{ reservation.pickupAddress }}<br>
+                    <strong>Destination:</strong> {{ reservation.destinationAddress }}
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                {{ include('reservation_admin/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <style>
+        /* Base styling for light mode */
+        body {
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+            font-size: 0.85rem;
+        }
+
+        /* Content header */
+        .content-header {
+            padding: 15px 0;
+        }
+
+        h1 {
+            font-weight: 700;
+            background: linear-gradient(45deg, #344767, #4b6cb7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+            line-height: 1.2;
+        }
+
+        .breadcrumb-item a {
+            color: #4b6cb7;
+            transition: color 0.2s ease;
+            font-size: 0.8rem;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #3b589e;
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+
+        /* Card */
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: none;
+            background: #ffffff;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-outline.card-primary {
+            border-top: 4px solid #4b6cb7;
+        }
+
+        .card-header {
+            padding: 0.75rem;
+            background: #ffffff;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .card-title {
+            color: #344767;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .card-title i.text-primary {
+            color: #4b6cb7;
+            font-size: 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        /* Status circle */
+        .status-circle {
+            display: inline-block;
+            padding: 0.4em 0.8em;
+            font-weight: 500;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            border: 2px solid;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
+        }
+
+        .status-accepted {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .status-completed {
+            background: #cce5ff;
+            border-color: #b8daff;
+            color: #004085;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        /* Accordion */
+        .btn-link {
+            color: #4b6cb7;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 0;
+        }
+
+        .btn-link:hover {
+            color: #3b589e;
+            text-decoration: none;
+        }
+
+        .btn-link.collapsed::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: 4px;
+            font-size: 0.9rem;
+        }
+
+        .btn-link:not(.collapsed)::after {
+            content: '\f106';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* Detail items */
+        .detail-item {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-item i {
+            font-size: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #6c757d;
+            margin-right: 4px;
+            font-size: 0.8rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #344767;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            font-size: 0.8rem;
+        }
+
+        /* Tooltips for truncated text */
+        .detail-value[data-tooltip] {
+            position: relative;
+        }
+
+        .detail-value[data-tooltip]:hover:after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #343a40;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        /* Icon colors */
+        .detail-item i.fas.fa-map-marker-alt {
+            color: #4b6cb7;
+        }
+
+        .detail-item i.fas.fa-flag-checkered {
+            color: #dc3545;
+        }
+
+        .detail-item i.fas.fa-calendar-alt {
+            color: #17a2b8;
+        }
+
+        .detail-item i.fas.fa-clock {
+            color: #ffc107;
+        }
+
+        .detail-item i.fas.fa-tag {
+            color: #4b6cb7;
+        }
+
+        /* Status log table */
+        .table {
+            margin-bottom: 0;
+            color: #495057;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            padding: 0.5rem;
+            border-bottom: 2px solid #dee2e6;
+            color: #495057;
+        }
+
+        .table tbody td {
+            padding: 0.5rem;
+            vertical-align: middle;
+            border-color: #e9ecef;
+            font-size: 0.75rem;
+        }
+
+        .badge {
+            padding: 0.3em 0.5em;
+            font-weight: 500;
+            border-radius: 5px;
+            font-size: 0.65rem;
+        }
+
+        .badge-success {
+            background-color: #28a745 !important;
+        }
+
+        .badge-warning {
+            background-color: #ffc107 !important;
+        }
+
+        .badge-danger {
+            background-color: #dc3545 !important;
+        }
+
+        .badge-primary {
+            background-color: #4b6cb7 !important;
+        }
+
+        .badge-secondary {
+            background-color: #6c757d !important;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            border-color: #dfe6e9;
+            color: #7f8c8d;
+        }
+
+        .btn-secondary:hover {
+            background: #dfe6e9;
+            border-color: #ced4da;
+            color: #636e72;
+        }
+
+        .btn-primary {
+            background: #4b6cb7;
+            border-color: #4b6cb7;
+        }
+
+        .btn-primary:hover {
+            background: #3b589e;
+            border-color: #3b589e;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            border-color: #c82333;
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+            background: #ffffff;
+            color: #344767;
+        }
+
+        .modal-header.bg-danger {
+            background: #dc3545;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .modal-header .modal-title {
+            font-size: 1rem;
+            color: #ffffff;
+        }
+
+        .modal-header .close {
+            color: #ffffff;
+            opacity: 0.8;
+        }
+
+        .modal-header .close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .modal-body .alert-warning {
+            font-size: 0.8rem;
+            padding: 0.75rem;
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .modal-body .text-danger {
+            color: #dc3545;
+        }
+
+        .modal-body .text-warning {
+            color: #ffc107;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #e9ecef;
+            padding: 0.75rem;
+        }
+
+        /* Dark Mode Adjustments */
+        body.dark-mode {
+            background-color: #1a1a1a;
+        }
+
+        body.dark-mode h1 {
+            background: linear-gradient(45deg, #6a89cc, #a3bffa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.dark-mode .breadcrumb-item a {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .breadcrumb-item a:hover {
+            color: #a3bffa;
+        }
+
+        body.dark-mode .breadcrumb-item.active {
+            color: #a0a0a0;
+        }
+
+        body.dark-mode .card {
+            background: #2a2a2a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .card-outline.card-primary {
+            border-top-color: #6a89cc;
+        }
+
+        body.dark-mode .card-header {
+            background: #2a2a2a;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        body.dark-mode .card-title {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .card-title i.text-primary {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .status-pending {
+            background: #453508;
+            border-color: #664d03;
+            color: #ffca2c;
+        }
+
+        body.dark-mode .status-accepted {
+            background: #1e4620;
+            border-color: #2e7031;
+            color: #4caf50;
+        }
+
+        body.dark-mode .status-completed {
+            background: #003366;
+            border-color: #0052cc;
+            color: #66b0ff;
+        }
+
+        body.dark-mode .status-confirmed {
+            background: #1e4620;
+            border-color: #2e7031;
+            color: #4caf50;
+        }
+
+        body.dark-mode .status-cancelled {
+            background: #5c1c22;
+            border-color: #842029;
+            color: #e4606d;
+        }
+
+        body.dark-mode .btn-link {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .btn-link:hover {
+            color: #a3bffa;
+        }
+
+        body.dark-mode .detail-label {
+            color: #a0a0a0;
+        }
+
+        body.dark-mode .detail-value {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .detail-value[data-tooltip]:hover:after {
+            background: #555555;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .detail-item i.fas.fa-map-marker-alt {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .detail-item i.fas.fa-flag-checkered {
+            color: #e4606d;
+        }
+
+        body.dark-mode .detail-item i.fas.fa-calendar-alt {
+            color: #1ccad8;
+        }
+
+        body.dark-mode .detail-item i.fas.fa-clock {
+            color: #ffd700;
+        }
+
+        body.dark-mode .detail-item i.fas.fa-tag {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .table {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .table thead th {
+            background-color: #343434;
+            border-bottom: 2px solid #4a4a4a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .table tbody td {
+            border-color: #3a3a3a;
+        }
+
+        body.dark-mode .badge-success {
+            background-color: #4caf50 !important;
+        }
+
+        body.dark-mode .badge-warning {
+            background-color: #ffd700 !important;
+        }
+
+        body.dark-mode .badge-danger {
+            background-color: #e4606d !important;
+        }
+
+        body.dark-mode .badge-primary {
+            background-color: #6a89cc !important;
+        }
+
+        body.dark-mode .badge-secondary {
+            background-color: #a0a0a0 !important;
+        }
+
+        body.dark-mode .btn-secondary {
+            background: #4a4a4a;
+            border-color: #4a4a4a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: #5a5a5a;
+            border-color: #5a5a5a;
+        }
+
+        body.dark-mode .btn-primary {
+            background: #6a89cc;
+            border-color: #6a89cc;
+        }
+
+        body.dark-mode .btn-primary:hover {
+            background: #a3bffa;
+            border-color: #a3bffa;
+        }
+
+        body.dark-mode .btn-danger {
+            background: #dc3545;
+            border-color: #dc3545;
+        }
+
+        body.dark-mode .btn-danger:hover {
+            background: #e4606d;
+            border-color: #e4606d;
+        }
+
+        body.dark-mode .modal-content {
+            background: #2a2a2a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .modal-header.bg-danger {
+            background: #dc3545;
+        }
+
+        body.dark-mode .modal-body .alert-warning {
+            background: #453508;
+            color: #ffca2c;
+        }
+
+        body.dark-mode .modal-body .text-danger {
+            color: #e4606d;
+        }
+
+        body.dark-mode .modal-body .text-warning {
+            color: #ffd700;
+        }
+
+        body.dark-mode .modal-footer {
+            border-top: 1px solid #3a3a3a;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 767.98px) {
+            body {
+                font-size: 0.75rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card-body {
+                padding: 0.75rem;
+            }
+
+            .btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .table thead th,
+            .table tbody td {
+                font-size: 0.65rem;
+                padding: 0.4rem;
+            }
+
+            .badge {
+                font-size: 0.6rem;
+            }
+
+            .detail-item i {
+                font-size: 0.9rem;
+            }
+
+            .detail-label,
+            .detail-value {
+                font-size: 0.75rem;
+            }
+
+            .status-circle {
+                padding: 0.3em 0.6em;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
 {% endblock %}

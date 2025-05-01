@@ -1,100 +1,364 @@
 {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'reservation-form'}}) }}
 
-    <div class="form-section">
-        <h4 class="section-title"><i class="fas fa-map-marker-alt mr-2"></i>Trip Information</h4>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    {{ form_label(form.pickup_address) }}
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
-                        </div>
-                        {{ form_widget(form.pickup_address, {'attr': {'class': 'form-control' ~ (form.pickup_address.vars.valid ? '' : ' is-invalid')}}) }}
+<div class="form-section">
+    <h4 class="section-title"><i class="fas fa-map-marker-alt mr-1"></i>Trip Information</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.pickup_address) }}
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
                     </div>
-                    {{ form_errors(form.pickup_address) }}
+                    {{ form_widget(form.pickup_address, {'attr': {'class': 'form-control' ~ (form.pickup_address.vars.valid ? '' : ' is-invalid')}}) }}
                 </div>
+                {{ form_errors(form.pickup_address) }}
             </div>
-            
-            <div class="col-md-6">
-                <div class="form-group">
-                    {{ form_label(form.destination_address) }}
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-flag"></i></span>
-                        </div>
-                        {{ form_widget(form.destination_address, {'attr': {'class': 'form-control' ~ (form.destination_address.vars.valid ? '' : ' is-invalid')}}) }}
+        </div>
+        
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.destination_address) }}
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-flag"></i></span>
                     </div>
-                    {{ form_errors(form.destination_address) }}
+                    {{ form_widget(form.destination_address, {'attr': {'class': 'form-control' ~ (form.destination_address.vars.valid ? '' : ' is-invalid')}}) }}
                 </div>
+                {{ form_errors(form.destination_address) }}
             </div>
         </div>
     </div>
-    
-    <div class="form-section">
-        <h4 class="section-title"><i class="fas fa-info-circle mr-2"></i>Additional Details</h4>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    {{ form_label(form.specialRequests) }}
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-comment-alt"></i></span>
-                        </div>
-                        {{ form_widget(form.specialRequests, {'attr': {'class': 'form-control' ~ (form.specialRequests.vars.valid ? '' : ' is-invalid')}}) }}
+</div>
+
+<div class="form-section">
+    <h4 class="section-title"><i class="fas fa-info-circle mr-1"></i>Additional Details</h4>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                {{ form_label(form.specialRequests) }}
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-comment-alt"></i></span>
                     </div>
-                    {{ form_errors(form.specialRequests) }}
+                    {{ form_widget(form.specialRequests, {'attr': {'class': 'form-control' ~ (form.specialRequests.vars.valid ? '' : ' is-invalid')}}) }}
                 </div>
+                <small class="character-counter">{{ form.specialRequests.vars.value|length }}/500</small>
+                {{ form_errors(form.specialRequests) }}
             </div>
         </div>
     </div>
-    
-    {% set renderedFields = ['pickup_address', 'destination_address', 'specialRequests', '_token'] %}
-    
-    {% if form|filter(field => field.vars.name not in renderedFields)|length > 0 %}
-    <div class="form-section">
-        <h4 class="section-title"><i class="fas fa-cog mr-2"></i>Other Information</h4>
-        <div class="row">
-            {% for field in form %}
-                {% if field.vars.name not in renderedFields %}
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {{ form_label(field) }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        {% if field.vars.name matches '/date|time/i' %}
-                                            <i class="fas fa-calendar-alt"></i>
-                                        {% elseif field.vars.name matches '/price|cost/i' %}
-                                            <i class="fas fa-dollar-sign"></i>
-                                        {% elseif field.vars.name matches '/status/i' %}
-                                            <i class="fas fa-tag"></i>
-                                        {% elseif field.vars.name matches '/customer|client/i' %}
-                                            <i class="fas fa-user"></i>
-                                        {% elseif field.vars.name matches '/driver/i' %}
-                                            <i class="fas fa-car"></i>
-                                        {% else %}
-                                            <i class="fas fa-pen"></i>
-                                        {% endif %}
-                                    </span>
-                                </div>
-                                {{ form_widget(field, {'attr': {'class': 'form-control' ~ (field.vars.valid ? '' : ' is-invalid')}}) }}
+</div>
+
+{% set renderedFields = ['pickup_address', 'destination_address', 'specialRequests', '_token'] %}
+
+{% if form|filter(field => field.vars.name not in renderedFields)|length > 0 %}
+<div class="form-section">
+    <h4 class="section-title"><i class="fas fa-cog mr-1"></i>Other Information</h4>
+    <div class="row">
+        {% for field in form %}
+            {% if field.vars.name not in renderedFields %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form_label(field) }}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    {% if field.vars.name matches '/date|time/i' %}
+                                        <i class="fas fa-calendar-alt"></i>
+                                    {% elseif field.vars.name matches '/price|cost/i' %}
+                                        <i class="fas fa-dollar-sign"></i>
+                                    {% elseif field.vars.name matches '/status/i' %}
+                                        <i class="fas fa-tag"></i>
+                                    {% elseif field.vars.name matches '/customer|client/i' %}
+                                        <i class="fas fa-user"></i>
+                                    {% elseif field.vars.name matches '/driver/i' %}
+                                        <i class="fas fa-car"></i>
+                                    {% else %}
+                                        <i class="fas fa-pen"></i>
+                                    {% endif %}
+                                </span>
                             </div>
-                            {{ form_errors(field) }}
+                            {{ form_widget(field, {'attr': {'class': 'form-control' ~ (field.vars.valid ? '' : ' is-invalid')}}) }}
                         </div>
+                        {{ form_errors(field) }}
                     </div>
-                {% endif %}
-            {% endfor %}
-        </div>
+                </div>
+            {% endif %}
+        {% endfor %}
     </div>
-    {% endif %}
-    
-    <div class="form-actions">
-        <a href="{{ path('app_reservation_admin_index') }}" class="back-btn">
-            <i class="fas fa-arrow-left"></i> Back to List
-        </a>
-        <button type="submit" class="btn-save">
-            <i class="fas fa-save"></i> {{ button_label|default('Save') }}
-        </button>
-    </div>
+</div>
+{% endif %}
+
+<div class="form-actions">
+    <a href="{{ path('app_reservation_admin_index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left mr-1"></i> Back
+    </a>
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save mr-1"></i> {{ button_label|default('Save') }}
+    </button>
+</div>
+
 {{ form_end(form) }}
+
+<style>
+    /* Form section */
+    .form-section {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .form-section:last-child {
+        border-bottom: none;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #344767;
+        margin-bottom: 0.75rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title i {
+        color: #4b6cb7;
+        font-size: 1rem;
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 30px;
+        height: 2px;
+        background: #4b6cb7;
+    }
+
+    /* Form group */
+    .form-group {
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+
+    .form-group label {
+        font-weight: 500;
+        color: #4a5568;
+        margin-bottom: 0.4rem;
+        display: block;
+        font-size: 0.8rem;
+    }
+
+    .form-control {
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        box-shadow: none;
+        height: auto;
+    }
+
+    .form-control:focus {
+        border-color: #4b6cb7;
+        box-shadow: 0 0 0 2px rgba(75, 108, 183, 0.15);
+    }
+
+    textarea.form-control {
+        min-height: 100px;
+    }
+
+    /* Input group */
+    .input-group-prepend .input-group-text {
+        background: #f8f9fa;
+        border: 1px solid #e2e8f0;
+        border-right: none;
+        border-radius: 6px 0 0 6px;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .input-group-prepend .input-group-text i {
+        color: #4b6cb7;
+        font-size: 1rem;
+        transition: transform 0.2s ease;
+    }
+
+    .input-group:hover .input-group-text i {
+        transform: scale(1.1);
+    }
+
+    .input-group .form-control {
+        border-left: none;
+        border-radius: 0 6px 6px 0;
+    }
+
+    /* Floating label effect */
+    .form-group.focused label {
+        color: #4b6cb7;
+    }
+
+    /* Error styling */
+    .invalid-feedback {
+        margin-top: 0.4rem;
+        font-size: 0.75rem;
+        color: #dc3545;
+    }
+
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    .is-invalid:focus {
+        box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2) !important;
+    }
+
+    /* Character counter */
+    .character-counter {
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-top: 0.4rem;
+        display: block;
+    }
+
+    /* Form actions */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+        gap: 0.75rem;
+    }
+
+    /* Buttons */
+    .btn {
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        font-size: 0.85rem;
+    }
+
+    .btn-primary {
+        background: #4b6cb7;
+        border-color: #4b6cb7;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary:hover {
+        background: #3b589e;
+        border-color: #3b589e;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary.loading {
+        pointer-events: none;
+    }
+
+    .btn-secondary {
+        background: #ecf0f1;
+        border-color: #dfe6e9;
+        color: #7f8c8d;
+    }
+
+    .btn-secondary:hover {
+        background: #dfe6e9;
+        border-color: #ced4da;
+        color: #636e72;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+        .form-section {
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+        }
+
+        .section-title i {
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+        }
+
+        .invalid-feedback {
+            font-size: 0.65rem;
+        }
+
+        .input-group-prepend .input-group-text {
+            padding: 0.4rem 0.6rem;
+        }
+
+        .input-group-prepend .input-group-text i {
+            font-size: 0.9rem;
+        }
+
+        .character-counter {
+            font-size: 0.65rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-actions .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .col-md-6 {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Floating label effect
+        const formControls = document.querySelectorAll('.form-control');
+        formControls.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.closest('.form-group').classList.add('focused');
+            });
+            input.addEventListener('blur', function() {
+                this.closest('.form-group').classList.remove('focused');
+            });
+        });
+
+        // Character counter for specialRequests textarea
+        const textarea = document.querySelector('textarea[name="reservation[specialRequests]"]');
+        if (textarea) {
+            const counter = textarea.parentNode.querySelector('.character-counter');
+            textarea.addEventListener('input', function() {
+                counter.textContent = `${this.value.length}/500`;
+                if (this.value.length > 500) {
+                    this.value = this.value.substring(0, 500);
+                    counter.textContent = '500/500';
+                }
+            });
+        }
+    });
+</script>

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="content-header">
     <div class="container-fluid">
-        <div class="row mb-4">
+        <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0">Add New Transport</h1>
                 <p class="text-muted">Create a new transport entry in the system</p>
@@ -26,64 +26,61 @@
         <div class="row">
             <div class="col-md-8">
                 <!-- Main Form Card -->
-                <div class="card card-primary shadow-lg border-0">
+                <div class="card card-outline card-primary">
                     <div class="card-header">
                         <h3 class="card-title">
-                            <i class="fas fa-car-side mr-2"></i>Vehicle Information
+                            <i class="fas fa-car-side mr-1 text-primary"></i>
+                            Vehicle Information
                         </h3>
-                        <div class="card-tools">
-                            <span class="badge badge-primary">Step 1 of 1</span>
-                        </div>
                     </div>
                     
                     <div class="card-body">
                         {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
                         
-                        <div class="progress mb-4" style="height: 5px;">
+                        <div class="progress mb-3">
                             <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="form-progress"></div>
                         </div>
                         
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    {{ form_label(form.carModel, 'Car Model', {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_label(form.carModel, 'Car Model', {'label_attr': {'class': 'form-label', 'data-toggle': 'tooltip', 'data-placement': 'top', 'title': 'Enter the vehicle model (e.g., Toyota Camry)'}}) }}
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-car"></i></span>
                                         </div>
-                                        {{ form_widget(form.carModel, {'attr': {'class': 'form-control form-control-lg shadow-sm', 'placeholder': 'Enter car model', 'data-field': 'model'}}) }}
+                                        {{ form_widget(form.carModel, {'attr': {'class': 'form-control', 'placeholder': 'Enter car model', 'data-field': 'model'}}) }}
                                     </div>
                                     {{ form_errors(form.carModel) }}
-                                    <small class="form-text text-muted">Example: Toyota Camry, Honda Accord</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    {{ form_label(form.carColor, 'Car Color', {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_label(form.carColor, 'Car Color', {'label_attr': {'class': 'form-label', 'data-toggle': 'tooltip', 'data-placement': 'top', 'title': 'Enter the vehicle color (e.g., Blue)'}}) }}
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-palette"></i></span>
                                         </div>
-                                        {{ form_widget(form.carColor, {'attr': {'class': 'form-control form-control-lg shadow-sm', 'placeholder': 'Enter car color', 'data-field': 'color'}}) }}
+                                        {{ form_widget(form.carColor, {'attr': {'class': 'form-control', 'placeholder': 'Enter car color', 'data-field': 'color'}}) }}
                                     </div>
                                     {{ form_errors(form.carColor) }}
-                                    <div class="color-preview mt-2" id="color-preview"></div>
+                                    <div class="color-preview mt-1" id="color-preview"></div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="row mt-4">
+                        <div class="row mt-2">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    {{ form_label(form.licensePlate, 'License Plate', {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_label(form.licensePlate, 'License Plate', {'label_attr': {'class': 'form-label', 'data-toggle': 'tooltip', 'data-placement': 'top', 'title': 'Enter the vehicle license plate number'}}) }}
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                         </div>
-                                        {{ form_widget(form.licensePlate, {'attr': {'class': 'form-control form-control-lg shadow-sm', 'placeholder': 'Enter license plate', 'data-field': 'license'}}) }}
+                                        {{ form_widget(form.licensePlate, {'attr': {'class': 'form-control', 'placeholder': 'Enter license plate', 'data-field': 'license'}}) }}
                                     </div>
                                     {{ form_errors(form.licensePlate) }}
-                                    <div class="license-plate-preview mt-2" id="license-preview">
+                                    <div class="license-plate-preview mt-1" id="license-preview">
                                         <div class="license-plate">
                                             <span class="plate-text">Enter License</span>
                                         </div>
@@ -92,20 +89,34 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    {{ form_label(form.maxLuggage, 'Max Luggage Capacity', {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_label(form.maxLuggage, 'Max Luggage Capacity', {'label_attr': {'class': 'form-label', 'data-toggle': 'tooltip', 'data-placement': 'top', 'title': 'Enter the maximum number of standard suitcases (0-10)'}}) }}
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-suitcase"></i></span>
                                         </div>
-                                        {{ form_widget(form.maxLuggage, {'attr': {'class': 'form-control form-control-lg shadow-sm', 'placeholder': 'Enter max luggage capacity', 'data-field': 'luggage', 'min': '0', 'max': '10'}}) }}
+                                        {{ form_widget(form.maxLuggage, {'attr': {'class': 'form-control', 'placeholder': 'Enter max luggage capacity', 'data-field': 'luggage', 'min': '0', 'max': '10'}}) }}
                                     </div>
                                     {{ form_errors(form.maxLuggage) }}
-                                    <div class="luggage-preview mt-2">
+                                    <div class="luggage-preview mt-1">
                                         <div class="d-flex align-items-center">
                                             <div class="luggage-icons" id="luggage-icons"></div>
-                                            <small class="text-muted ml-2">Number of standard suitcases</small>
+                                            <small class="text-muted ml-1">Standard suitcases</small>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.vehicleType, 'Vehicle Type', {'label_attr': {'class': 'form-label', 'data-toggle': 'tooltip', 'data-placement': 'top', 'title': 'Select the type of vehicle'}}) }}
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-car-side"></i></span>
+                                        </div>
+                                        {{ form_widget(form.vehicleType, {'attr': {'class': 'form-control', 'data-field': 'vehicleType'}}) }}
+                                    </div>
+                                    {{ form_errors(form.vehicleType) }}
                                 </div>
                             </div>
                         </div>
@@ -113,11 +124,11 @@
                     
                     <div class="card-footer">
                         <div class="d-flex justify-content-between">
-                            <a href="{{ path('app_transport_admin_index') }}" class="btn btn-outline-secondary btn-lg">
-                                <i class="fas fa-arrow-left mr-2"></i> Back to List
+                            <a href="{{ path('app_transport_admin_index') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left mr-1"></i> Back
                             </a>
-                            <button type="submit" class="btn btn-primary btn-lg" id="save-btn">
-                                <i class="fas fa-save mr-2"></i> Save Transport
+                            <button type="submit" class="btn btn-primary" id="save-btn">
+                                <i class="fas fa-save mr-1"></i> Save Transport
                             </button>
                         </div>
                         {{ form_end(form) }}
@@ -127,70 +138,50 @@
             
             <div class="col-md-4">
                 <!-- Sidebar Card -->
-                <div class="card card-info shadow-lg border-0">
+                <div class="card card-outline card-info">
                     <div class="card-header">
                         <h3 class="card-title">
-                            <i class="fas fa-info-circle mr-2"></i>Transport Requirements
+                            <i class="fas fa-info-circle mr-1 text-info"></i>
+                            Transport Requirements
                         </h3>
                     </div>
                     <div class="card-body">
-                        <div class="status-tracker mb-4">
-                            <h5 class="mb-3">Completion Status</h5>
-                            <div class="progress-steps">
-                                <div class="progress-step active">
-                                    <div class="step-icon"><i class="fas fa-car"></i></div>
-                                    <div class="step-label">Vehicle Info</div>
-                                </div>
-                                <div class="progress-step">
-                                    <div class="step-icon"><i class="fas fa-check-circle"></i></div>
-                                    <div class="step-label">Review</div>
-                                </div>
-                                <div class="progress-step">
-                                    <div class="step-icon"><i class="fas fa-flag-checkered"></i></div>
-                                    <div class="step-label">Done</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="callout callout-info mb-4">
-                            <h5><i class="fas fa-clipboard-list mr-2"></i>Required Documentation</h5>
+                        <div class="callout callout-info mb-3">
+                            <h5><i class="fas fa-clipboard-list mr-1"></i> Required Documentation</h5>
                             <ul class="requirements-list">
                                 <li class="requirement-item">
-                                    <i class="fas fa-check-circle text-success mr-2"></i>
-                                    <span>Valid driving license</span>
+                                    <i class="fas fa-check-circle text-success mr-1"></i>
+                                    Valid driving license
                                 </li>
                                 <li class="requirement-item">
-                                    <i class="fas fa-check-circle text-success mr-2"></i>
-                                    <span>Vehicle registration</span>
+                                    <i class="fas fa-check-circle text-success mr-1"></i>
+                                    Vehicle registration
                                 </li>
                                 <li class="requirement-item">
-                                    <i class="fas fa-check-circle text-success mr-2"></i>
-                                    <span>Insurance documentation</span>
+                                    <i class="fas fa-check-circle text-success mr-1"></i>
+                                    Insurance documentation
                                 </li>
                                 <li class="requirement-item">
-                                    <i class="fas fa-check-circle text-success mr-2"></i>
-                                    <span>Background check clearance</span>
+                                    <i class="fas fa-check-circle text-success mr-1"></i>
+                                    Background check clearance
                                 </li>
                             </ul>
                         </div>
                         
-                        <div class="info-box bg-gradient-success mb-4">
-                            <span class="info-box-icon"><i class="fas fa-check"></i></span>
+                        <div class="info-box bg-light">
+                            <span class="info-box-icon"><i class="fas fa-check text-success"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Transport Approval Process</span>
-                                <span class="info-box-number">Complete all fields for faster approval</span>
+                                <span class="info-box-text">Form Completion</span>
+                                <span class="info-box-number" id="approval-text">0% complete</span>
                                 <div class="progress">
-                                    <div class="progress-bar" style="width: 0%" id="approval-progress"></div>
+                                    <div class="progress-bar bg-primary" style="width: 0%" id="approval-progress"></div>
                                 </div>
-                                <span class="progress-description" id="approval-text">
-                                    0% complete
-                                </span>
                             </div>
                         </div>
                         
-                        <div class="card bg-gradient-primary text-white">
+                        <div class="card bg-light">
                             <div class="card-body">
-                                <h5 class="card-title">Tips for Approval</h5>
+                                <h5 class="card-title"><i class="fas fa-lightbulb mr-1 text-warning"></i> Tips for Approval</h5>
                                 <p class="card-text">Ensure all vehicle information is accurate and matches your documentation for faster approval.</p>
                                 <p class="card-text mb-0">All fields must be completed before submission.</p>
                             </div>
@@ -206,357 +197,568 @@
 {% block css %}
 {{ parent() }}
 <style>
-/* Base Styling */
-body {
-    font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8f9fa;
-}
-
-h1 {
-    font-weight: 700;
-    font-size: 2.2rem;
-    background: linear-gradient(45deg, #344767, #4b6cb7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-label.form-label {
-    font-weight: 600;
-    color: #495057;
-    margin-bottom: 0.5rem;
-}
-
-.form-control {
-    border-radius: 0.5rem;
-    transition: all 0.2s ease-in-out;
-}
-
-.form-control:focus {
-    border-color: #4b6cb7;
-    box-shadow: 0 0 0 0.2rem rgba(75, 108, 183, 0.25);
-}
-
-.form-control-lg {
-    font-size: 1rem;
-    padding: 0.75rem 1rem;
-}
-
-.input-group-text {
-    border-radius: 0.5rem 0 0 0.5rem;
-    background-color: #f8f9fa;
-    border-right: none;
-}
-
-.input-group .form-control {
-    border-radius: 0 0.5rem 0.5rem 0;
-}
-
-/* Card Styling */
-.card {
-    border-radius: 0.75rem;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-    transition: all 0.3s ease-in-out;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card-header {
-    background-color: #fff;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 1.25rem 1.5rem;
-}
-
-.card-title {
-    font-weight: 600;
-    margin-bottom: 0;
-    color: #344767;
-    display: flex;
-    align-items: center;
-}
-
-.card-info .card-header {
-    background: linear-gradient(45deg, #3a7bd5, #00d2ff);
-    color: white;
-}
-
-.card-primary .card-header {
-    background: linear-gradient(45deg, #4b6cb7, #182848);
-    color: white;
-}
-
-.card-body {
-    padding: 1.5rem;
-}
-
-.card-footer {
-    background-color: #fff;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 1.25rem 1.5rem;
-}
-
-.shadow-lg {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Interactive Elements */
-.btn {
-    border-radius: 0.5rem;
-    font-weight: 500;
-    padding: 0.5rem 1.5rem;
-    transition: all 0.2s ease;
-}
-
-.btn-lg {
-    padding: 0.75rem 1.5rem;
-}
-
-.btn-primary {
-    background: linear-gradient(45deg, #4b6cb7, #182848);
-    border: none;
-}
-
-.btn-primary:hover {
-    background: linear-gradient(45deg, #3a5a9d, #0c1526);
-    box-shadow: 0 5px 15px rgba(27, 40, 72, 0.3);
-}
-
-.btn-outline-secondary {
-    color: #6c757d;
-    border-color: #6c757d;
-}
-
-.btn-outline-secondary:hover {
-    background-color: #6c757d;
-    color: white;
-}
-
-/* Form Progress */
-.progress {
-    border-radius: 0.5rem;
-    overflow: hidden;
-    background-color: #e9ecef;
-    height: 0.5rem;
-}
-
-.progress-bar {
-    background: linear-gradient(45deg, #4b6cb7, #182848);
-    transition: width 0.5s ease;
-}
-
-/* Progress Steps */
-.progress-steps {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-}
-
-.progress-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-    position: relative;
-}
-
-.progress-step:not(:first-child):before {
-    content: '';
-    position: absolute;
-    top: 15px;
-    left: -50%;
-    width: 100%;
-    height: 2px;
-    background-color: #ddd;
-    z-index: 0;
-}
-
-.progress-step.active:not(:first-child):before {
-    background-color: #4b6cb7;
-}
-
-.progress-step .step-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #ddd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    position: relative;
-    z-index: 1;
-}
-
-.progress-step.active .step-icon {
-    background-color: #4b6cb7;
-}
-
-.progress-step .step-label {
-    margin-top: 0.5rem;
-    font-size: 0.8rem;
-    color: #6c757d;
-}
-
-.progress-step.active .step-label {
-    color: #4b6cb7;
-    font-weight: 600;
-}
-
-/* Requirements List */
-.requirements-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.requirement-item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.requirement-item:last-child {
-    border-bottom: none;
-}
-
-/* Vehicle Preview */
-.vehicle-preview {
-    background-color: #fff;
-    border-radius: 0.5rem;
-    padding: 1rem;
-}
-
-.car-illustration {
-    margin: 1rem 0;
-}
-
-/* License Plate Preview */
-.license-plate-preview {
-    display: flex;
-    justify-content: center;
-}
-
-.license-plate {
-    background-color: #fff;
-    border: 2px solid #000;
-    border-radius: 4px;
-    padding: 4px 12px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    display: inline-block;
-    min-width: 150px;
-    text-align: center;
-}
-
-/* Color Preview */
-.color-preview {
-    display: flex;
-    justify-content: flex-start;
-}
-
-.color-preview::before {
-    content: '';
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-    background-color: #cccccc;
-}
-
-/* Luggage Icons */
-.luggage-icons {
-    display: flex;
-    align-items: center;
-}
-
-.luggage-icon {
-    color: #4b6cb7;
-    margin-right: 5px;
-}
-
-/* Callout Styling */
-.callout {
-    border-radius: 0.5rem;
-    border-left: 5px solid;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-    background-color: #fff;
-}
-
-.callout-info {
-    border-left-color: #17a2b8;
-}
-
-.callout h5 {
-    margin-top: 0;
-    margin-bottom: 0.75rem;
-    font-weight: 600;
-}
-
-/* Info Box */
-.info-box {
-    border-radius: 0.5rem;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-.info-box-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 70px;
-    font-size: 1.5rem;
-}
-
-.info-box-content {
-    padding: 0.75rem 1rem;
-}
-
-.info-box-text {
-    font-weight: 600;
-}
-
-.info-box-number {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-}
-
-.bg-gradient-success {
-    background: linear-gradient(45deg, #28a745, #20c997);
-    color: white;
-}
-
-.bg-gradient-primary {
-    background: linear-gradient(45deg, #4b6cb7, #182848);
-    color: white;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .progress-steps {
-        flex-direction: column;
-        align-items: flex-start;
+    /* Content header */
+    .content-header {
+        padding: 15px 0;
     }
-    
-    .progress-step {
+
+    h1 {
+        font-weight: 700;
+        background: linear-gradient(45deg, #344767, #4b6cb7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.8rem;
+        line-height: 1.2;
+    }
+
+    .content-header p.text-muted {
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        color: #6c757d;
+    }
+
+    .breadcrumb-item a {
+        color: #4b6cb7;
+        transition: color 0.2s ease;
+        font-size: 0.8rem;
+    }
+
+    .breadcrumb-item a:hover {
+        color: #3b589e;
+    }
+
+    .breadcrumb-item.active {
+        color: #6c757d;
+        font-size: 0.8rem;
+    }
+
+    /* Dark mode for content header */
+    body.dark-mode h1 {
+        background: linear-gradient(45deg, #e0e0e0, #6a89cc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    body.dark-mode .content-header p.text-muted {
+        color: #a0a0a0;
+    }
+
+    body.dark-mode .breadcrumb-item a {
+        color: #6a89cc;
+    }
+
+    body.dark-mode .breadcrumb-item a:hover {
+        color: #a3bffa;
+    }
+
+    body.dark-mode .breadcrumb-item.active {
+        color: #a0a0a0;
+    }
+
+    /* Card */
+    .card-outline.card-primary {
+        border-top: 4px solid #4b6cb7;
+    }
+
+    .card-outline.card-info {
+        border-top: 4px solid #17a2b8;
+    }
+
+    .card-header {
+        padding: 0.75rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    body.dark-mode .card-header {
+        border-bottom: 1px solid #444444;
+    }
+
+    .card-title {
+        color: #344767;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    body.dark-mode .card-title {
+        color: #e0e0e0;
+    }
+
+    .card-title i {
+        font-size: 1rem;
+    }
+
+    .card-title i.text-primary {
+        color: #4b6cb7;
+    }
+
+    .card-title i.text-info {
+        color: #17a2b8;
+    }
+
+    body.dark-mode .card-title i.text-primary {
+        color: #6a89cc;
+    }
+
+    body.dark-mode .card-title i.text-info {
+        color: #1ccad8;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .card-footer {
+        padding: 0.75rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    body.dark-mode .card-footer {
+        border-top: 1px solid #444444;
+    }
+
+    /* Form */
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+        font-size: 0.8rem;
+        margin-bottom: 0.25rem;
+    }
+
+    body.dark-mode .form-label {
+        color: #e0e0e0;
+    }
+
+    .form-control {
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+    }
+
+    body.dark-mode .form-control {
+        border: 1px solid #444444;
+        background-color: #343434;
+        color: #e0e0e0;
+    }
+
+    .form-control:focus {
+        border-color: #4b6cb7;
+        box-shadow: 0 0 0 0.2rem rgba(75, 108, 183, 0.25);
+    }
+
+    body.dark-mode .form-control:focus {
+        border-color: #6a89cc;
+        box-shadow: 0 0 0 0.2rem rgba(106, 137, 204, 0.25);
+    }
+
+    .form-control.is-invalid {
+        border-color: #dc3545;
+    }
+
+    body.dark-mode .form-control.is-invalid {
+        border-color: #ef5350;
+    }
+
+    .form-control.is-valid {
+        border-color: #28a745;
+    }
+
+    body.dark-mode .form-control.is-valid {
+        border-color: #4caf50;
+    }
+
+    .invalid-feedback {
+        font-size: 0.75rem;
+        color: #dc3545;
+    }
+
+    body.dark-mode .invalid-feedback {
+        color: #ef5350;
+    }
+
+    .input-group-text {
+        border: 1px solid #e2e8f0;
+        border-right: none;
+        border-radius: 6px 0 0 6px;
+        background-color: #f8f9fa;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    body.dark-mode .input-group-text {
+        border: 1px solid #444444;
+        border-right: none;
+        background-color: #444444;
+    }
+
+    .input-group-text i {
+        color: #4b6cb7;
+    }
+
+    body.dark-mode .input-group-text i {
+        color: #6a89cc;
+    }
+
+    .input-group .form-control {
+        border-radius: 0 6px 6px 0;
+    }
+
+    /* Progress bar */
+    .progress {
+        height: 4px;
+        border-radius: 2px;
+        background-color: #e9ecef;
         margin-bottom: 1rem;
-        flex-direction: row;
-        width: 100%;
     }
-    
-    .progress-step:not(:first-child):before {
-        display: none;
+
+    body.dark-mode .progress {
+        background-color: #444444;
     }
-    
-    .progress-step .step-label {
-        margin-top: 0;
-        margin-left: 1rem;
+
+    .progress-bar {
+        background-color: #4b6cb7;
+        transition: width 0.5s ease;
     }
-}
+
+    body.dark-mode .progress-bar {
+        background-color: #6a89cc;
+    }
+
+    /* Color preview */
+    .color-preview {
+        display: flex;
+        align-items: center;
+    }
+
+    .color-preview div {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    body.dark-mode .color-preview div {
+        border: 1px solid #666666;
+    }
+
+    .color-preview span {
+        font-size: 0.75rem;
+        color: #6c757d;
+    }
+
+    body.dark-mode .color-preview span {
+        color: #a0a0a0;
+    }
+
+    /* License plate preview */
+    .license-plate-preview {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .license-plate {
+        background-color: #fff;
+        border: 2px solid #000;
+        border-radius: 4px;
+        padding: 2px 8px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        display: inline-block;
+        min-width: 100px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark-mode .license-plate {
+        background-color: #2a2a2a;
+        border: 2px solid #e0e0e0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark-mode .license-plate .plate-text {
+        color: #e0e0e0;
+    }
+
+    /* Luggage preview */
+    .luggage-preview {
+        display: flex;
+        align-items: center;
+    }
+
+    .luggage-icons {
+        display: flex;
+        align-items: center;
+    }
+
+    .luggage-icon {
+        color: #4b6cb7;
+        margin-right: 4px;
+        font-size: 0.9rem;
+    }
+
+    body.dark-mode .luggage-icon {
+        color: #6a89cc;
+    }
+
+    .luggage-preview small {
+        font-size: 0.75rem;
+        color: #6c757d;
+    }
+
+    body.dark-mode .luggage-preview small {
+        color: #a0a0a0;
+    }
+
+    /* Sidebar */
+    .callout {
+        border-radius: 6px;
+        border-left: 4px solid #17a2b8;
+        background: #ffffff;
+        padding: 0.75rem;
+    }
+
+    body.dark-mode .callout {
+        border-left: 4px solid #1ccad8;
+        background: #2a2a2a;
+    }
+
+    .callout h5 {
+        font-weight: 600;
+        color: #344767;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    body.dark-mode .callout h5 {
+        color: #e0e0e0;
+    }
+
+    .callout h5 i {
+        color: #17a2b8;
+    }
+
+    body.dark-mode .callout h5 i {
+        color: #1ccad8;
+    }
+
+    .requirements-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .requirement-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0;
+        font-size: 0.8rem;
+        color: #495057;
+    }
+
+    body.dark-mode .requirement-item {
+        color: #e0e0e0;
+    }
+
+    .requirement-item i {
+        font-size: 0.9rem;
+        color: #28a745;
+    }
+
+    body.dark-mode .requirement-item i {
+        color: #4caf50;
+    }
+
+    .info-box {
+        border-radius: 6px;
+    }
+
+    .info-box-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        font-size: 1.2rem;
+    }
+
+    .info-box-icon i {
+        color: #28a745;
+    }
+
+    body.dark-mode .info-box-icon i {
+        color: #4caf50;
+    }
+
+    .info-box-content {
+        padding: 0.5rem;
+    }
+
+    .info-box-text {
+        font-weight: 500;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    body.dark-mode .info-box-text {
+        color: #a0a0a0;
+    }
+
+    .info-box-number {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #344767;
+    }
+
+    body.dark-mode .info-box-number {
+        color: #e0e0e0;
+    }
+
+    .info-box .progress {
+        height: 4px;
+        margin: 0.25rem 0;
+    }
+
+    .card.bg-light {
+        border: 1px solid #e9ecef;
+    }
+
+    body.dark-mode .card.bg-light {
+        border: 1px solid #444444;
+    }
+
+    .card.bg-light .card-body {
+        padding: 0.75rem;
+    }
+
+    .card.bg-light .card-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .card.bg-light .card-title i {
+        color: #ffc107;
+    }
+
+    body.dark-mode .card.bg-light .card-title i {
+        color: #ffd700;
+    }
+
+    .card.bg-light .card-text {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+
+    body.dark-mode .card.bg-light .card-text {
+        color: #a0a0a0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+        h1 {
+            font-size: 1.5rem;
+        }
+
+        .content-header p.text-muted {
+            font-size: 0.75rem;
+        }
+
+        .card-body,
+        .card-footer {
+            padding: 0.75rem;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+        }
+
+        .form-control {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .input-group-text {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .input-group-text i {
+            font-size: 0.9rem;
+        }
+
+        .invalid-feedback {
+            font-size: 0.65rem;
+        }
+
+        .color-preview div {
+            width: 18px;
+            height: 18px;
+        }
+
+        .color-preview span {
+            font-size: 0.65rem;
+        }
+
+        .license-plate {
+            font-size: 0.65rem;
+            min-width: 80px;
+            padding: 1px 6px;
+        }
+
+        .luggage-icon {
+            font-size: 0.8rem;
+            margin-right: 3px;
+        }
+
+        .luggage-preview small {
+            font-size: 0.65rem;
+        }
+
+        .callout {
+            padding: 0.5rem;
+        }
+
+        .callout h5 {
+            font-size: 0.85rem;
+        }
+
+        .requirement-item {
+            font-size: 0.75rem;
+            padding: 0.4rem 0;
+        }
+
+        .requirement-item i {
+            font-size: 0.8rem;
+        }
+
+        .info-box-icon {
+            width: 40px;
+            font-size: 1rem;
+        }
+
+        .info-box-text {
+            font-size: 0.75rem;
+        }
+
+        .info-box-number {
+            font-size: 0.9rem;
+        }
+
+        .card.bg-light .card-title {
+            font-size: 0.85rem;
+        }
+
+        .card.bg-light .card-text {
+            font-size: 0.75rem;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -564,77 +766,71 @@ label.form-label {
 {{ parent() }}
 <script>
 $(function () {
-    // Initialize form validation
+    // Initialize tooltips
+    $('[data-toggle="tooltip"]').tooltip();
+
+    // Form inputs and progress elements
     const formInputs = document.querySelectorAll('input[data-field], select[data-field], textarea[data-field]');
     const progressBar = document.getElementById('form-progress');
     const approvalProgress = document.getElementById('approval-progress');
     const approvalText = document.getElementById('approval-text');
     const saveBtn = document.getElementById('save-btn');
-    
+
     // Track form completion progress
     function updateProgress() {
         const totalFields = formInputs.length;
         let completedFields = 0;
-        
+
         formInputs.forEach(input => {
             if (input.value.trim() !== '') {
                 completedFields++;
             }
         });
-        
+
         const percentComplete = totalFields > 0 ? Math.round((completedFields / totalFields) * 100) : 0;
-        
+
         progressBar.style.width = `${percentComplete}%`;
         progressBar.setAttribute('aria-valuenow', percentComplete);
-        
+
         approvalProgress.style.width = `${percentComplete}%`;
         approvalText.textContent = `${percentComplete}% complete`;
-        
+
         if (percentComplete === 100) {
             saveBtn.classList.remove('btn-primary');
             saveBtn.classList.add('btn-success');
-            saveBtn.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Save Transport';
+            saveBtn.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Save Transport';
+        } else {
+            saveBtn.classList.remove('btn-success');
+            saveBtn.classList.add('btn-primary');
+            saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i> Save Transport';
         }
     }
-    
+
     // Color preview
     const colorInput = document.querySelector('[data-field="color"]');
     const colorPreview = document.getElementById('color-preview');
-    
+
     if (colorInput && colorPreview) {
         colorInput.addEventListener('input', function() {
             let color = this.value.toLowerCase();
             let hexColor = getColorHex(color);
             colorPreview.innerHTML = '';
-            
+
             const colorSwatch = document.createElement('div');
-            colorSwatch.style.width = '30px';
-            colorSwatch.style.height = '30px';
             colorSwatch.style.backgroundColor = hexColor;
-            colorSwatch.style.borderRadius = '50%';
-            colorSwatch.style.border = '1px solid #ddd';
-            colorSwatch.style.display = 'inline-block';
-            
+
             const colorName = document.createElement('span');
             colorName.textContent = color;
-            colorName.style.marginLeft = '10px';
-            colorName.style.color = '#495057';
-            
+
             colorPreview.appendChild(colorSwatch);
             colorPreview.appendChild(colorName);
-            
-            // Update car color
-            const carBody = document.querySelector('.car-body');
-            if (carBody) {
-                carBody.setAttribute('fill', hexColor);
-            }
         });
     }
-    
+
     // License plate preview
     const licensePlateInput = document.querySelector('[data-field="license"]');
     const licensePlatePreview = document.getElementById('license-preview');
-    
+
     if (licensePlateInput && licensePlatePreview) {
         licensePlateInput.addEventListener('input', function() {
             const plateText = document.querySelector('.plate-text');
@@ -643,89 +839,51 @@ $(function () {
             }
         });
     }
-    
+
     // Luggage capacity preview
     const luggageInput = document.querySelector('[data-field="luggage"]');
     const luggageIcons = document.getElementById('luggage-icons');
-    
+
     if (luggageInput && luggageIcons) {
         luggageInput.addEventListener('input', function() {
             const count = parseInt(this.value) || 0;
             luggageIcons.innerHTML = '';
-            
+
             for (let i = 0; i < Math.min(count, 5); i++) {
                 const icon = document.createElement('i');
                 icon.className = 'fas fa-suitcase luggage-icon';
                 luggageIcons.appendChild(icon);
             }
-            
+
             if (count > 5) {
                 const extraText = document.createElement('span');
-                extraText.textContent = `+${count - 5} more`;
-                extraText.style.marginLeft = '5px';
+                extraText.textContent = `+${count - 5}`;
+                extraText.style.marginLeft = '4px';
                 extraText.style.color = '#6c757d';
+                extraText.style.fontSize = '0.75rem';
                 luggageIcons.appendChild(extraText);
             }
         });
     }
-    
-    // Car model preview
-    const carModelInput = document.querySelector('[data-field="model"]');
-    const carModelDisplay = document.getElementById('car-model-display');
-    
-    if (carModelInput && carModelDisplay) {
-        carModelInput.addEventListener('input', function() {
-            carModelDisplay.textContent = this.value ? `Model: ${this.value}` : 'Model: Not specified';
-        });
-    }
-    
-    // Initialize datepicker if it exists
-    if ($.fn.datetimepicker) {
-        $('#licenseDatetimepicker, #regDatetimepicker').datetimepicker({
-            format: 'L',
-            icons: {
-                time: 'far fa-clock',
-                date: 'far fa-calendar',
-                up: 'fas fa-arrow-up',
-                down: 'fas fa-arrow-down',
-                previous: 'fas fa-chevron-left',
-                next: 'fas fa-chevron-right',
-                today: 'far fa-calendar-check',
-                clear: 'far fa-trash-alt',
-                close: 'fas fa-times'
-            }
-        });
-    }
-    
-    // Custom file input
-    $(document).on('change', '.custom-file-input', function() {
-        var fileName = $(this).val().split('\\').pop();
-        $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
-    });
-    
+
     // Save transport button functionality
     saveBtn.addEventListener('click', function(e) {
-        // Don't submit the form - let the form submit handle that
-        // This just adds the loading state to the button
-        $(this).html('<i class="fas fa-spinner fa-spin mr-2"></i> Saving...');
+        $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
         $(this).prop('disabled', true);
-        
-        // Form will be submitted naturally
     });
-    
+
     // Form validation
     $('.needs-validation').on('submit', function(event) {
         if (this.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
-            
-            // Re-enable the save button if form is invalid
-            saveBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Save Transport';
+
+            saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i> Save Transport';
             saveBtn.disabled = false;
         }
         $(this).addClass('was-validated');
     });
-    
+
     // Color helper function
     function getColorHex(colorName) {
         const colorMap = {
@@ -746,27 +904,16 @@ $(function () {
             'navy': '#000080',
             'teal': '#008080'
         };
-        
         return colorMap[colorName] || '#cccccc';
     }
-    
+
     // Initialize progress on load
     updateProgress();
-    
+
     // Update progress when form fields change
     formInputs.forEach(input => {
         input.addEventListener('input', updateProgress);
     });
-    
-    // Add animation to cards
-    $('.card').hover(
-        function() {
-            $(this).addClass('shadow-lg');
-        },
-        function() {
-            $(this).removeClass('shadow-lg');
-        }
-    );
 });
 </script>
 {% endblock %}

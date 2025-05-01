@@ -5,7 +5,7 @@
 {% block content %}
 <div class="content-header">
     <div class="container-fluid">
-        <div class="row mb-2">
+        <div class="row mb-4">
             <div class="col-sm-6">
                 <h1 class="m-0">Reservation Management</h1>
             </div>
@@ -16,10 +16,9 @@
                 </ol>
             </div>
         </div>
-         <div class="row mt-4">
+        <div class="row mb-3">
             <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
+                <div class="small-box bg-info elevation-1">
                     <div class="inner">
                         <h3>{{ totalReservations }}</h3>
                         <p>Total Reservations</p>
@@ -27,13 +26,11 @@
                     <div class="icon">
                         <i class="fas fa-calendar-check"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#reservation-chart" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <!-- ./col -->
             <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
+                <div class="small-box bg-success elevation-1">
                     <div class="inner">
                         <h3>{{ confirmedCount }}</h3>
                         <p>Confirmed</p>
@@ -41,13 +38,11 @@
                     <div class="icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#reservation-chart" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <!-- ./col -->
             <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
+                <div class="small-box bg-warning elevation-1">
                     <div class="inner">
                         <h3>{{ pendingCount }}</h3>
                         <p>Pending</p>
@@ -55,13 +50,11 @@
                     <div class="icon">
                         <i class="fas fa-clock"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#reservation-chart" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <!-- ./col -->
             <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-danger">
+                <div class="small-box bg-danger elevation-1">
                     <div class="inner">
                         <h3>{{ cancelledCount }}</h3>
                         <p>Cancelled</p>
@@ -69,10 +62,9 @@
                     <div class="icon">
                         <i class="fas fa-ban"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#reservation-chart" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <!-- ./col -->
         </div>
     </div>
 </div>
@@ -81,7 +73,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card card-outline card-primary">
                     <div class="card-header">
                         <h3 class="card-title">All Reservations</h3>
                         <div class="card-tools">
@@ -102,10 +94,9 @@
                             </form>
                         </div>
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body table-responsive p-0">
-                        <table class="table table-hover text-nowrap">
-                            <thead>
+                        <table class="table table-hover text-nowrap table-striped">
+                            <thead class="thead-light">
                                 <tr>
                                     <th>ID</th>
                                     <th>Pickup Location</th>
@@ -119,126 +110,116 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            {% for reservation in pagination %}
-                                <tr>
-                                    <td>{{ reservation.id }}</td>
-                                    <td>{{ reservation.pickupAddress }}</td>
-                                    <td>{{ reservation.destinationAddress }}</td>
-                                    <td>
-                                        {% if reservation.price %}
-                                            <span class="badge bg-info">{{ reservation.price }}</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">Not set</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if reservation.status == 'pending' %}
-                                            <span class="badge bg-warning">{{ reservation.status }}</span>
-                                        {% elseif reservation.status == 'confirmed' %}
-                                            <span class="badge bg-success">{{ reservation.status }}</span>
-                                        {% elseif reservation.status == 'cancelled' %}
-                                            <span class="badge bg-danger">{{ reservation.status }}</span>
-                                        {% else %}
-                                            <span class="badge bg-info">{{ reservation.status }}</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i') : '' }}</td>
-                                    <td>{{ reservation.estimatedDuration }}</td>
-                                    <td>
-                                        {% if reservation.specialRequests %}
-                                            <span class="text-primary">
-                                                <i class="fas fa-info-circle"></i> {{ reservation.specialRequests }}
-                                            </span>
-                                        {% else %}
-                                            <span class="text-muted">None</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="btn-group">
-                                            <a href="{{ path('app_reservation_admin_show', {'id': reservation.id}) }}" class="btn btn-info btn-sm" title="View details">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ path('app_reservation_admin_edit', {'id': reservation.id}) }}" class="btn btn-warning btn-sm" title="Edit reservation">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <button type="button" class="btn btn-danger btn-sm" title="Delete" data-toggle="modal" data-target="#delete-modal-{{ reservation.id }}"
-                                                {% if (reservation.isActive is defined and not reservation.isActive) %}disabled{% endif %}>
-                                                <i class="fas fa-ban"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="9" class="text-center py-5">
-                                        <div class="empty-state">
-                                            <i class="fas fa-database fa-3x text-muted"></i>
-                                            <p class="mt-3">No reservations found in the system.</p>
-                                            <a href="{{ path('app_reservation_admin_new') }}" class="btn btn-primary">
-                                                <i class="fas fa-plus"></i> Create First Reservation
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                                {% for reservation in pagination %}
+                                    <tr>
+                                        <td>{{ reservation.id }}</td>
+                                        <td data-tooltip="{{ reservation.pickupAddress }}">{{ reservation.pickupAddress }}</td>
+                                        <td data-tooltip="{{ reservation.destinationAddress }}">{{ reservation.destinationAddress }}</td>
+                                        <td>
+                                            {% if reservation.price %}
+                                                <span class="badge bg-info">{{ reservation.price }}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Not set</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if reservation.status == 'pending' %}
+                                                <span class="badge bg-warning">{{ reservation.status }}</span>
+                                            {% elseif reservation.status == 'confirmed' %}
+                                                <span class="badge bg-success">{{ reservation.status }}</span>
+                                            {% elseif reservation.status == 'cancelled' %}
+                                                <span class="badge bg-danger">{{ reservation.status }}</span>
+                                            {% else %}
+                                                <span class="badge bg-info">{{ reservation.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i') : '' }}</td>
+                                        <td>{{ reservation.estimatedDuration }}</td>
+                                        <td data-tooltip="{{ reservation.specialRequests ?: 'None' }}">
+                                            {% if reservation.specialRequests %}
+                                                <span class="text-primary">
+                                                    <i class="fas fa-info-circle"></i> {{ reservation.specialRequests }}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted">None</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <a href="{{ path('app_reservation_admin_show', {'id': reservation.id}) }}" class="btn btn-info btn-sm" title="View details">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ path('app_reservation_admin_edit', {'id': reservation.id}) }}" class="btn btn-warning btn-sm" title="Edit reservation">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-danger btn-sm" title="Delete" data-toggle="modal" data-target="#delete-modal-{{ reservation.id }}"
+                                                    {% if (reservation.isActive is defined and not reservation.isActive) %}disabled{% endif %}>
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="9" class="text-center py-5">
+                                            <div class="empty-state">
+                                                <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                                                <p class="mt-3 text-muted">No reservations found in the system.</p>
+                                                <a href="{{ path('app_reservation_admin_new') }}" class="btn btn-primary btn-lg mt-3">
+                                                    <i class="fas fa-plus mr-2"></i> Create New Reservation
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    <!-- /.card-body -->
-                  <!-- Replace the existing pagination with this -->
-<div class="card-footer clearfix">
-    <ul class="pagination pagination-sm m-0 float-right">
-        {% if pagination.page > 1 %}
-            <li class="page-item">
-                <a class="page-link" href="{{ path('app_reservation_admin_index', app.request.query.all|merge({'page': pagination.page-1})) }}">«</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">«</span>
-            </li>
-        {% endif %}
-        
-        {% for i in 1..pagination.pageCount %}
-            <li class="page-item {% if i == pagination.page %}active{% endif %}">
-                <a class="page-link" href="{{ path('app_reservation_admin_index', app.request.query.all|merge({'page': i})) }}">{{ i }}</a>
-            </li>
-        {% endfor %}
-        
-        {% if pagination.page < pagination.pageCount %}
-            <li class="page-item">
-                <a class="page-link" href="{{ path('app_reservation_admin_index', app.request.query.all|merge({'page': pagination.page+1})) }}">»</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">»</span>
-            </li>
-        {% endif %}
-    </ul>
-</div>
-                </div>
-                <!-- /.card -->
-            </div>
-        </div>
-
-        <div class="container-fluid py-4">
-    <div class="row mb-2">
-        <div class="col-sm-6">
-                <h1 class="m-0">Reservation Dashboard</h1>
-            </div>
-    </div>
-    
-     <!-- Bar Chart: Top Vehicles by Luggage -->
-        <div class="col-lg-8">
-            <div class="card shadow-sm rounded-lg">
-                <div class="card-header bg-white border-0">
-                    <h5 class="card-title mb-0">Status Dashboard</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="barChart" height="180"></canvas>
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                            {% if pagination.page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ path('app_reservation_admin_index', app.request.query.all|merge({'page': pagination.page-1})) }}">«</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">«</span>
+                                </li>
+                            {% endif %}
+                            
+                            {% for i in 1..pagination.pageCount %}
+                                <li class="page-item {% if i == pagination.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ path('app_reservation_admin_index', app.request.query.all|merge({'page': i})) }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            
+                            {% if pagination.page < pagination.pageCount %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ path('app_reservation_admin_index', app.request.query.all|merge({'page': pagination.page+1})) }}">»</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">»</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-</div>
+        
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                <div id="reservation-chart" class="card chart-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0"><i class="fas fa-chart-bar mr-2 text-primary"></i> Reservation Status Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="barChart" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -248,21 +229,31 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-danger">
-                    <h4 class="modal-title">Confirm reservation Deletion</h4>
+                    <h4 class="modal-title">Confirm Reservation Deletion</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete this reservation record?</p>
-                    <p class="text-danger"><small>This action cannot be undone.</small></p>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-exclamation-triangle text-warning fa-2x mr-3"></i>
+                        <div>
+                            <p class="mb-1">Are you sure you want to delete this reservation record?</p>
+                            <p class="text-danger mb-0"><small>This action cannot be undone.</small></p>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>Reservation ID:</strong> #{{ reservation.id }}<br>
+                        <strong>Pickup:</strong> {{ reservation.pickupAddress }}<br>
+                        <strong>Destination:</strong> {{ reservation.destinationAddress }}
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <form method="post" action="{{ path('app_reservation_admin_delete', {'id': reservation.id}) }}" style="display:inline-block;">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.id) }}">
                         <button type="submit" class="btn btn-danger">
-                            Delete
+                            <i class="fas fa-trash mr-1"></i> Delete
                         </button>
                     </form>
                 </div>
@@ -274,99 +265,691 @@
 
 {% block css %}
     {{ parent() }}
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --accent-color: #FF9F67;
-            --dark-color: #263A5B;
-            --light-color: #f8f9fa;
-            --pending-color: #FFC107;
-            --confirmed-color: #4CAF50;
-            --cancelled-color: #F44336;
-            --border-radius: 12px;
-            --card-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            --transition: all 0.3s ease;
+<style>
+    /* Content header */
+    .content-header {
+        padding: 20px 0;
+    }
+
+    h1 {
+        font-weight: 700;
+        background: linear-gradient(45deg, #344767, #4b6cb7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.2rem;
+        line-height: 1.2;
+    }
+
+    .breadcrumb-item a {
+        color: #4b6cb7;
+        transition: color 0.2s ease;
+        font-size: 0.8rem;
+    }
+
+    .breadcrumb-item a:hover {
+        color: #3b589e;
+    }
+
+    .breadcrumb-item.active {
+        color: #6c757d;
+        font-size: 0.8rem;
+    }
+
+    /* Dark mode for content header */
+    body.dark-mode h1 {
+        background: linear-gradient(45deg, #e0e0e0, #6a89cc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    body.dark-mode .breadcrumb-item a {
+        color: #6a89cc;
+    }
+
+    body.dark-mode .breadcrumb-item a:hover {
+        color: #a3bffa;
+    }
+
+    body.dark-mode .breadcrumb-item.active {
+        color: #a0a0a0;
+    }
+
+    /* Stats cards (small-box) */
+    .small-box {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .small-box .inner {
+        padding: 1rem;
+        color: #ffffff;
+    }
+
+    .small-box h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .small-box p {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .small-box .icon {
+        font-size: 2rem;
+        top: 15px;
+        right: 15px;
+        opacity: 0.3;
+    }
+
+    body.dark-mode .small-box .icon {
+        opacity: 0.5;
+    }
+
+    .small-box .small-box-footer {
+        background: rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        padding: 0.6rem;
+        font-size: 0.85rem;
+        text-align: center;
+        transition: background 0.2s ease;
+    }
+
+    body.dark-mode .small-box .small-box-footer {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .small-box .small-box-footer:hover {
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    body.dark-mode .small-box .small-box-footer:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .bg-info {
+        background: linear-gradient(45deg, #17a2b8, #117a8b);
+    }
+
+    body.dark-mode .bg-info {
+        background: linear-gradient(45deg, #1ccad8, #15a1b3);
+    }
+
+    .bg-success {
+        background: linear-gradient(45deg, #28a745, #1e7e34);
+    }
+
+    body.dark-mode .bg-success {
+        background: linear-gradient(45deg, #4caf50, #388e3c);
+    }
+
+    .bg-warning {
+        background: linear-gradient(45deg, #ffc107, #e0a800);
+    }
+
+    body.dark-mode .bg-warning {
+        background: linear-gradient(45deg, #ffd700, #f9a825);
+    }
+
+    .bg-danger {
+        background: linear-gradient(45deg, #dc3545, #bd2130);
+    }
+
+    body.dark-mode .bg-danger {
+        background: linear-gradient(45deg, #ef5350, #e53935);
+    }
+
+    /* Chart card */
+    .chart-card {
+        border-top: 4px solid #4b6cb7;
+    }
+
+    body.dark-mode .chart-card {
+        border-top: 4px solid #6a89cc;
+    }
+
+    .chart-card .card-header {
+        padding: 1rem;
+        border-bottom: none;
+    }
+
+    body.dark-mode .chart-card .card-header {
+        background: #2a2a2a;
+    }
+
+    .chart-card .card-body {
+        padding: 1rem;
+    }
+
+    .chart-card .card-title {
+        color: #344767;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    body.dark-mode .chart-card .card-title {
+        color: #e0e0e0;
+    }
+
+    .chart-card .card-title i.text-primary {
+        color: #4b6cb7;
+    }
+
+    body.dark-mode .chart-card .card-title i.text-primary {
+        color: #6a89cc;
+    }
+
+    /* Card */
+    .card-outline.card-primary {
+        border-top: 4px solid #4b6cb7;
+    }
+
+    body.dark-mode .card-outline.card-primary {
+        border-top: 4px solid #6a89cc;
+    }
+
+    .card-header {
+        padding: 1.25rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    body.dark-mode .card-header {
+        border-bottom: 1px solid #444444;
+    }
+
+    .card-title {
+        color: #344767;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    body.dark-mode .card-title {
+        color: #e0e0e0;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-footer {
+        border-top: 1px solid #e9ecef;
+    }
+
+    body.dark-mode .card-footer {
+        border-top: 1px solid #444444;
+    }
+
+    /* Table */
+    .table {
+        margin-bottom: 0;
+        font-size: 0.85rem;
+        width: 100%; /* Ensure table takes full container width */
+        table-layout: fixed; /* Force fixed layout to respect column widths */
+    }
+
+    .table thead th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        padding: 0.5rem;
+        border-bottom: 2px solid #dee2e6;
+        color: #495057;
+        vertical-align: middle;
+    }
+
+    body.dark-mode .table thead th {
+        background-color: #343434;
+        border-bottom: 2px solid #555555;
+        color: #e0e0e0;
+    }
+
+    .table tbody td {
+        padding: 0.5rem;
+        vertical-align: middle;
+        border-color: #e9ecef;
+        color: #344767;
+    }
+
+    body.dark-mode .table tbody td {
+        border-color: #444444;
+        color: #e0e0e0;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f5f9;
+    }
+
+    body.dark-mode .table-hover tbody tr:hover {
+        background-color: #3a3a3a;
+    }
+
+    /* Table column widths (adjusted to match transport interface and fit 100%) */
+    .table th:nth-child(1), .table td:nth-child(1) { /* ID */
+        width: 5%;
+        max-width: 40px;
+    }
+
+    .table th:nth-child(2), .table td:nth-child(2) { /* Pickup Location */
+        width: 15%;
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .table th:nth-child(3), .table td:nth-child(3) { /* Destination */
+        width: 15%;
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .table th:nth-child(4), .table td:nth-child(4) { /* Price */
+        width: 10%;
+        max-width: 80px;
+    }
+
+    .table th:nth-child(5), .table td:nth-child(5) { /* Status */
+        width: 10%;
+        max-width: 80px;
+    }
+
+    .table th:nth-child(6), .table td:nth-child(6) { /* Created At */
+        width: 15%;
+        max-width: 100px;
+    }
+
+    .table th:nth-child(7), .table td:nth-child(7) { /* Duration */
+        width: 10%;
+        max-width: 80px;
+    }
+
+    .table th:nth-child(8), .table td:nth-child(8) { /* Special Requests */
+        width: 10%;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .table th:nth-child(9), .table td:nth-child(9) { /* Actions */
+        width: 10%;
+        max-width: 60px;
+        text-align: center;
+    }
+
+    /* Tooltips for truncated text */
+    .table td:nth-child(2), .table td:nth-child(3), .table td:nth-child(8) {
+        position: relative;
+    }
+
+    .table td:nth-child(2):hover:after,
+    .table td:nth-child(3):hover:after,
+    .table td:nth-child(8):hover:after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #343a40;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        z-index: 10;
+    }
+
+    body.dark-mode .table td:nth-child(2):hover:after,
+    body.dark-mode .table td:nth-child(3):hover:after,
+    body.dark-mode .table td:nth-child(8):hover:after {
+        background: #555555;
+        color: #e0e0e0;
+    }
+
+    /* Special Requests */
+    .table td:nth-child(8) .text-primary {
+        color: #4b6cb7;
+    }
+
+    body.dark-mode .table td:nth-child(8) .text-primary {
+        color: #6a89cc;
+    }
+
+    .table td:nth-child(8) .text-muted {
+        color: #6c757d;
+    }
+
+    body.dark-mode .table td:nth-child(8) .text-muted {
+        color: #a0a0a0;
+    }
+
+    /* Badges */
+    .badge {
+        padding: 0.4em 0.6em;
+        font-weight: 500;
+        border-radius: 6px;
+        font-size: 0.75rem;
+    }
+
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+
+    body.dark-mode .bg-success {
+        background-color: #4caf50 !important;
+    }
+
+    .bg-warning {
+        background-color: #ffc107 !important;
+    }
+
+    body.dark-mode .bg-warning {
+        background-color: #ffd700 !important;
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important;
+    }
+
+    body.dark-mode .bg-danger {
+        background-color: #ef5350 !important;
+    }
+
+    .bg-info {
+        background-color: #17a2b8 !important;
+    }
+
+    body.dark-mode .bg-info {
+        background-color: #1ccad8 !important;
+    }
+
+    .bg-secondary {
+        background-color: #6c757d !important;
+    }
+
+    body.dark-mode .bg-secondary {
+        background-color: #a0a0a0 !important;
+    }
+
+    /* Search input */
+    .form-control {
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+    body.dark-mode .form-control {
+        background-color: #343434;
+        border-color: #444444;
+        color: #e0e0e0;
+    }
+
+    .input-group-append .btn {
+        border-radius: 0 8px 8px 0;
+    }
+
+    body.dark-mode .input-group-append .btn {
+        background-color: #444444;
+        border-color: #444444;
+        color: #e0e0e0;
+    }
+
+    /* Pagination */
+    .pagination .page-link {
+        border-radius: 6px;
+        margin: 0 3px;
+        color: #4b6cb7;
+        border: 1px solid #dee2e6;
+        padding: 0.4rem 0.75rem;
+    }
+
+    body.dark-mode .pagination .page-link {
+        color: #6a89cc;
+        border: 1px solid #444444;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #4b6cb7;
+        border-color: #4b6cb7;
+        color: #ffffff;
+    }
+
+    body.dark-mode .pagination .page-item.active .page-link {
+        background-color: #6a89cc;
+        border-color: #6a89cc;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+        border-color: #dee2e6;
+    }
+
+    body.dark-mode .pagination .page-item.disabled .page-link {
+        color: #666666;
+        border-color: #444444;
+    }
+
+    /* Empty state */
+    .empty-state {
+        padding: 3rem;
+        text-align: center;
+    }
+
+    .empty-state i {
+        color: #6c757d;
+    }
+
+    body.dark-mode .empty-state i {
+        color: #a0a0a0;
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        color: #6c757d;
+    }
+
+    body.dark-mode .empty-state p {
+        color: #a0a0a0;
+    }
+
+    /* Modal */
+    .modal-header.bg-danger {
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+    body.dark-mode .modal-header.bg-danger {
+        background: #ef5350;
+    }
+
+    .modal-header .modal-title {
+        color: #ffffff;
+        font-size: 1.1rem;
+    }
+
+    .modal-header .close {
+        color: #ffffff;
+    }
+
+    .modal-body .text-danger {
+        color: #dc3545 !important;
+    }
+
+    body.dark-mode .modal-body .text-danger {
+        color: #ef5350 !important;
+    }
+
+    .modal-body .alert-warning {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    body.dark-mode .modal-body .alert-warning {
+        background: #856404;
+        color: #e0e0e0;
+    }
+
+    .modal-body i.fas.fa-exclamation-triangle {
+        color: #ffc107;
+    }
+
+    body.dark-mode .modal-body i.fas.fa-exclamation-triangle {
+        color: #ffd700;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #e9ecef;
+    }
+
+    body.dark-mode .modal-footer {
+        border-top: 1px solid #444444;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+        .small-box {
+            margin-bottom: 1rem;
         }
-    </style>
-{% endblock %}
-{% block js %}
-{{ parent() }}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const colors = [
-        'rgba(54, 162, 235, 0.8)', // Blue
-        'rgba(75, 192, 192, 0.8)', // Teal
-        'rgba(153, 102, 255, 0.8)', // Purple
-        'rgba(255, 159, 64, 0.8)',  // Orange
-        'rgba(255, 205, 86, 0.8)',  // Yellow
-        'rgba(201, 90, 90, 0.8)',   // Darker Red
-        'rgba(100, 149, 237, 0.8)', // Cornflower Blue
-        'rgba(0, 123, 255, 0.8)',   // Stronger Blue
-        'rgba(255, 99, 132, 0.8)'   // Red
-   
-    ];
+        .card-tools .input-group {
+            width: 100% !important;
+            margin-bottom: 1rem;
+        }
 
-    // Bar Chart: Top Vehicles
-    const barCtx = document.getElementById('barChart').getContext('2d');
-new Chart(barCtx, {
-    type: 'bar',
-    data: {
-        labels: {{ statusStats|map(v => v.status)|json_encode|raw }},
-        datasets: [{
-            label: 'Reservations by Status',
-            data: {{ statusStats|map(v => v.count)|json_encode|raw }},
-            backgroundColor: [
-                'rgba(75, 192, 192, 0.8)', // Confirmed - green
-                'rgba(255, 206, 86, 0.8)',  // Pending - yellow
-                'rgba(255, 99, 132, 0.8)'   // Cancelled - red
-            ],
-            borderColor: [
-                'rgba(75, 192, 192, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(255, 99, 132, 1)'
-            ],
-            borderWidth: 1,
-            borderRadius: 5,
-            maxBarThickness: 50
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        return `${context.parsed.y} ${context.label.toLowerCase()} reservations`;
-                    }
-                }
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: 'Number of Reservations'
-                },
-                ticks: {
-                    precision: 0,
-                    stepSize: 1
-                }
-            },
-            x: {
-                title: {
-                    display: true,
-                    text: 'Reservation Status'
-                }
-            }
+        .card-tools .btn {
+            width: 100%;
+        }
+
+        .table {
+            font-size: 0.75rem;
+        }
+
+        .table th, .table td {
+            padding: 0.4rem;
+        }
+
+        .badge {
+            font-size: 0.65rem;
+        }
+
+        .btn-group .btn {
+            padding: 0.2rem 0.4rem;
         }
     }
-});
+</style>    
+{% endblock %}
 
-});
-</script>
+{% block js %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            
+            // Modern color palette matching Transport Management, adjusted for dark mode
+            const colors = [
+                isDarkMode ? 'rgba(106, 137, 204, 0.8)' : 'rgba(59, 130, 246, 0.8)',  // Blue
+                isDarkMode ? 'rgba(76, 175, 80, 0.8)' : 'rgba(16, 185, 129, 0.8)',     // Green (Confirmed)
+                isDarkMode ? 'rgba(255, 152, 0, 0.8)' : 'rgba(249, 115, 22, 0.8)',     // Orange
+                isDarkMode ? 'rgba(159, 122, 234, 0.8)' : 'rgba(139, 92, 246, 0.8)',   // Purple
+                isDarkMode ? 'rgba(255, 215, 0, 0.8)' : 'rgba(234, 179, 8, 0.8)',      // Yellow (Pending)
+                isDarkMode ? 'rgba(239, 83, 80, 0.8)' : 'rgba(239, 68, 68, 0.8)',      // Red (Cancelled)
+                isDarkMode ? 'rgba(28, 202, 216, 0.8)' : 'rgba(14, 165, 233, 0.8)',    // Light Blue
+                isDarkMode ? 'rgba(92, 107, 192, 0.8)' : 'rgba(79, 70, 229, 0.8)',     // Indigo
+                isDarkMode ? 'rgba(244, 143, 177, 0.8)' : 'rgba(236, 72, 153, 0.8)'    // Pink
+            ];
+
+            // Bar Chart: Reservation Status
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: {{ statusStats|map(v => v.status)|json_encode|raw }},
+                    datasets: [{
+                        label: 'Reservations by Status',
+                        data: {{ statusStats|map(v => v.count)|json_encode|raw }},
+                        backgroundColor: [
+                            isDarkMode ? 'rgba(76, 175, 80, 0.8)' : 'rgba(16, 185, 129, 0.8)',  // Confirmed - Green
+                            isDarkMode ? 'rgba(255, 215, 0, 0.8)' : 'rgba(234, 179, 8, 0.8)',    // Pending - Yellow
+                            isDarkMode ? 'rgba(239, 83, 80, 0.8)' : 'rgba(239, 68, 68, 0.8)'     // Cancelled - Red
+                        ],
+                        borderColor: [
+                            isDarkMode ? 'rgba(76, 175, 80, 1)' : 'rgba(16, 185, 129, 1)',
+                            isDarkMode ? 'rgba(255, 215, 0, 1)' : 'rgba(234, 179, 8, 1)',
+                            isDarkMode ? 'rgba(239, 83, 80, 1)' : 'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 10,
+                        maxBarThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.9)' : 'rgba(0, 0, 0, 0.85)',
+                            bodyFont: { size: 14, family: 'Poppins' },
+                            titleFont: { size: 16, family: 'Poppins', weight: '600' },
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.y} ${context.label.toLowerCase()} reservations`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: { size: 12, family: 'Poppins' },
+                                color: isDarkMode ? '#a0a0a0' : '#6c757d',
+                                precision: 0,
+                                stepSize: 1
+                            },
+                            title: {
+                                display: true,
+                                text: 'Number of Reservations',
+                                font: { size: 14, family: 'Poppins', weight: '600' },
+                                color: isDarkMode ? '#e0e0e0' : '#344767'
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { size: 12, family: 'Poppins' },
+                                color: isDarkMode ? '#a0a0a0' : '#6c757d'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Reservation Status',
+                                font: { size: 14, family: 'Poppins', weight: '600' },
+                                color: isDarkMode ? '#e0e0e0' : '#344767'
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -3,11 +3,461 @@
 {% block title %}Edit Reservation{% endblock %}
 
 {% block content %}
-    <h1>Edit Reservation</h1>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Edit Reservation #{{ reservation.id }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_reservation_admin_index') }}">Reservations</a></li>
+                    <li class="breadcrumb-item active">Edit</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
 
-    {{ include('reservation_admin/_form.html.twig', {'button_label': 'Update'}) }}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-edit mr-1 text-primary"></i>
+                            Update Reservation Details
+                        </h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-modal">
+                                <i class="fas fa-trash mr-1"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {{ include('reservation_admin/_form.html.twig', {'button_label': 'Update'}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <a href="{{ path('app_reservation_admin_index') }}">back to list</a>
+<!-- Delete Modal -->
+<div class="modal fade" id="delete-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger  ">
+                <h4 class="modal-title">Confirm Deletion</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-exclamation-triangle text-warning fa-lg mr-2"></i>
+                    <div>
+                        <p class="mb-1">Are you sure you want to delete this reservation?</p>
+                        <p class="text-danger mb-0"><small>This action cannot be undone.</small></p>
+                    </div>
+                </div>
+                <div class="alert alert-warning">
+                    <strong>ID:</strong> #{{ reservation.id }}<br>
+                    <strong>Pickup:</strong> {{ reservation.pickupAddress }}<br>
+                    <strong>Destination:</strong> {{ reservation.destinationAddress }}
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                {{ include('reservation_admin/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
-    {{ include('reservation_admin/_delete_form.html.twig') }}
+{% block css %}
+    {{ parent() }}
+    <style>
+        /* Base styling for light mode */
+        body {
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+            font-size: 0.85rem;
+        }
+
+        /* Content header */
+        .content-header {
+            padding: 15px 0;
+        }
+
+        h1 {
+            font-weight: 700;
+            background: linear-gradient(45deg, #344767, #4b6cb7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+            line-height: 1.2;
+        }
+
+        .breadcrumb-item a {
+            color: #4b6cb7;
+            transition: color 0.2s ease;
+            font-size: 0.8rem;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #3b589e;
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+
+        /* Card */
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: none;
+            background: #ffffff;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-outline.card-primary {
+            border-top: 4px solid #4b6cb7;
+        }
+
+        .card-header {
+            padding: 0.75rem;
+            background: #ffffff;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .card-title {
+            color: #344767;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .card-title i.text-primary {
+            color: #4b6cb7;
+            font-size: 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        /* Form layout */
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 0.4rem;
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        .form-control {
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            box-shadow: none;
+            height: auto;
+            background: #ffffff;
+            color: #344767;
+        }
+
+        .form-control:focus {
+            border-color: #4b6cb7;
+            box-shadow: 0 0 0 2px rgba(75, 108, 183, 0.15);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+        }
+
+        /* Floating label effect */
+        .form-group.focused label {
+            color: #4b6cb7;
+        }
+
+        /* Error styling */
+        .invalid-feedback {
+            margin-top: 0.4rem;
+            font-size: 0.75rem;
+            color: #dc3545;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+        .is-invalid:focus {
+            box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2) !important;
+        }
+
+        /* Form actions */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            gap: 0.75rem;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: #4b6cb7;
+            border-color: #4b6cb7;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3b589e;
+            border-color: #3b589e;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            border-color: #dfe6e9;
+            color: #7f8c8d;
+        }
+
+        .btn-secondary:hover {
+            background: #dfe6e9;
+            border-color: #ced4da;
+            color: #636e72;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Ripple effect for all buttons */
+        .btn-primary:after,
+        .btn-secondary:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn-primary:focus:not(:active)::after,
+        .btn-secondary:focus:not(:active)::after {
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        .btn-primary.loading,
+        .btn-secondary.loading {
+            pointer-events: none;
+        }
+
+        /* Character counter */
+        .character-counter {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 0.4rem;
+            display: block;
+        }
+
+        /* Dark Mode Adjustments */
+        body.dark-mode {
+            background-color: #1a1a1a;
+        }
+
+        body.dark-mode h1 {
+            background: linear-gradient(45deg, #6a89cc, #a3bffa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.dark-mode .breadcrumb-item a {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .breadcrumb-item a:hover {
+            color: #a3bffa;
+        }
+
+        body.dark-mode .breadcrumb-item.active {
+            color: #a0a0a0;
+        }
+
+        body.dark-mode .card {
+            background: #2a2a2a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .card-outline.card-primary {
+            border-top-color: #6a89cc;
+        }
+
+        body.dark-mode .card-header {
+            background: #2a2a2a;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        body.dark-mode .card-title {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .card-title i.text-primary {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .form-group label {
+            color: #a0a0a0;
+        }
+
+        body.dark-mode .form-control {
+            background: #343434;
+            border-color: #4a4a4a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .form-control:focus {
+            border-color: #6a89cc;
+            box-shadow: 0 0 0 2px rgba(106, 137, 204, 0.25);
+        }
+
+        body.dark-mode .form-group.focused label {
+            color: #6a89cc;
+        }
+
+        body.dark-mode .invalid-feedback {
+            color: #e4606d;
+        }
+
+        body.dark-mode .is-invalid:focus {
+            box-shadow: 0 0 0 2px rgba(228, 96, 109, 0.2) !important;
+        }
+
+        body.dark-mode .btn-primary {
+            background: #6a89cc;
+            border-color: #6a89cc;
+        }
+
+        body.dark-mode .btn-primary:hover {
+            background: #a3bffa;
+            border-color: #a3bffa;
+        }
+
+        body.dark-mode .btn-secondary {
+            background: #4a4a4a;
+            border-color: #4a4a4a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: #5a5a5a;
+            border-color: #5a5a5a;
+        }
+
+        body.dark-mode .character-counter {
+            color: #a0a0a0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 767.98px) {
+            body {
+                font-size: 0.75rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card-body {
+                padding: 0.75rem;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-control {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .form-group label {
+                font-size: 0.75rem;
+            }
+
+            .invalid-feedback {
+                font-size: 0.65rem;
+            }
+
+            .btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
 {% endblock %}
