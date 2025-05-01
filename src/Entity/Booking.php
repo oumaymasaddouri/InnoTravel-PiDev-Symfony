@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Hotel;
+use App\Entity\User;
 use App\Repository\BookingRepository;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
@@ -17,10 +18,10 @@ class Booking
     #[ORM\Column(type: "integer")]
     private int $id;
 
-    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "bookings")]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "bookings")]
     #[ORM\JoinColumn(name: 'userId', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[Assert\NotBlank(message: 'User is required')]
-    private Users $userId;
+    private User $userId;
 
     #[ORM\ManyToOne(targetEntity: Hotel::class, inversedBy: "bookings")]
     #[ORM\JoinColumn(name: 'hotelId', referencedColumnName: 'id', onDelete: 'CASCADE')]

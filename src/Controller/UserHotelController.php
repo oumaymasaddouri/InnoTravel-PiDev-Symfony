@@ -3,20 +3,27 @@
 namespace App\Controller;
 
 use App\Entity\Hotel;
+use App\Entity\User;
 use App\Repository\HotelRepository;
 use App\Service\CurrencyService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/user/hotel')]
 final class UserHotelController extends AbstractController
 {
     #[Route('/', name: 'user_hotel_index', methods: ['GET'])]
-    public function index(Request $request, EntityManagerInterface $entityManager, CurrencyService $currencyService): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, CurrencyService $currencyService, SessionInterface $session): Response
     {
+        // Get user from session
+        $user = $this->getUserFromSession($session, $entityManager);
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         /** @var HotelRepository $hotelRepository */
         $hotelRepository = $entityManager->getRepository(Hotel::class);
 
@@ -77,6 +84,7 @@ final class UserHotelController extends AbstractController
         $exchangeRate = $currencyService->getExchangeRate($selectedCurrency);
 
         return $this->render('hotel/user_index.html.twig', [
+            'user' => $user,
             'hotels' => $hotels,
             'locations' => $locationOptions,
             'filters' => $filterCriteria,
@@ -89,8 +97,13 @@ final class UserHotelController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'user_hotel_show', methods: ['GET'])]
-    public function show(Request $request, Hotel $hotel, CurrencyService $currencyService): Response
+    public function show(Request $request, Hotel $hotel, CurrencyService $currencyService, SessionInterface $session, EntityManagerInterface $entityManager): Response
     {
+        // Get user from session
+        $user = $this->getUserFromSession($session, $entityManager);
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         // Get selected currency (default to USD)
         $selectedCurrency = $request->query->get('currency', 'USD');
 
@@ -100,11 +113,17 @@ final class UserHotelController extends AbstractController
         $exchangeRate = $currencyService->getExchangeRate($selectedCurrency);
 
         return $this->render('hotel/user_show.html.twig', [
+            'user' => $user,
             'hotel' => $hotel,
             'currencies' => $currencies,
             'selectedCurrency' => $selectedCurrency,
             'currencySymbol' => $currencySymbols[$selectedCurrency] ?? '$',
             'exchangeRate' => $exchangeRate,
         ]);
+    }
+
+    private function getUserFromSession(SessionInterface $session, EntityManagerInterface $em): ?User
+    {
+        return $session->get('user_id') ? $em->getRepository(User::class)->find($session->get('user_id')) : null;
     }
 }

@@ -48,10 +48,6 @@ class GenerateEntitiesCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $io->title("Generating Entity Classes from Database...");
-        if (!\Doctrine\DBAL\Types\Type::hasType('enum')) {
-            \Doctrine\DBAL\Types\Type::addType('enum', \Doctrine\DBAL\Types\StringType::class);
-        }
-        $this->connection->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
 
         try {
             $schemaManager = $this->getSchemaManager();
@@ -334,7 +330,6 @@ class GenerateEntitiesCommand extends Command
             'Doctrine\DBAL\Types\TextType' => 'text',
             'Doctrine\DBAL\Types\DecimalType', 'Doctrine\DBAL\Types\FloatType', 'Doctrine\DBAL\Types\DoubleType' => 'float',
             'Doctrine\DBAL\Types\StringType', 'Doctrine\DBAL\Types\VarCharType' => 'string',
-            'Doctrine\DBAL\Types\EnumType' => 'string', // Treat enum as string
             default => 'string',
         };
 

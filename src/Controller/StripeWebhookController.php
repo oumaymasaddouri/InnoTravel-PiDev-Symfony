@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Stripe\Webhook;
 use Stripe\Stripe;
@@ -67,9 +69,20 @@ class StripeWebhookController extends AbstractController
         return new Response('Webhook received', 200);
     }
 
-    #[Route('/stripe/success/{bookingId}', name: 'stripe_success', methods: ['GET'])]
-    public function success(int $bookingId, EntityManagerInterface $entityManager): Response
+    private function getUserFromSession(SessionInterface $session, EntityManagerInterface $em): ?User
     {
+        return $session->get('user_id') ? $em->getRepository(User::class)->find($session->get('user_id')) : null;
+    }
+
+    #[Route('/stripe/success/{bookingId}', name: 'stripe_success', methods: ['GET'])]
+    public function success(int $bookingId, EntityManagerInterface $entityManager, SessionInterface $session): Response
+    {
+        // Get user from session
+        $user = $this->getUserFromSession($session, $entityManager);
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         // Manually retrieve the booking entity from the database
         $booking = $entityManager->getRepository(Booking::class)->find($bookingId);
 
@@ -94,6 +107,7 @@ class StripeWebhookController extends AbstractController
 
         // Render the success page
         return $this->render('booking/stripe_success.html.twig', [
+            'user' => $user,
             'booking' => $booking,
             'totalAmount' => $totalAmount,
             'nights' => $nights,

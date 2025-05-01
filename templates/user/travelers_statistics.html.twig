@@ -1,0 +1,24 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Traveler Statistics{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">📊 Traveler Statistics</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="text-center">🌍 Travelers by Country</h5>
+            {{ render_chart(countryChart) }}
+        </div>
+        <div class="col-md-6">
+            <h5 class="text-center">🎂 Travelers by Age Group</h5>
+            {{ render_chart(ageChart) }}
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ path('admin_travelers') }}" class="btn btn-outline-secondary">← Back to Travelers</a>
+    </div>
+</div>
+{% endblock %}

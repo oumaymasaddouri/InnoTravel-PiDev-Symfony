@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Entity\Hotel;
+use App\Entity\User;
 use App\Form\BookingType;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Security;
 use Stripe\Exception\ApiErrorException;
@@ -25,17 +27,19 @@ class UserBookingController extends AbstractController
         EntityManagerInterface $em,
         Hotel $hotel,
         Security $security,
-        StripeService $stripeService
+        StripeService $stripeService,
+        SessionInterface $session
     ): Response {
 
-        $user = $em->getRepository(\App\Entity\Users::class)->find(3); // ✅ Simulate user ID 3
+        // Get user from session
+        $user = $this->getUserFromSession($session, $em);
         if (!$user) {
-            throw $this->createNotFoundException('User not found.');
+            return $this->redirectToRoute('app_login');
         }
 
         $booking = new Booking();
         $booking->setHotelId($hotel);   // ✅ Pass Hotel entity
-        $booking->setUserId($user);     // ✅ Pass Users entity
+        $booking->setUserId($user);     // ✅ Pass User entity
         $booking->setStatus('pending'); // Default status
 
         $form = $this->createForm(BookingType::class, $booking);
@@ -75,22 +79,23 @@ class UserBookingController extends AbstractController
         }
 
         return $this->render('booking/user_new.html.twig', [
+            'user' => $user,
             'form' => $form->createView(),
             'hotel' => $hotel,
         ]);
     }
 
     #[Route('/', name: 'user_booking_index', methods: ['GET'])]
-    public function index(Request $request, EntityManagerInterface $em): Response
+    public function index(Request $request, EntityManagerInterface $em, SessionInterface $session): Response
     {
         // Get pagination parameters
         $page = max(1, $request->query->getInt('page', 1));
         $limit = 5; // Number of bookings per page
 
-        // Simulate the same user (ID 3)
-        $user = $em->getRepository(\App\Entity\Users::class)->find(3);
+        // Get user from session
+        $user = $this->getUserFromSession($session, $em);
         if (!$user) {
-            throw $this->createNotFoundException('User not found.');
+            return $this->redirectToRoute('app_login');
         }
 
         // Get paginated bookings
@@ -102,14 +107,21 @@ class UserBookingController extends AbstractController
         $pagination = $result['pagination'];
 
         return $this->render('booking/user_index.html.twig', [
+            'user' => $user,
             'bookings' => $bookings,
             'pagination' => $pagination,
         ]);
     }
 
     #[Route('/invoice/{id}', name: 'booking_invoice_download', methods: ['GET'])]
-    public function downloadInvoice(Booking $booking): Response
+    public function downloadInvoice(Booking $booking, SessionInterface $session, EntityManagerInterface $em): Response
     {
+        // Get user from session
+        $user = $this->getUserFromSession($session, $em);
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         // Configure Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
@@ -164,5 +176,10 @@ class UserBookingController extends AbstractController
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ]
         );
+    }
+
+    private function getUserFromSession(SessionInterface $session, EntityManagerInterface $em): ?User
+    {
+        return $session->get('user_id') ? $em->getRepository(User::class)->find($session->get('user_id')) : null;
     }
 }

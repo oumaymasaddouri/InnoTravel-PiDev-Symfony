@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
-use App\Entity\Users;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,12 +17,12 @@ class BookingRepository extends ServiceEntityRepository
     /**
      * Find bookings for a user with pagination
      *
-     * @param Users $user The user to find bookings for
+     * @param User $user The user to find bookings for
      * @param int $page Current page number
      * @param int $limit Number of items per page
      * @return array Returns an array with bookings and pagination data
      */
-    public function findByUserPaginated(Users $user, int $page = 1, int $limit = 5): array
+    public function findByUserPaginated(User $user, int $page = 1, int $limit = 5): array
     {
         $qb = $this->createQueryBuilder('b')
                    ->andWhere('b.userId = :user')

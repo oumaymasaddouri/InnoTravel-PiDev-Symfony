@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\Booking;
 use App\Entity\Hotel;
-use App\Entity\Users;
+use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,20 +30,8 @@ class BookingType extends AbstractType
                 'label' => 'Check-out Date',
                 'attr' => ['class' => 'form-control']
             ])
-            ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'Pending' => 'pending',
-                    'Confirmed' => 'confirmed',
-                    'Cancelled' => 'cancelled'
-                ]
-            ])
-            ->add('userId', EntityType::class, [
-                'class' => Users::class,
-                'choice_label' => 'id',
-            ])
-            ->add('hotelId', EntityType::class, [
-                'class' => Hotel::class,
-                'choice_label' => 'id',
+            ->add('status', HiddenType::class, [
+                'data' => 'pending'
             ])
             ->add('paymentMethod', ChoiceType::class, [
                 'mapped' => false,

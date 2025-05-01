@@ -1,8 +1,5 @@
 doctrine:
     dbal:
-        server_version: 'mariadb-10.4.3' # or your version
-        mapping_types:
-            enum: string
         url: '%env(resolve:DATABASE_URL)%'
 
         # IMPORTANT: You MUST configure your server version,
@@ -11,6 +8,10 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+
+        mapping_types:
+            enum: string
+
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
