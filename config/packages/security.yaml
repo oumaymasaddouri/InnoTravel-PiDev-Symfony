@@ -13,32 +13,32 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
-            provider: app_user_provider
-            form_login:
-                login_path: app_login
-                check_path: app_login
-                enable_csrf: true
-            logout:
-                path: app_logout
-                target: app_login
-            custom_authenticator: App\Security\UserAuthenticator
-            entry_point: App\Security\UserAuthenticator
+        #main:
+        #    lazy: true
+        #    provider: app_user_provider
+        #    form_login:
+        #        login_path: app_login
+        #        check_path: app_login
+        #        enable_csrf: true
+        #    logout:
+        #        path: app_logout
+        #        target: app_login
+        #    custom_authenticator: App\Security\UserAuthenticator
+        #    entry_point: App\Security\UserAuthenticator
 
-        admin:
-            pattern: ^/
-            lazy: true
-            provider: app_user_provider
-            form_login:
-                login_path: app_admin_login
-                check_path: app_admin_login
-                enable_csrf: true
-            logout:
-                path: app_admin_login
-                target: app_admin_login
-            custom_authenticator: App\Security\AdminAuthenticator
-            entry_point: App\Security\AdminAuthenticator
+        #admin:
+        #    pattern: ^/
+        #    lazy: true
+        #    provider: app_user_provider
+        #    form_login:
+        #        login_path: app_admin_login
+        #        check_path: app_admin_login
+        #        enable_csrf: true
+        #    logout:
+        #        path: app_admin_login
+        #        target: app_admin_login
+        #    custom_authenticator: App\Security\AdminAuthenticator
+        #    entry_point: App\Security\AdminAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -49,8 +49,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: ^/admin, roles: ROLE_ADMIN }
-         - { path: ^/user, roles: ROLE_USER }
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/user, roles: ROLE_USER }
 
 when@test:
     security:

@@ -1,0 +1,123 @@
+{% extends 'User/base.html.twig' %}
+
+{% block title %}Edit Account{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('frontoffice/css/user/edit.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-body p-5">
+                    <h2 class="text-center text-primary fw-bold mb-4">✏️ Edit Your Profile</h2>
+
+                    {% if form.vars.errors|length > 0 %}
+                        <div class="alert alert-danger">
+                            {% for error in form.vars.errors %}
+                                <div>{{ error.message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+
+                        <div class="form-group mb-3">
+                            {{ form_label(form.firstName) }}
+                            {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.firstName) }}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form_label(form.lastName) }}
+                            {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.lastName) }}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form_label(form.gender) }}
+                            <div class="gender-options">
+                                {% for choice in form.gender %}
+                                    <label>
+                                        {{ form_widget(choice) }}
+                                        {{ choice.vars.label }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            {{ form_errors(form.gender) }}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form_label(form.dateOfBirth) }}
+                            {{ form_widget(form.dateOfBirth, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.dateOfBirth) }}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form_label(form.phoneNumber) }}
+                            {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.phoneNumber) }}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form_label(form.country) }}
+                            {{ form_widget(form.country, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.country) }}
+                        </div>
+
+                        <div class="form-group text-center mb-4">
+                            {{ form_label(form.profilePictureFile) }}
+                            <div class="custom-file-upload mb-3">
+                                {{ form_widget(form.profilePictureFile, {
+                                    'attr': {
+                                        'onchange': 'previewImage(event)',
+                                        'class': 'form-control-file',
+                                        'accept': 'image/*'
+                                    }
+                                }) }}
+                            </div>
+                            {{ form_errors(form.profilePictureFile) }}
+
+                            <div class="preview-container">
+                                <img id="preview"
+                                     src="{{ user.profilePictureUrl ? asset('uploads/profile_pictures/' ~ user.profilePictureUrl) : asset('uploads/profile_pictures/default.png') }}"
+                                     alt="Profile Preview"
+                                     style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 1px solid #ddd; padding: 5px;" />
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-flex justify-content-between">
+                            <a href="{{ path('user_account') }}" class="btn btn-outline-secondary px-4">❌ Cancel</a>
+                            <button type="submit" class="btn btn-success px-4">💾 Save</button>
+                        </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            const preview = document.getElementById('preview');
+            preview.src = reader.result;
+            preview.style.display = 'inline-block';
+        };
+        if (event.target.files.length > 0) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+</script>
+{% endblock %}

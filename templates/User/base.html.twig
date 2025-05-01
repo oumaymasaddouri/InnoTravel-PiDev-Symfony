@@ -96,11 +96,47 @@
                                 </div><!-- end of nav-collapse -->
                             </div>
                             <div class="col-lg-3 col-md-4 col-4">
+                            {% if user is empty %}
+
                                 <div class="header-right">
                                     <div class="close-form">
+                                        <a class="theme-btn" href="{{ path('app_register') }}">sign up</a>
                                         <a class="theme-btn" href="{{ path('app_login') }}">sign in</a>
                                     </div>
                                 </div>
+
+                            {% else %}
+                                <div class="dropdown profile-dropdown" style="position: relative;">
+                                    <img
+                                            src="{{ user.profilePictureUrl ? asset('uploads/profile_pictures/' ~ user.profilePictureUrl) : asset('uploads/profile_pictures/default.png') }}"
+                                            alt="Profile Picture"
+                                            class="profile-picture"
+                                            id="profileDropdownToggle"
+                                            style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);"
+                                            onerror="this.onerror=null;this.src='{{ asset('uploads/profile_pictures/default.png') }}';">
+
+                                    <div class="dropdown-menu" id="profileDropdownMenu" style="display: none; position: absolute; top: 60px; right: 0; background: #ffffff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); padding: 20px; text-align: center; width: 170px; z-index: 99;">
+                                        <img
+                                                src="{{ user.profilePictureUrl ? asset('uploads/profile_pictures/' ~ user.profilePictureUrl) : asset('uploads/profile_pictures/default.png') }}"
+                                                alt="Profile Avatar"
+                                                class="dropdown-avatar"
+                                                style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; margin-bottom: 15px;"
+                                                onerror="this.onerror=null;this.src='{{ asset('uploads/profile_pictures/default.png') }}';">
+                                        <div style="margin-top: 10px;">
+                                            <a href="{{ path('account_edit') }}"
+                                               class="btn-small"
+                                               style="background-color: #2979FE; color: white; padding: 6px 12px; border-radius: 8px; font-size: 14px; display: block; margin-bottom: 10px; transition: 0.3s;">
+                                                Settings
+                                            </a>
+                                            <a href="{{ path('app_logout') }}"
+                                               class="btn-small"
+                                               style="background-color: #f44336; color: white; padding: 6px 12px; border-radius: 8px; font-size: 14px; display: block; transition: 0.3s;">
+                                                Logout
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
                             </div>
                         </div>
                     </div><!-- end of container -->
@@ -301,6 +337,25 @@
         <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toggle = document.getElementById('profileDropdownToggle');
+                    const menu = document.getElementById('profileDropdownMenu');
+
+                    if (toggle && menu) {
+                        toggle.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+                        });
+
+                        document.addEventListener('click', (e) => {
+                            if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+                                menu.style.display = 'none';
+                            }
+                        });
+                    }
+                });
+            </script>
         {% endblock %}
     </body>
     

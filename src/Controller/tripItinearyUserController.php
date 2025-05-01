@@ -14,20 +14,26 @@ use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class tripItinearyUserController extends AbstractController
 {
-    #[Route('/user/trip-itinerary', name: 'trip_itinerary_user')]
-    public function index(Request $request, ManagerRegistry $doctrine, PaginatorInterface $paginator): Response
+    private function getUserFromSession(SessionInterface $session, EntityManagerInterface $em): ?User
     {
-        $user = $this->getUser();
+        return $session->get('user_id') ? $em->getRepository(User::class)->find($session->get('user_id')) : null;
+    }
+
+    #[Route('/user/trip-itinerary', name: 'trip_itinerary_user')]
+    public function index(Request $request, ManagerRegistry $doctrine, PaginatorInterface $paginator, SessionInterface $session, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUserFromSession($session, $em);
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-    
+
         $status = $request->query->get('status');
         $date = $request->query->get('date');
         $minBudget = $request->query->get('min_budget');
@@ -75,6 +81,7 @@ class tripItinearyUserController extends AbstractController
             'filterDate' => $date,
             'filterMinBudget' => $minBudget,
             'filterMaxBudget' => $maxBudget,
+            'user' => $user,
         ]);
     }
 
@@ -97,9 +104,9 @@ class tripItinearyUserController extends AbstractController
     }
 
     #[Route('/user/create-trip', name: 'user_create_trip')]
-    public function createTrip(Request $request, ManagerRegistry $doctrine, MailService $mailService): Response
+    public function createTrip(Request $request, ManagerRegistry $doctrine, MailService $mailService, SessionInterface $session, EntityManagerInterface $em): Response
     {
-        $user = $this->getUser();
+        $user = $this->getUserFromSession($session, $em);
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
@@ -169,17 +176,17 @@ class tripItinearyUserController extends AbstractController
 
         return $this->render('user/trip-itineary/create.html.twig', [
             'trip_form' => $form->createView(),
+            'user' => $user,
         ]);
     } 
 
     #[Route('/user/view-trip/{id}', name: 'user_view_trip')]
-    public function viewTrip(ManagerRegistry $doctrine, $id): Response
+    public function viewTrip(ManagerRegistry $doctrine, $id, SessionInterface $session, EntityManagerInterface $em): Response
     {
-        $user = $this->getUser();
+        $user = $this->getUserFromSession($session, $em);
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-
 
         $trip = $doctrine->getRepository(Trip::class)->findOneBy(['id' => $id , 'user' => $user]);
        
@@ -202,11 +209,12 @@ class tripItinearyUserController extends AbstractController
             'trip_form' => $form->createView(),
             'itineraire_list' => $itineraires,
             'selectedItineraries' => $selectedItineraryIds,
+            'user' => $user,
         ]);
     }
 
     #[Route('/user/update-trip/{id}', name: 'user_update_trip')]
-    public function updateTrip(Request $request, ManagerRegistry $doctrine, $id, MailService $mailService): Response
+    public function updateTrip(Request $request, ManagerRegistry $doctrine, $id, MailService $mailService, SessionInterface $session, EntityManagerInterface $em): Response
     {
         $em = $doctrine->getManager();
         $trip = $doctrine->getRepository(Trip::class)->findOneBy(['id' => $id]);
@@ -271,13 +279,12 @@ class tripItinearyUserController extends AbstractController
     
 
     #[Route('/user/delete-trip/{id}', name: 'user_delete_trip', methods: ['POST'], options: ['expose' => true])]
-    public function deleteTrip(EntityManagerInterface $entityManager, $id): Response
+    public function deleteTrip(EntityManagerInterface $entityManager, $id, SessionInterface $session, EntityManagerInterface $em): Response
     {
-        $user = $this->getUser();
+        $user = $this->getUserFromSession($session, $em);
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-
 
         $trip = $entityManager->getRepository(Trip::class)->findOneBy(['id' => $id , 'user' => $user]);
     
