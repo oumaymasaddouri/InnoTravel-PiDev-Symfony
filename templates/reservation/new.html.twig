@@ -24,6 +24,8 @@
 {% block css %}
     {{ parent() }}
     <style>
+
+    
         .reservation-form-wrapper {
             padding: 60px 20px;
             max-width: 800px;
@@ -159,7 +161,7 @@
         }
         
         form button[type="submit"] {
-            background: linear-gradient(135deg, #FF9F67, #ff7e33);
+            background: linear-gradient(135deg, #35c759, #2a9e48);
             color: white;
             border: none;
             padding: 14px 30px;
@@ -204,6 +206,10 @@
             background-color: #388E3C;
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
         }
+        .map-toggle .pickup-btn:hover {
+           transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(56, 200, 60, 1);
+        }
         
         .map-toggle .destination-btn {
             background-color: #F44336;
@@ -213,6 +219,10 @@
         .map-toggle .destination-btn.active {
             background-color: #D32F2F;
             box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.3);
+        }
+        .map-toggle .destination-btn:hover {
+           transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(244, 67, 54, 1);
         }
         
         @media (max-width: 768px) {

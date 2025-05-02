@@ -1,13 +1,15 @@
 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_errors(form) }} {# Display global form errors #}
-    {{ form_row(form.pickup_address) }}
-    {{ form_row(form.destination_address) }}
+  <br>
     <label class="form-label">Select pickup and destination locations on the map</label>
+       <div id="map"></div>
     <div class="map-toggle">
         <button type="button" class="pickup-btn">Set Pickup Location</button>
         <button type="button" class="destination-btn">Set Destination Location</button>
     </div>
-    <div id="map"></div>
+ 
+      {{ form_row(form.pickup_address) }}
+    {{ form_row(form.destination_address) }}
     {{ form_widget(form.pickupLatitude) }}
     {{ form_widget(form.pickupLongitude) }}
     {{ form_widget(form.destinationLatitude) }}

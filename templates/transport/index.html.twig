@@ -1,13 +1,13 @@
 {% extends 'basefrontoffice.html.twig' %}
 
-{% block title %}transport index{% endblock %}
+{% block title %}Transport Index{% endblock %}
 
 {% block section8 %}
 <div class="transport-index-wrapper">
     <div class="transport-index-header">
         <h1>Transport Management</h1>
-        <a href="{{ path('app_transport_new') }}" class="create-btn">
-            <i class="ti-plus"></i> Create new transport
+        <a href="{{ path('app_transport_new') }}" class="theme-btn">
+            <i class="ti-plus"></i> Create New Transport
         </a>
     </div>
     
@@ -35,7 +35,6 @@
                         <label><input type="checkbox" value="green"> Green</label>
                         <label><input type="checkbox" value="grey"> Grey</label>
                         <label><input type="checkbox" value="brown"> Brown</label>
-                        
                     </div>
                 </div>
                 <div class="filter-group">
@@ -59,7 +58,7 @@
             <i class="ti-car"></i>
         </div>
         
-        {% if transports|length > 0 %}
+        {% if pagination|length > 0 %}
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -73,7 +72,7 @@
                     </tr>
                 </thead>
                 <tbody id="transportTableBody">
-                {% for transport in transports %}
+                {% for transport in pagination %}
                     <tr>
                         <td>{{ transport.id }}</td>
                         <td>{{ transport.carModel }}</td>
@@ -95,6 +94,42 @@
                 </tbody>
             </table>
         </div>
+        
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <ul class="pagination">
+                {% if pagination.currentPageNumber > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path('app_transport_index', app.request.query.all|merge({'page': pagination.currentPageNumber-1})) }}">
+                            <i class="ti-angle-left"></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="ti-angle-left"></i></span>
+                    </li>
+                {% endif %}
+                
+                {% for page in 1..pagination.pageCount %}
+                    <li class="page-item {% if page == pagination.currentPageNumber %}active{% endif %}">
+                        <a class="page-link" href="{{ path('app_transport_index', app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+                
+                {% if pagination.currentPageNumber < pagination.pageCount %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path('app_transport_index', app.request.query.all|merge({'page': pagination.currentPageNumber+1})) }}">
+                            <i class="ti-angle-right"></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="ti-angle-right"></i></span>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        
         <div id="no-search-results" class="no-records" style="display: none;">
             <div class="no-records-icon">
                 <i class="ti-search"></i>
@@ -256,6 +291,13 @@
         background: #f8f9fa;
     }
     
+    /* Style for selected checkboxes */
+    .filter-options label:has(input[type="checkbox"]:checked) {
+        background: #e6f0ff;
+        color: #4285F4;
+        font-weight: 600;
+    }
+    
     .filter-actions {
         display: flex;
         justify-content: space-between;
@@ -296,9 +338,8 @@
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(66, 133, 244, 0.4);
     }
-    /* End of Search and Filter Styles */
     
-    .create-btn {
+    .theme-btn {
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -313,9 +354,13 @@
         box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
     }
     
-    .create-btn:hover {
+    .theme-btn:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
+    }
+    
+    .theme-btn i {
+        font-size: 1rem;
     }
     
     .transport-table-container {
@@ -472,6 +517,67 @@
         max-width: 400px;
     }
     
+    /* Pagination Styles */
+    .pagination-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+    
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        gap: 8px;
+    }
+    
+    .pagination .page-item {
+        display: inline-block;
+    }
+    
+    .pagination .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        color: #263A5B;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .pagination .page-link:hover {
+        background-color: #4285F4;
+        color: white;
+        border-color: #4285F4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(66, 133, 244, 0.2);
+    }
+    
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #4285F4, #34A853);
+        border-color: transparent;
+        color: white;
+        font-weight: 600;
+    }
+    
+    .pagination .page-item.disabled .page-link {
+        background-color: #f5f5f5;
+        color: #ccc;
+        border-color: #e0e0e0;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+    
+    .pagination .page-link i {
+        font-size: 12px;
+    }
+    
     @media (max-width: 992px) {
         .transport-index-header {
             flex-direction: column;
@@ -498,6 +604,10 @@
             gap: 8px;
             align-items: flex-start;
         }
+        
+        .pagination-container {
+            justify-content: center;
+        }
     }
     
     @media (max-width: 768px) {
@@ -511,6 +621,12 @@
         
         .transport-index-header h1 {
             font-size: 28px;
+        }
+        
+        .pagination .page-link {
+            width: 32px;
+            height: 32px;
+            font-size: 13px;
         }
     }
 </style>
@@ -575,10 +691,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Filter functionality
+    // Filter functionality with immediate feedback
     const applyFiltersBtn = document.getElementById('applyFilters');
     const clearFiltersBtn = document.getElementById('clearFilters');
     const filterCheckboxes = document.querySelectorAll('.filter-options input[type="checkbox"]');
+    
+    // Add event listener to each checkbox for immediate feedback
+    filterCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const label = this.parentElement;
+            if (this.checked) {
+                label.classList.add('selected');
+            } else {
+                label.classList.remove('selected');
+            }
+        });
+    });
     
     if (applyFiltersBtn && tableBody) {
         applyFiltersBtn.addEventListener('click', function() {
@@ -591,6 +719,7 @@ document.addEventListener('DOMContentLoaded', function() {
         clearFiltersBtn.addEventListener('click', function() {
             filterCheckboxes.forEach(checkbox => {
                 checkbox.checked = false;
+                checkbox.parentElement.classList.remove('selected');
             });
             
             if (tableRows.length > 0) {
@@ -646,6 +775,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+
 });
 </script>
 {% endblock %}

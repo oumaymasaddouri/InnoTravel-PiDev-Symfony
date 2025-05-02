@@ -19,14 +19,96 @@
         </div>
         
         <div class="form-container">
-            {{ include('transport/_form.html.twig') }}
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
+                <div class="form-group">
+                    {{ form_label(form.carModel, 'Car Model', {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti-car"></i></span>
+                        {{ form_widget(form.carModel, {'attr': {'class': 'form-input', 'placeholder': 'Enter car model'}}) }}
+                    </div>
+                    {{ form_errors(form.carModel) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.carColor, 'Car Color', {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti-palette"></i></span>
+                        {{ form_widget(form.carColor, {'attr': {'class': 'form-input', 'placeholder': 'Enter car color'}}) }}
+                    </div>
+                    {{ form_errors(form.carColor) }}
+                    <div class="color-preview mt-2" id="color-preview"></div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.licensePlate, 'License Plate', {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti-id-badge"></i></span>
+                        {{ form_widget(form.licensePlate, {'attr': {'class': 'form-input', 'placeholder': 'Enter license plate'}}) }}
+                    </div>
+                    {{ form_errors(form.licensePlate) }}
+                    <div class="license-plate-preview mt-2" id="license-preview">
+                        <span class="license-plate">{{ transport.licensePlate ?: 'Enter License Plate' }}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.maxLuggage, 'Max Luggage', {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti-briefcase"></i></span>
+                        {{ form_widget(form.maxLuggage, {'attr': {'class': 'form-input', 'placeholder': 'Enter max luggage capacity'}}) }}
+                    </div>
+                    {{ form_errors(form.maxLuggage) }}
+                    <div class="luggage-preview mt-2" id="luggage-preview"></div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.vehicleType, 'Vehicle Type', {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti-truck"></i></span>
+                        {{ form_widget(form.vehicleType, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    {{ form_errors(form.vehicleType) }}
+                </div>
+                <button type="submit" class="custom-save-btn">
+                    {{ button_label|default('Save') }}
+                </button>
+            {{ form_end(form) }}
         </div>
         
         <div class="delete-container">
             <hr class="divider">
-            <h3>Delete this transport</h3>
-            <p>This action cannot be undone. Please be certain.</p>
-            {{ include('transport/_delete_form.html.twig') }}
+            <button type="button" class="delete-btn" data-toggle="modal" data-target="#deleteModal">
+                Delete this transport
+            </button>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="deleteModalLabel">
+                        <i class="ti-alert mr-2"></i> Confirm Deletion
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning d-flex align-items-start" role="alert">
+                        <i class="ti-warning text-warning mr-3 mt-1" style="font-size: 1.5rem;"></i>
+                        <div>
+                            <p class="mb-2">Are you sure you want to delete this transport?</p>
+                            <p class="text-muted mb-0"><small>This action cannot be undone. Please be certain.</small></p>
+                        </div>
+                    </div>
+                    <div class="transport-info">
+                        <p><strong>Vehicle:</strong> {{ transport.carModel }} ({{ transport.carColor }})</p>
+                        <p><strong>License Plate:</strong> {{ transport.licensePlate }}</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    {{ include('transport/_delete_form.html.twig') }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -134,7 +216,11 @@
     }
     
     /* Form Styling */
-    form label {
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
         font-weight: 600;
         color: #263A5B;
         margin-bottom: 10px;
@@ -142,31 +228,124 @@
         font-size: 15px;
     }
     
-    form input[type="text"],
-    form input[type="email"],
-    form input[type="number"],
-    form select,
-    form textarea {
+    .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
         width: 100%;
-        padding: 14px 18px;
+    }
+
+    .input-group-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 48px;
+        background-color: #f9f9f9;
         border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        margin-bottom: 24px;
+        border-right: none;
+        border-radius: 10px 0 0 10px;
+        color: #4285F4;
+        font-size: 18px;
+    }
+
+    .form-input, .form-select {
+        flex: 1;
+        width: 100%;
+        padding: 14px 18px 14px 0;
+        border: 1px solid #e0e0e0;
+        border-left: none;
+        border-radius: 0 10px 10px 0;
         font-size: 15px;
         transition: all 0.3s ease;
         background-color: #f9f9f9;
+        height: 48px;
+    }
+
+    .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
     }
     
-    form input:focus,
-    form select:focus,
-    form textarea:focus {
+    .form-input:focus, .form-select:focus {
         outline: none;
         border-color: #4285F4;
         box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.15);
         background-color: #fff;
     }
+
+    .invalid-feedback {
+        font-size: 12px;
+        color: #dc3545;
+        margin-top: 4px;
+    }
+
+    .color-preview {
+        display: flex;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    .color-preview div {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    .color-preview span {
+        font-size: 13px;
+        color: #6c757d;
+    }
+
+    .license-plate-preview {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 8px;
+    }
+
+    .license-plate {
+        background-color: #fff;
+        border: 2px solid #000;
+        border-radius: 4px;
+        padding: 4px 12px;
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 1px;
+        display: inline-block;
+        min-width: 100px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .luggage-preview {
+        display: flex;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    .luggage-icons {
+        display: flex;
+        align-items: center;
+    }
+
+    .luggage-icon {
+        color: #4285F4;
+        margin-right: 4px;
+        font-size: 14px;
+    }
+
+    .luggage-preview small {
+        font-size: 13px;
+        color: #6c757d;
+    }
     
-    form button[type="submit"] {
+    .custom-save-btn {
         background: linear-gradient(135deg, #4285F4, #34A853);
         color: white;
         border: none;
@@ -181,46 +360,151 @@
         box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
     }
     
-    form button[type="submit"]:hover {
+    .custom-save-btn:hover {
         background: linear-gradient(135deg, #34A853, #2b8a44);
         transform: translateY(-3px);
         box-shadow: 0 8px 20px rgba(52, 168, 83, 0.3);
     }
     
     .divider {
-            margin: -25px 0 25px;
-            border: none;
-            border-top: 2px solid #f0f0f0;
-        }
+        margin: -25px 0 25px;
+        border: none;
+        border-top: 2px solid #f0f0f0;
+    }
     
     .delete-container {
         margin-top: 30px;
-        padding: 25px;
-        background-color: #fff8f8;
-        border-radius: 12px;
-        border-left: 4px solid #dc3545;
+        text-align: center;
     }
     
-    .delete-container h3 {
-        color: #dc3545;
-        font-size: 20px;
-        margin-bottom: 12px;
-        font-weight: 600;
-    }
-    
-    .delete-container p {
-        color: #666;
-        margin-bottom: 20px;
-        font-size: 15px;
-        line-height: 1.5;
-    }
-    
-    /* Delete Form Styling */
-    form.delete-form button {
+    .delete-btn {
         background-color: #fff;
         color: #dc3545;
         border: 2px solid #dc3545;
         padding: 12px 24px;
+        font-size: 15px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .delete-btn:hover {
+        background-color: #dc3545;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+    }
+    
+    .delete-btn:before {
+        content: "\e646"; /* ti-trash icon code */
+        font-family: 'themify';
+        font-size: 15px;
+    }
+
+    /* Modal Styles */
+    .modal-content {
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        background: #ffffff;
+        color: #263A5B;
+    }
+
+    .modal-header {
+        background: linear-gradient(to right, #dc3545, #ff5b5b);
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        color: white;
+        padding: 12px 16px;
+    }
+
+    .modal-header .modal-title {
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .modal-header .close {
+        color: #ffffff;
+        opacity: 0.8;
+        font-size: 24px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .modal-header .close:hover {
+        opacity: 1;
+    }
+
+    .modal-body {
+        padding: 16px;
+        font-size: 15px;
+    }
+
+    .modal-body .alert-warning {
+        font-size: 14px;
+        padding: 12px;
+        background: #fff3cd;
+        color: #856404;
+        border-radius: 8px;
+    }
+
+    .modal-body .text-muted {
+        color: #6c757d;
+    }
+
+    .modal-body .transport-info {
+        margin-top: 12px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .modal-body .transport-info p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #263A5B;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #f0f0f0;
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .modal-footer .btn {
+        padding: 10px 20px;
+        font-size: 15px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #f8f8f8;
+        color: #555;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .modal-footer .btn-secondary:hover {
+        background-color: #263A5B;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(38, 58, 91, 0.2);
+    }
+
+    /* Delete Form Styling in Modal */
+    form.delete-form button {
+        background-color: #fff;
+        color: #dc3545;
+        border: 2px solid #dc3545;
+        padding: 10px 20px;
         font-size: 15px;
         border-radius: 50px;
         cursor: pointer;
@@ -238,7 +522,6 @@
         box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
     }
     
-    /* Add icon to delete button */
     form.delete-form button:before {
         content: "\e646"; /* ti-trash icon code */
         font-family: 'themify';
@@ -260,9 +543,145 @@
             font-size: 28px;
         }
         
-        .delete-container {
-            padding: 20px 15px;
+        .modal-footer {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-footer .btn {
+            width: 100%;
         }
     }
 </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Bootstrap modal
+            const deleteModal = document.querySelector('#deleteModal');
+            if (deleteModal && typeof bootstrap !== 'undefined') {
+                const modalInstance = new bootstrap.Modal(deleteModal, {
+                    backdrop: 'static',
+                    keyboard: true
+                });
+
+                // Handle form submission
+                const deleteForm = deleteModal.querySelector('form.delete-form');
+                const deleteButton = deleteForm.querySelector('button');
+
+                deleteButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.classList.add('loading');
+                    this.innerHTML = '<i class="ti-trash mr-1"></i> Deleting...';
+                    this.disabled = true;
+
+                    setTimeout(() => {
+                        deleteForm.submit();
+                    }, 500);
+                });
+
+                deleteModal.addEventListener('hidden.bs.modal', function() {
+                    deleteButton.classList.remove('loading');
+                    deleteButton.innerHTML = '<i class="ti-trash mr-1"></i> Delete';
+                    deleteButton.disabled = false;
+                });
+            }
+
+            // Color preview
+            const colorInput = document.querySelector('#{{ form.carColor.vars.id }}');
+            const colorPreview = document.getElementById('color-preview');
+            if (colorInput && colorPreview) {
+                const updateColorPreview = () => {
+                    let color = colorInput.value.toLowerCase();
+                    let hexColor = getColorHex(color);
+                    colorPreview.innerHTML = '';
+
+                    const colorSwatch = document.createElement('div');
+                    colorSwatch.style.backgroundColor = hexColor;
+
+                    const colorName = document.createElement('span');
+                    colorName.textContent = color || 'Enter color';
+
+                    colorPreview.appendChild(colorSwatch);
+                    colorPreview.appendChild(colorName);
+                };
+                updateColorPreview();
+                colorInput.addEventListener('input', updateColorPreview);
+            }
+
+            // License plate preview
+            const licensePlateInput = document.querySelector('#{{ form.licensePlate.vars.id }}');
+            const licensePlatePreview = document.getElementById('license-preview');
+            if (licensePlateInput && licensePlatePreview) {
+                licensePlateInput.addEventListener('input', function() {
+                    const plateText = document.querySelector('.license-plate');
+                    if (plateText) {
+                        plateText.textContent = this.value || 'Enter License Plate';
+                    }
+                });
+            }
+
+            // Luggage capacity preview
+            const luggageInput = document.querySelector('#{{ form.maxLuggage.vars.id }}');
+            const luggageIcons = document.getElementById('luggage-preview');
+            if (luggageInput && luggageIcons) {
+                const updateLuggagePreview = () => {
+                    const count = parseInt(luggageInput.value) || 0;
+                    luggageIcons.innerHTML = '';
+
+                    for (let i = 0; i < Math.min(count, 5); i++) {
+                        const icon = document.createElement('i');
+                        icon.className = 'ti-briefcase luggage-icon';
+                        luggageIcons.appendChild(icon);
+                    }
+
+                    if (count > 5) {
+                        const extraText = document.createElement('span');
+                        extraText.textContent = `+${count - 5}`;
+                        extraText.style.marginLeft = '4px';
+                        extraText.style.color = '#6c757d';
+                        extraText.style.fontSize = '13px';
+                        luggageIcons.appendChild(extraText);
+                    }
+                };
+                updateLuggagePreview();
+                luggageInput.addEventListener('input', updateLuggagePreview);
+            }
+
+            // Form validation
+            const form = document.querySelector('.needs-validation');
+            form.addEventListener('submit', function(event) {
+                if (!this.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                this.classList.add('was-validated');
+            });
+
+            // Color helper function
+            function getColorHex(colorName) {
+                const colorMap = {
+                    'red': '#ff0000',
+                    'blue': '#0000ff',
+                    'green': '#008000',
+                    'yellow': '#ffff00',
+                    'black': '#000000',
+                    'white': '#ffffff',
+                    'silver': '#c0c0c0',
+                    'gray': '#808080',
+                    'orange': '#ffa500',
+                    'purple': '#800080',
+                    'pink': '#ffc0cb',
+                    'brown': '#a52a2a',
+                    'beige': '#f5f5dc',
+                    'gold': '#ffd700',
+                    'navy': '#000080',
+                    'teal': '#008080'
+                };
+                return colorMap[colorName] || '#cccccc';
+            }
+        });
+    </script>
 {% endblock %}
