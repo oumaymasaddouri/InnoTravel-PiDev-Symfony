@@ -1,0 +1,340 @@
+{# templates/post/indexAdmin.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block stylsheets %}
+    {# Tribute.js CSS pour l’autocomplétion des @mentions #}
+    <link rel="stylesheet" href="https://unpkg.com/tributejs@5.1.3/dist/tribute.css">
+
+    {# Vos autres CSS #}
+
+  <link href="/assets/css/themify-icons.css" rel="stylesheet">
+  <link href="/assets/css/flaticon.css" rel="stylesheet">
+  <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/css/jquery-ui.css" rel="stylesheet">
+  <link href="/assets/css/animate.css" rel="stylesheet">
+  <link href="/assets/css/nice-select.css" rel="stylesheet">
+  <link href="/assets/css/owl.carousel.css" rel="stylesheet">
+  <link href="/assets/css/owl.theme.css" rel="stylesheet">
+  <link href="/assets/css/slick.css" rel="stylesheet">
+  <link href="/assets/css/slick-theme.css" rel="stylesheet">
+  <link href="/assets/css/swiper.min.css" rel="stylesheet">
+  <link href="/assets/css/owl.transitions.css" rel="stylesheet">
+  <link href="/assets/css/jquery.fancybox.css" rel="stylesheet">
+  <link href="/assets/css/odometer-theme-default.css" rel="stylesheet">
+  <link href="/assets/sass/style.css" rel="stylesheet">
+    {# … ajoutez ici tous vos autres fichiers CSS … #}
+
+    <style>
+        .d-none { display: none; }
+        .mention { color: #1877f2; font-weight: 500; }
+        .card-post {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .post-nom {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        /* Réactions */
+        .reactions-container {
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            margin-top: 10px;
+        }
+        .reactions-wrapper {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .reaction-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        .reaction-btn {
+            font-size: 1.8rem;
+            transition: transform 0.2s;
+        }
+        .reaction-btn:hover {
+            transform: scale(1.3);
+        }
+        .reaction-count {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 3px;
+            font-weight: 500;
+        }
+        /* Commentaires */
+        .comment-list {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .comment-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .comment-content-wrapper p {
+            margin: 0;
+        }
+        .comment-date {
+            font-size: 0.8rem;
+            color: #777;
+        }
+        .add-comment-form textarea {
+            resize: vertical;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="content-page">
+      <div class="content container-fluid">
+
+        {# Map des emojis #}
+        {% set reactionMap = {
+          1: '👍',
+          2: '😍',
+          3: '😂',
+          4: '😢',
+          5: '😡'
+        } %}
+
+        {# Barre de recherche #}
+        <form action="{{ path('app_post') }}" method="GET" class="mb-4 input-group">
+          <input type="text" name="search" class="form-control"
+                 placeholder="Rechercher un post…"
+                 value="{{ app.request.query.get('search') }}">
+          <button class="btn btn-primary input-group-append">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+
+        <div class="row">
+          {% for post in posts %}
+            {% set counts = reactionCounts[post.id] ?? {} %}
+            <div class="col-12 mb-4">
+              <div class="card card-post">
+                <div class="card-body">
+                  <h5 class="post-nom">{{ post.title }}</h5>
+                  <p><strong>Date :</strong> {{ post.createdAt|date('d-m-Y') }}</p>
+                  <p><strong>Email :</strong> {{ post.email }}</p>
+                  <p><strong>Tél. :</strong> {{ post.num }}</p>
+
+                  {# Réactions #}
+                  <div class="reactions-container">
+                    <div class="reactions-wrapper">
+                      {% for typeIndex, emoji in reactionMap %}
+                        <div class="reaction-item"
+                             onclick="sendReaction({{ post.id }}, '{{ emoji }}', {{ typeIndex }})">
+                          <span class="reaction-btn">{{ emoji }}</span>
+                          <span class="reaction-count">
+                            {{ counts[typeIndex] is defined ? counts[typeIndex] : 0 }}
+                          </span>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  {# Bouton toggler #}
+                  <button class="btn btn-sm btn-comment mt-3"
+                          onclick="toggleComments({{ post.id }})">
+                    <i class="fas fa-comment"></i> Commentaires
+                  </button>
+
+                  {# Liste des commentaires #}
+                  <div id="comments-{{ post.id }}" class="comment-list d-none">
+                    <div id="comment-items-{{ post.id }}">
+                      {% for comment in post.comments %}
+                        {# Remplacement des mentions @<id> par @Prénom #}
+                        {% set html = comment.content %}
+                        {% for u in comment.mentionedUsers %}
+                          {% set html = html|replace({
+                              ('@' ~ u.id): '<span class="mention">@' ~ u.firstName ~ '</span>'
+                          }) %}
+                        {% endfor %}
+
+                        <div class="comment-item">
+                          <img src="{{ asset('images/user_avatar.png') }}"
+                               class="comment-avatar" alt="Avatar">
+                          <div class="comment-content-wrapper">
+                            <p class="comment-content">{{ html|raw }}</p>
+                            <small class="comment-date">
+                              {{ comment.createdAt|date('d/m/Y H:i') }}
+                            </small>
+                          </div>
+                        </div>
+                      {% else %}
+                        <p class="text-muted">Aucun commentaire pour ce post.</p>
+                      {% endfor %}
+                    </div>
+
+                    {# Formulaire d’ajout #}
+                    <div class="add-comment-form mt-3">
+                      <textarea class="form-control mention-input"
+                                id="comment-content-{{ post.id }}"
+                                data-post-id="{{ post.id }}"
+                                placeholder="Tapez @ pour mentionner…"></textarea>
+                      <button class="btn btn-primary mt-2"
+                              onclick="submitComment({{ post.id }})">
+                        Commenter
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="col-12">
+              <div class="alert alert-info">Aucun post trouvé.</div>
+            </div>
+          {% endfor %}
+        </div>
+
+        {# Pagination #}
+        {% if posts|length > 0 %}
+          <div class="pagination justify-content-center mt-4">
+            <ul class="pagination">
+              {% if previous %}
+                <li class="page-item">
+                  <a class="page-link"
+                     href="{{ path('app_post') }}?page={{ previous }}&search={{ app.request.query.get('search') }}">
+                    Précédent
+                  </a>
+                </li>
+              {% endif %}
+              <li class="page-item active">
+                <span class="page-link">{{ currentPage }}</span>
+              </li>
+              {% if next %}
+                <li class="page-item">
+                  <a class="page-link"
+                     href="{{ path('app_post') }}?page={{ next }}&search={{ app.request.query.get('search') }}">
+                    Suivant
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+            <div class="text-center mt-2">
+              Page {{ currentPage }} sur {{ posts.getPageCount() }}
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <!-- All JavaScript files
+    ================================================== -->
+    <script src="/assets/js/jquery.min.js"></script>
+    
+   
+   
+   
+    
+  
+ 
+  <script src="/assets/js/bootstrap.bundle.min.js"></script>
+  <!-- Plugins for this template -->
+  <script src="/assets/js/modernizr.custom.js"></script>
+  <script src="/assets/js/jquery.dlmenu.js"></script>
+  <script src="/assets/js/jquery-plugin-collection.js"></script>
+  <!-- Custom script for this template -->
+  <script src="/assets/js/script.js"></script>
+
+  <!-- Tribute.js pour les @mentions -->
+  <script src="https://unpkg.com/tributejs@5.1.3/dist/tribute.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tribute = new Tribute({
+        trigger: '@',
+        lookup: 'firstName',
+        fillAttr: 'id',
+        values: (text, cb) => {
+          fetch('{{ path("users_search") }}?q=' + encodeURIComponent(text))
+            .then(r => r.json())
+            .then(data => cb(data));
+        },
+        menuItemTemplate: item => item.string,
+        selectTemplate: item => '@' + item.original.id + ' '
+      });
+      document.querySelectorAll('.mention-input').forEach(el => tribute.attach(el));
+    });
+
+    function sendReaction(postId, emoji, typeIndex) {
+      fetch(`/post/${postId}/react`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({emoji, type: typeIndex})
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'ok' || data.status === 'removed') {
+          // on peut rafraîchir uniquement les compteurs ou, ici, recharger
+          location.reload();
+        } else {
+          alert('Erreur lors de la réaction');
+        }
+      });
+    }
+
+    function toggleComments(postId) {
+      document.getElementById(`comments-${postId}`).classList.toggle('d-none');
+    }
+
+    function submitComment(postId) {
+      const textarea = document.getElementById(`comment-content-${postId}`);
+      const content  = textarea.value;
+      fetch('{{ path("add_comment", {"postId":"__ID__"}) }}'.replace('__ID__', postId), {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({content})
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'success') {
+          // on injecte le nouveau commentaire sans recharger
+          const itemsDiv = document.getElementById(`comment-items-${postId}`);
+          const html = `
+            <div class="comment-item">
+              <img src="/images/user_avatar.png" class="comment-avatar" alt="Avatar">
+              <div>
+                <p class="comment-content">${data.comment.content}</p>
+                <small class="comment-date">${data.comment.createdAt}</small>
+              </div>
+            </div>`;
+          itemsDiv.insertAdjacentHTML('beforeend', html);
+          textarea.value = '';
+        } else {
+          alert('Erreur : ' + data.message);
+        }
+      })
+      .catch(console.error);
+    }
+  </script>
+{% endblock %}

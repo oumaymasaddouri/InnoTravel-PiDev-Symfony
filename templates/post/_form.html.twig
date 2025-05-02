@@ -1,0 +1,10 @@
+{# templates/post/_form.html.twig #}
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Ajouter un comment</h5>
+        {{ form_start(form) }}
+            {{ form_widget(form.content, {'attr': {'placeholder': 'Écrivez votre message...'}}) }}
+            <button type="submit" class="btn btn-primary mt-2">Commenter</button>
+        {{ form_end(form) }}
+    </div>
+</div>

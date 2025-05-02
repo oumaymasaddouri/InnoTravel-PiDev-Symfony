@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+        .avatar-small {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+{% endblock %}
+{% block custom_styles %}
+
+    <style>
+        .avatar-small {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+{% endblock %}
+
+
+{% block body %}
+<div class="container mt-4">
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content }}</p>
+
+    <!-- Formulaire pour ajouter un comment -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Ajouter un comment</h5>
+            {{ form_start(form) }}
+                {{ form_widget(form.content, {'attr': {'placeholder': 'Écrivez votre message...'}}) }}
+                <button type="submit" class="btn btn-primary mt-2">Commenter</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <!-- Liste des comments -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Commentaires</h5>
+            {% for comment in post.comments %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="{{ asset('images/user_avatar.png') }}" alt="Avatar" class="avatar-small">
+                            <span class="ms-2">Utilisateur</span>
+                        </div>
+                        <p class="card-text">{{ comment.content }}</p>
+                        <small class="text-muted">{{ comment.createdAt|date('d/m/Y H:i') }}</small>
+                        
+                    </div>
+                </div>
+            {% else %}
+               <p class="text-muted">Aucun commentaire pour ce post.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

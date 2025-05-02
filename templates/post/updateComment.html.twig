@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le commentaire{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4">Modifier le commentaire</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="form-group mb-3">
+                    {{ form_label(form.content, 'Contenu du commentaire') }}
+                    {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                </div>
+                <button type="submit" class="btn btn-success">Enregistrer</button>
+                <a href="{{ path('app_post') }}" class="btn btn-secondary ms-2">Annuler</a>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

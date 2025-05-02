@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="wpOceans">
+<link href="/assets/css/themify-icons.css" rel="stylesheet">
+<link href="/assets/css/flaticon.css" rel="stylesheet">
+<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="/assets/css/jquery-ui.css" rel="stylesheet">
+<link href="/assets/css/animate.css" rel="stylesheet">
+<link href="/assets/css/nice-select.css" rel="stylesheet">
+<link href="/assets/css/owl.carousel.css" rel="stylesheet">
+<link href="/assets/css/owl.theme.css" rel="stylesheet">
+<link href="/assets/css/slick.css" rel="stylesheet">
+<link href="/assets/css/slick-theme.css" rel="stylesheet">
+<link href="/assets/css/swiper.min.css" rel="stylesheet">
+<link href="/assets/css/owl.transitions.css" rel="stylesheet">
+<link href="/assets/css/jquery.fancybox.css" rel="stylesheet">
+<link href="/assets/css/odometer-theme-default.css" rel="stylesheet">
+<link href="/assets/sass/style.css" rel="stylesheet">
+
+    <style>
+        .form-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 500px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Zone de création de post -->
+                <div class="card shadow-sm p-3">
+                    <div class="d-flex align-items-center">
+                        <img src="/images/user_avatar.png" alt="Avatar" class="rounded-circle" width="50" height="50">
+                        <button class="btn btn-light flex-grow-1 ml-2 text-left" onclick="openForm()">
+                            Ajouter une publication !
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Conteneur du formulaire en pop-up #}
+    <div id="form-overlay" class="form-overlay" style="display: none;">
+        <div class="form-container">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Créer une publication</h5>
+                    <button class="btn btn-close" onclick="closeForm()"></button>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    <div class="form-group">
+                        {{ form_label(form.title) }}
+                        {{ form_widget(form.title, {'attr': {'class': 'form-control', 'placeholder': 'Title du post'}}) }}
+                    </div>
+                                    
+                    <div class="form-group">
+                        {{ form_label(form.content) }}
+                        {{ form_widget(form.content, {'attr': {'class': 'form-control', 'placeholder': 'Content'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Adresse e-mail'}}) }}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.num) }}
+                        {{ form_widget(form.num, {'attr': {'class': 'form-control', 'placeholder': 'Numéro de téléphone'}}) }}
+                    </div>
+                               
+                   
+                
+                    {# Nouveau champ pour l'image #}
+                    <div class="form-group">
+                        {{ form_label(form.imageFile) }}
+                        {{ form_widget(form.imageFile, {'attr': {'class': 'form-control-file'}}) }}
+                    </div>
+                                    
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">Publier</button>
+                        <button type="button" class="btn btn-secondary ml-2" onclick="closeForm()">Annuler</button>
+                    </div>
+                {{ form_end(form) }}
+                
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+    <script>
+        function openForm() {
+            document.getElementById('form-overlay').style.display = 'flex';
+        }
+
+        function closeForm() {
+            document.getElementById('form-overlay').style.display = 'none';
+        }
+    </script>
+{% endblock %}

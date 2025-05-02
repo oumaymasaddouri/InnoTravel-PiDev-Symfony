@@ -1,0 +1,29 @@
+{% extends 'admin.html.twig' %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Commentaires pour : {{ post.title }}</h2>
+
+    {% if comments is empty %}
+        <div class="alert alert-info">Aucun commentaire pour ce post.</div>
+    {% else %}
+        <div class="list-group">
+            {% for comment in comments %}
+                <div class="list-group-item">
+                    <strong>Commentaire :</strong> {{ comment.content }}<br>
+                    <small class="text-muted">{{ comment.createdAt|date('d/m/Y H:i') }}</small>
+                </div>
+                <div class="mt-2">
+                    <a href="{{ path('delete_comment_admin', {'id': comment.id}) }}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">Supprimer</a>
+                </div>
+                
+               
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <a href="{{ path('app_postAdmin') }}" class="btn btn-secondary mt-3">Retour aux posts</a>
+</div>
+{% endblock %}

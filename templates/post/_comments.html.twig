@@ -1,0 +1,20 @@
+s<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Comments</h5>
+        {% for comment in post.comments %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="{{ asset('images/user_avatar.png') }}" alt="Avatar" class="rounded-circle" width="40" height="40">
+                        <span class="ms-2"></span>
+                    </div>
+                    <p class="card-text">{{ comment.content }}</p>
+                    <small class="text-muted">{{ comment.createdAt|date('d/m/Y H:i') }}</small>
+                    
+                </div>
+            </div>
+        {% else %}
+            <p class="text-muted">Aucun comment pour ce post.</p>
+        {% endfor %}
+    </div>
+</div>

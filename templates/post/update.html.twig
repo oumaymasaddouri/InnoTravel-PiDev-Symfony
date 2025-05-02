@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block pp %}
+                {# Rendre le formulaire une seule fois et le stocker dans une variable #}
+                {% set form_html %}
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                {% endset %}
+        
+                <div class="row">
+                    <!-- Première colonne -->
+                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                        <div class="row">
+                            <!-- Boîte 1 -->
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="product_box">
+                                    <figure>
+                                        <img src="/images/product_img1.jpg" alt="#" />
+                                        <h3>Fresh Apple</h3>
+                                    </figure>
+                                    <!-- Formulaire d'ajout de post -->
+                                    <div class="form-overlay">
+                                        <div class="form-container">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Ajouter une post</h5>
+                                                {{ form_html|raw }} {# Réutiliser le formulaire rendu #}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                          
+                    
+                    
+                </div>
+            {% endblock %}          

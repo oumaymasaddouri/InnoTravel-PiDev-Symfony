@@ -1,0 +1,276 @@
+{# templates/post/index.html.twig #}
+{% extends 'admin.html.twig' %}
+
+
+{% block stylesheets %}
+<!-- Bootstrap core CSS -->
+<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Additional CSS Files -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+
+    <link rel="stylesheet" href="{{ asset('css/kk.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Styles pour les boutons */
+        .btn-like, .btn-comment, .btn-share {
+            border: none;
+            background: none;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .btn-like:hover, .btn-comment:hover, .btn-share:hover {
+            color: #1877f2;
+        }
+        .btn-like i, .btn-comment i, .btn-share i {
+            margin-right: 5px;
+        }
+        .post-actions {
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        /* Styles pour les comments */
+        .comment-list {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .comment-item {
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .comment-content-wrapper {
+            flex: 1;
+        }
+        .comment-user {
+            font-weight: bold;
+            color: #333;
+        }
+        .comment-content {
+            font-size: 0.9rem;
+            color: #444;
+            margin-top: 5px;
+        }
+        .comment-date {
+            font-size: 0.8rem;
+            color: #777;
+            margin-top: 5px;
+        }
+        /* Style pour le formulaire d'ajout de comment */
+        .add-comment-form {
+            margin-top: 10px;
+        }
+        .add-comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            resize: vertical;
+        }
+        .add-comment-form button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Gestion des post</h5>
+
+                            <!-- Formulaire de recherche -->
+                            <form action="{{ path('app_post') }}" method="GET" class="mb-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" placeholder="Rechercher une post par nom ou type..." value="{{ app.request.query.get('search') }}">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-search"></i> Rechercher
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Fin du formulaire de recherche -->
+
+                            <!-- Liste verticale des post -->
+                            <div class="row">
+                                {% for post in posts %}
+                                <div class="col-12 mb-4">
+                                    <div class="card card-post">
+                                        <div class="card-body">
+                                            <!-- Nom de la post -->
+                                            <h5 class="post-nom">{{ post.title }}</h5>
+                                            <!-- Information sur la post -->
+                                            <p class="post-type"><strong>Type :</strong> {{ post.content }}</p>
+                                            <p class="post-date"><strong>Date de création :</strong> {{ post.createdAt|date('d-m-Y') }}</p>
+                                            <p class="post-email"><strong>Email :</strong> {{ post.email }}</p>
+                                            <p class="post-num"><strong>Téléphone :</strong> {{ post.num }}</p>
+
+                                            <!-- Boutons d'actions -->
+                                            <div class="post-actions">
+                                                <button class="btn btn-like">
+                                                    <i class="fas fa-thumbs-up"></i> J'aime
+                                                </button>
+                                                <a href="{{ path('view_post_comments_admin', {'id': post.id}) }}" class="btn btn-comment">
+                                                    <i class="fas fa-comment"></i> Voir les comments
+                                                </a>
+                                                
+                                                <button class="btn btn-share">
+                                                    <i class="fas fa-share"></i> Partager
+                                                </button>
+                                            </div>
+
+                                            <!-- Liste des comments (masquée par défaut) -->
+                                            <div id="comments-{{ post.id }}" class="comment-list" style="display: none;">
+                                                <!-- Affichage des comments -->
+                                                {% for comment in post.comments %}
+                                                    <div class="comment-item">
+                                                        <!-- Avatar de l'utilisateur -->
+                                                        <img src="{{ asset('images/user_avatar.png') }}" alt="Avatar" class="comment-avatar">
+                                                        <!-- Contenu du comment -->
+                                                        <div class="comment-content-wrapper">
+                                                            <div class="comment-user">Utilisateur</div>
+                                                            <p class="comment-content">{{ comment.content }}</p>
+                                                            <small class="comment-date">{{ comment.createdAt|date('d/m/Y H:i') }}</small>
+                                                            <!-- Boutons Modifier / Supprimer -->
+                                                            <div class="mt-2">
+                                                                <button class="btn btn-sm btn-warning" onclick="toggleEditForm({{ comment.id }})">Modifier</button>
+                                                                <a href="{{ path('delete_comment_admin', {'id': comment.id}) }}"
+                                                                   class="btn btn-sm btn-danger"
+                                                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">Supprimer</a>
+                                                            </div>
+                                                            
+                                                            <!-- Formulaire de modification inline (masqué au début) -->
+                                                            <div id="edit-comment-form-{{ comment.id }}" class="mt-2" style="display: none;">
+                                                                <form action="{{ path('update_comment_admin', {'id': comment.id}) }}" method="post">
+                                                                    <textarea name="comment_content" class="form-control" rows="3">{{ comment.content }}</textarea>
+                                                                    <button type="submit" class="btn btn-success btn-sm mt-2">Enregistrer</button>
+                                                                    <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="toggleEditForm({{ comment.id }})">Annuler</button>
+                                                                </form>
+                                                            </div>
+
+                                                    </div>
+                                                {% else %}
+                                                    <p class="text-muted">Aucun comment pour ce post.</p>
+                                                {% endfor %}
+
+                                                <!-- Formulaire d'ajout de comment -->
+                                                <div class="add-comment-form">
+                                                    {{ form_start(forms[post.id], {'attr': {'id': 'form-' ~ post.id, 'action': path('post_comments', {'id': post.id}), 'method': 'POST'}}) }}
+                                                        {{ form_widget(forms[post.id].content, {'attr': {'placeholder': 'Écrivez votre message...', 'class': 'form-control'}}) }}
+                                                        <button type="submit" class="btn btn-primary mt-2">Commenter</button>
+                                                    {{ form_end(forms[post.id]) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="col-12">
+                                    <div class="alert alert-info" role="alert">
+                                        Aucune post trouvée.
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!-- Fin de la liste verticale -->
+
+                            <!-- Pagination -->
+                            {% if posts|length > 0 %}
+                            <div class="pagination justify-content-center mt-4">
+                                <ul class="pagination">
+                                    {% if previous is defined and previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ path('app_post') }}?page={{ previous }}&search={{ app.request.query.get('search') }}">Précédent</a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ currentPage }}</span>
+                                    </li>
+                                    {% if next is defined and next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ path('app_post') }}?page={{ next }}&search={{ app.request.query.get('search') }}">Suivant</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="text-center mt-2">
+                                Page {{ currentPage }} sur {{ posts.getPageCount() }}
+                            </div>
+                            {% endif %}
+                            <!-- Fin de la pagination -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+    {% block javascripts %}
+    {{ parent() }}
+    <script>
+        function toggleComments(postId) {
+            const commentsDiv = document.getElementById(`comments-${postId}`);
+            commentsDiv.classList.toggle('d-none');
+        }
+        
+        function toggleEditForm(commentId) {
+            const form = document.getElementById(`edit-comment-form-${commentId}`);
+            form.classList.toggle('d-none');
+        }
+        </script>
+    {% endblock %}
+    
+    
+    
+
