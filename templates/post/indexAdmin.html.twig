@@ -1,0 +1,100 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Post Management - InnoTravel{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Post Management</h3>
+                    <div class="card-tools">
+                        <form action="{{ path('app_blog_admin') }}" method="GET" class="input-group input-group-sm" style="width: 250px;">
+                            <input type="text" name="search" class="form-control float-right" placeholder="Search..." value="{{ app.request.query.get('search') }}">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Date</th>
+                                <th>Comments</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in posts %}
+                                <tr>
+                                    <td>{{ post.id }}</td>
+                                    <td>{{ post.title }}</td>
+                                    <td>{{ post.user.firstName }} {{ post.user.lastName }}</td>
+                                    <td>{{ post.createdAt|date('d/m/Y H:i') }}</td>
+                                    <td>
+                                        <span class="badge bg-info">{{ post.comments|length }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{{ path('admin_post_details', {'id': post.id}) }}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <form method="post" action="{{ path('delete_post', {'id': post.id}) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No posts found</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        {% if previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ path('app_blog_admin', {'page': previous, 'search': app.request.query.get('search')}) }}">«</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">«</span>
+                            </li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <span class="page-link">{{ currentPage }}</span>
+                        </li>
+
+                        {% if next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ path('app_blog_admin', {'page': next, 'search': app.request.query.get('search')}) }}">»</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">»</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

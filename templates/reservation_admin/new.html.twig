@@ -1,0 +1,278 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}New Reservation{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<style>
+    #map {
+        height: 300px;
+        width: 100%;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h2 mb-0">Create New Reservation</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent p-0">
+                        <li class="breadcrumb-item"><a href="{{ path('admin_reservation_index') }}">Reservation Management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">New Reservation</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Reservation Information</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.user) }}
+                                        {{ form_widget(form.user, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.user) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.transport) }}
+                                        {{ form_widget(form.transport, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.transport) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.reservationDate) }}
+                                        {{ form_widget(form.reservationDate, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.reservationDate) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.reservationTime) }}
+                                        {{ form_widget(form.reservationTime, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.reservationTime) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.status) }}
+                                        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.status) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.price) }}
+                                        {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.price) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Route Information</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="map"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.pickup_address) }}
+                                        {{ form_widget(form.pickup_address, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.pickup_address) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.destination_address) }}
+                                        {{ form_widget(form.destination_address, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.destination_address) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {{ form_widget(form.pickupLatitude) }}
+                            {{ form_widget(form.pickupLongitude) }}
+                            {{ form_widget(form.destinationLatitude) }}
+                            {{ form_widget(form.destinationLongitude) }}
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        {{ form_label(form.estimatedDuration) }}
+                                        {{ form_widget(form.estimatedDuration, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.estimatedDuration) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form_label(form.specialRequests) }}
+                                {{ form_widget(form.specialRequests, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+                                <div class="form-error text-danger">
+                                    {{ form_errors(form.specialRequests) }}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save mr-1"></i> Create Reservation
+                                </button>
+                                <a href="{{ path('admin_reservation_index') }}" class="btn btn-secondary ml-2">
+                                    <i class="fas fa-times mr-1"></i> Cancel
+                                </a>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the map
+        var map = L.map('map').setView([36.8065, 10.1815], 13); // Default to Tunis
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Variables to store markers
+        var pickupMarker = null;
+        var destinationMarker = null;
+        var routeLine = null;
+        
+        // Get form elements
+        var pickupAddressInput = document.getElementById('{{ form.pickup_address.vars.id }}');
+        var destAddressInput = document.getElementById('{{ form.destination_address.vars.id }}');
+        var pickupLatInput = document.getElementById('{{ form.pickupLatitude.vars.id }}');
+        var pickupLngInput = document.getElementById('{{ form.pickupLongitude.vars.id }}');
+        var destLatInput = document.getElementById('{{ form.destinationLatitude.vars.id }}');
+        var destLngInput = document.getElementById('{{ form.destinationLongitude.vars.id }}');
+        
+        // Function to geocode an address
+        function geocodeAddress(address, callback) {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        callback({
+                            lat: parseFloat(data[0].lat),
+                            lng: parseFloat(data[0].lon)
+                        });
+                    }
+                })
+                .catch(error => console.error('Error geocoding address:', error));
+        }
+        
+        // Function to update map with markers and route
+        function updateMap() {
+            var pickupAddress = pickupAddressInput.value;
+            var destinationAddress = destAddressInput.value;
+            
+            // Clear existing markers and route
+            if (pickupMarker) map.removeLayer(pickupMarker);
+            if (destinationMarker) map.removeLayer(destinationMarker);
+            if (routeLine) map.removeLayer(routeLine);
+            
+            // If both addresses are provided, geocode them
+            if (pickupAddress && destinationAddress) {
+                geocodeAddress(pickupAddress, function(pickupCoords) {
+                    // Add pickup marker
+                    pickupMarker = L.marker([pickupCoords.lat, pickupCoords.lng]).addTo(map)
+                        .bindPopup('Pickup: ' + pickupAddress);
+                    
+                    // Update hidden inputs
+                    pickupLatInput.value = pickupCoords.lat;
+                    pickupLngInput.value = pickupCoords.lng;
+                    
+                    geocodeAddress(destinationAddress, function(destCoords) {
+                        // Add destination marker
+                        destinationMarker = L.marker([destCoords.lat, destCoords.lng]).addTo(map)
+                            .bindPopup('Destination: ' + destinationAddress);
+                        
+                        // Update hidden inputs
+                        destLatInput.value = destCoords.lat;
+                        destLngInput.value = destCoords.lng;
+                        
+                        // Draw a line between the points
+                        routeLine = L.polyline([
+                            [pickupCoords.lat, pickupCoords.lng],
+                            [destCoords.lat, destCoords.lng]
+                        ], {
+                            color: '#3388ff',
+                            weight: 3,
+                            opacity: 0.7,
+                            dashArray: '10, 10'
+                        }).addTo(map);
+                        
+                        // Fit the map to show both markers
+                        var bounds = L.latLngBounds([
+                            [pickupCoords.lat, pickupCoords.lng],
+                            [destCoords.lat, destCoords.lng]
+                        ]);
+                        map.fitBounds(bounds, { padding: [50, 50] });
+                    });
+                });
+            }
+        }
+        
+        // Add event listeners to address inputs
+        pickupAddressInput.addEventListener('blur', updateMap);
+        destAddressInput.addEventListener('blur', updateMap);
+        
+        // Initial update if addresses are already filled
+        if (pickupAddressInput.value && destAddressInput.value) {
+            updateMap();
+        }
+    });
+</script>
+{% endblock %}

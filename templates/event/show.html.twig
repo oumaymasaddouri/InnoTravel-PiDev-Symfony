@@ -1,0 +1,283 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}{{ event.name }}{% endblock %}
+
+{% block section8 %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('events_index') }}" class="text-decoration-none">Events</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('events_by_category', {'category': event.category}) }}" class="text-decoration-none">{{ event.category }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ event.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-0">
+                    {% if event.imageFilename %}
+                        <img src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="{{ event.name }}" class="img-fluid w-100" style="max-height: 400px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                            <i class="fas fa-calendar-day fa-5x text-secondary"></i>
+                        </div>
+                    {% endif %}
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <span class="badge bg-info rounded-pill px-3 py-2 mb-2">{{ event.category }}</span>
+                                {% if event.price > 0 %}
+                                    <span class="badge bg-warning rounded-pill px-3 py-2 mb-2">
+                                        <i class="fas fa-tag me-1"></i> {{ event.price }} TND
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-success rounded-pill px-3 py-2 mb-2">
+                                        <i class="fas fa-ticket-alt me-1"></i> Free
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <span class="badge {{ event.availableSpots > 0 ? 'bg-success' : 'bg-danger' }} rounded-pill px-3 py-2">
+                                    <i class="fas fa-{{ event.availableSpots > 0 ? 'check-circle' : 'times-circle' }} me-1"></i>
+                                    {{ event.availableSpots > 0 ? event.availableSpots ~ ' spots available' : 'Fully booked' }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <h1 class="mb-3">{{ event.name }}</h1>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-light rounded-circle p-2 me-3">
+                                        <i class="fas fa-calendar-alt text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Date</small>
+                                        <span>{{ event.startDate|date('F d, Y') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-light rounded-circle p-2 me-3">
+                                        <i class="fas fa-clock text-info"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Time</small>
+                                        <span>{{ event.startDate|date('H:i') }} - {{ event.endDate|date('H:i') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-light rounded-circle p-2 me-3">
+                                        <i class="fas fa-map-marker-alt text-danger"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Location</small>
+                                        <span>{{ event.location }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-light rounded-circle p-2 me-3">
+                                        <i class="fas fa-hourglass-half text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Duration</small>
+                                        <span>{{ event.duration }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h4 class="mb-3">About This Event</h4>
+                            <p class="text-muted">{{ event.description|nl2br }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h4 class="mb-3">Organizer</h4>
+                            <div class="d-flex align-items-center">
+                                {% if event.organizer.logoFilename %}
+                                    <img src="{{ vich_uploader_asset(event.organizer, 'logoFile') }}" alt="{{ event.organizer.name }}" class="me-3 rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                                {% else %}
+                                    <div class="me-3 rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                        <i class="fas fa-building text-secondary"></i>
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <h5 class="mb-1">
+                                        {{ event.organizer.name }}
+                                        {% if event.organizer.isVerified %}
+                                            <i class="fas fa-check-circle text-success ms-1" title="Verified Organizer"></i>
+                                        {% endif %}
+                                    </h5>
+                                    <p class="mb-0 text-muted">{{ event.organizer.description|length > 100 ? event.organizer.description|slice(0, 100) ~ '...' : event.organizer.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i> Register for This Event</h5>
+                </div>
+                <div class="card-body">
+                    {% if event.availableSpots > 0 %}
+                        {% if app.user %}
+                            {{ form_start(form) }}
+                            <div class="mb-3">
+                                {{ form_label(form.numberOfPersons, 'Number of Persons', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(form.numberOfPersons, {'attr': {'class': 'form-control', 'min': 1, 'max': event.availableSpots}}) }}
+                                {{ form_errors(form.numberOfPersons) }}
+                                <small class="text-muted">Maximum {{ event.availableSpots }} persons</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold">Price per person:</span>
+                                    <span>{{ event.formattedPrice }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-2 border-top pt-2">
+                                    <span class="fw-bold">Total:</span>
+                                    <span class="text-primary fw-bold" id="totalPrice">{{ event.formattedPrice }}</span>
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-ticket-alt me-2"></i> Register Now
+                                </button>
+                            </div>
+                            {{ form_end(form) }}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-user-lock fa-3x text-muted mb-3"></i>
+                                <h5 class="mb-3">Login Required</h5>
+                                <p class="text-muted mb-4">You need to be logged in to register for this event.</p>
+                                <a href="{{ path('app_login') }}" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i> Login
+                                </a>
+                                <div class="mt-3">
+                                    <span class="text-muted">Don't have an account?</span>
+                                    <a href="{{ path('app_register') }}" class="text-decoration-none">Register</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-ticket-alt fa-3x text-danger mb-3"></i>
+                            <h5 class="mb-3">Fully Booked</h5>
+                            <p class="text-muted mb-0">Sorry, this event is fully booked. Please check other events.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-share-alt me-2"></i> Share This Event</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}" target="_blank" class="btn btn-outline-primary mx-2">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ app.request.uri }}&text={{ event.name }}" target="_blank" class="btn btn-outline-info mx-2">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://wa.me/?text={{ event.name }}%20{{ app.request.uri }}" target="_blank" class="btn btn-outline-success mx-2">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="mailto:?subject={{ event.name }}&body=Check out this event: {{ app.request.uri }}" class="btn btn-outline-secondary mx-2">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i> Other Events</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for upcomingEvent in upcomingEvents %}
+                            {% if upcomingEvent.id != event.id %}
+                                <li class="list-group-item p-3">
+                                    <div class="d-flex">
+                                        {% if upcomingEvent.imageFilename %}
+                                            <img src="{{ vich_uploader_asset(upcomingEvent, 'imageFile') }}" alt="{{ upcomingEvent.name }}" class="me-3 rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="me-3 rounded bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                                <i class="fas fa-calendar-day text-secondary"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <h6 class="mb-1">
+                                                <a href="{{ path('events_show', {'id': upcomingEvent.id}) }}" class="text-decoration-none text-dark">{{ upcomingEvent.name }}</a>
+                                            </h6>
+                                            <div class="small text-muted mb-1">
+                                                <i class="fas fa-calendar-alt me-1"></i> {{ upcomingEvent.startDate|date('M d, Y') }}
+                                            </div>
+                                            <div class="small text-muted">
+                                                <i class="fas fa-map-marker-alt me-1"></i> {{ upcomingEvent.location }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            <li class="list-group-item p-4 text-center">
+                                <i class="fas fa-calendar-times text-muted mb-2 d-block"></i>
+                                <span class="text-muted">No other events available</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{{ path('events_index') }}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-list me-2"></i> View All Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const numberOfPersonsInput = document.getElementById('participation_numberOfPersons');
+        const totalPriceElement = document.getElementById('totalPrice');
+        const pricePerPerson = {{ event.price }};
+
+        if (numberOfPersonsInput && totalPriceElement) {
+            numberOfPersonsInput.addEventListener('change', function() {
+                const numberOfPersons = parseInt(this.value) || 0;
+                const totalPrice = (numberOfPersons * pricePerPerson).toFixed(2);
+
+                if (pricePerPerson === 0) {
+                    totalPriceElement.textContent = 'Free';
+                } else {
+                    totalPriceElement.textContent = totalPrice + ' TND';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

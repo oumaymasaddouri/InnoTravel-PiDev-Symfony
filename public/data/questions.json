@@ -1,0 +1,264 @@
+[
+  {
+    "question": "Plan a 7-day trip to Japan focusing on culture and food.",
+    "response": {
+      "destination": "Japan",
+      "days": 7,
+      "activities": [
+        "Visit Kyoto temples",
+        "Explore Tsukiji fish market",
+        "Sushi-making workshop",
+        "Stay in a ryokan",
+        "Tea ceremony experience",
+        "Visit Hiroshima Peace Park",
+        "Street food tour in Osaka"
+      ],
+      "tips": [
+        "Buy a Japan Rail Pass",
+        "Learn basic Japanese phrases",
+        "Try local izakayas for authentic food"
+      ]
+    }
+  },
+  {
+    "question": "What are the best beaches in Thailand?",
+    "response": {
+      "destination": "Thailand",
+      "beaches": [
+        "Maya Bay (Phi Phi Islands)",
+        "Railay Beach (Krabi)",
+        "Phra Nang Beach (Krabi)",
+        "Karon Beach (Phuket)",
+        "White Sand Beach (Koh Chang)",
+        "Chaweng Beach (Koh Samui)",
+        "Freedom Beach (Phuket)"
+      ],
+      "tips": [
+        "Visit during dry season (November-April)",
+        "Bring reef-safe sunscreen",
+        "Respect local customs"
+      ]
+    }
+  },
+  {
+    "question": "Create a 10-day Europe backpacking itinerary.",
+    "response": {
+      "destination": "Europe",
+      "days": 10,
+      "activities": [
+        "Tour Paris landmarks",
+        "Ride a gondola in Venice",
+        "Explore Berlin's history",
+        "Visit Prague's Old Town",
+        "See Amsterdam's canals",
+        "Experience Swiss Alps",
+        "Party in Barcelona",
+        "Eat pizza in Naples",
+        "See Edinburgh Castle",
+        "Relax in Santorini"
+      ],
+      "tips": [
+        "Travel by Eurail pass",
+        "Stay in hostels",
+        "Pack light and smart"
+      ]
+    }
+  },
+  {
+    "question": "Recommend a 3-day romantic getaway to Paris.",
+    "response": {
+      "destination": "Paris",
+      "days": 3,
+      "activities": [
+        "Visit Eiffel Tower",
+        "Walk along the Seine",
+        "Dinner at a cozy bistro"
+      ],
+      "tips": [
+        "Book museums in advance",
+        "Learn basic French phrases",
+        "Carry an umbrella"
+      ]
+    }
+  },
+  {
+    "question": "What should I pack for a safari in Kenya?",
+    "response": {
+      "destination": "Kenya",
+      "essentials": [
+        "Neutral-colored clothing",
+        "Hat with chin strap",
+        "Sunglasses",
+        "Binoculars",
+        "Camera with zoom lens",
+        "Insect repellent",
+        "Sunscreen",
+        "First aid kit",
+        "Light rain jacket"
+      ],
+      "tips": [
+        "Pack layers for temperature changes",
+        "Bring a power bank",
+        "Use soft-sided luggage"
+      ]
+    }
+  },
+  {
+    "question": "Outline a 6-day culinary tour of Italy.",
+    "response": {
+      "destination": "Italy",
+      "days": 6,
+      "activities": [
+        "Pasta making in Bologna",
+        "Pizza tour in Naples",
+        "Wine tasting in Tuscany",
+        "Gelato tour in Florence",
+        "Truffle hunting in Piedmont",
+        "Seafood feast in Sicily"
+      ],
+      "tips": [
+        "Book cooking classes early",
+        "Bring comfortable walking shoes",
+        "Try regional specialties"
+      ]
+    }
+  },
+  {
+    "question": "Suggest a 4-day hiking trip in Patagonia.",
+    "response": {
+      "destination": "Patagonia",
+      "days": 4,
+      "activities": [
+        "Hike to Fitz Roy",
+        "Explore Torres del Paine",
+        "Visit Perito Moreno Glacier",
+        "Camp under the stars"
+      ],
+      "tips": [
+        "Pack layers for weather changes",
+        "Book refugios early",
+        "Carry a good camera"
+      ]
+    }
+  },
+  {
+    "question": "What are the best times to visit Bali?",
+    "response": {
+      "destination": "Bali",
+      "best_times": [
+        "May",
+        "June",
+        "September"
+      ],
+      "reasons": [
+        "Less rainfall",
+        "Lower humidity",
+        "Fewer tourists",
+        "Better prices"
+      ],
+      "avoid": [
+        "July-August (peak season)",
+        "December-March (rainy season)"
+      ]
+    }
+  },
+  {
+    "question": "Organize a 7-day history-focused trip to Greece.",
+    "response": {
+      "destination": "Greece",
+      "days": 7,
+      "activities": [
+        "Tour Athens and Acropolis",
+        "Visit Delphi ruins",
+        "Explore Meteora monasteries",
+        "Sail to Santorini",
+        "See Knossos Palace in Crete",
+        "Visit Ancient Olympia",
+        "Relax in Rhodes Old Town"
+      ],
+      "tips": [
+        "Pack light clothes",
+        "Wear sun protection",
+        "Try Greek street food"
+      ]
+    }
+  },
+  {
+    "question": "Plan a 5-day wine tasting trip in Napa Valley.",
+    "response": {
+      "destination": "Napa Valley",
+      "days": 5,
+      "activities": [
+        "Tour wineries",
+        "Hot air balloon ride",
+        "Visit downtown Napa",
+        "Spa day in Calistoga",
+        "Fine dining experiences"
+      ],
+      "tips": [
+        "Book tastings ahead",
+        "Arrange a driver",
+        "Hydrate between tastings"
+      ]
+    }
+  },
+  {
+    "question": "What are the must-see attractions in New York City?",
+    "response": {
+      "destination": "New York City",
+      "attractions": [
+        "Statue of Liberty",
+        "Empire State Building",
+        "Central Park",
+        "Times Square",
+        "Metropolitan Museum of Art",
+        "Brooklyn Bridge",
+        "Broadway show",
+        "High Line",
+        "9/11 Memorial"
+      ],
+      "tips": [
+        "Get a CityPASS for discounts",
+        "Use the subway",
+        "Wear comfortable shoes"
+      ]
+    }
+  },
+  {
+    "question": "Design a 5-day surf trip to Hawaii.",
+    "response": {
+      "destination": "Hawaii",
+      "days": 5,
+      "activities": [
+        "Surf at Waikiki Beach",
+        "Explore North Shore",
+        "Hike Diamond Head",
+        "Snorkel at Hanauma Bay",
+        "Attend a luau"
+      ],
+      "tips": [
+        "Use reef-safe sunscreen",
+        "Respect local traditions",
+        "Stay hydrated"
+      ]
+    }
+  },
+  {
+    "question": "Create a 4-day shopping and sightseeing trip to Dubai.",
+    "response": {
+      "destination": "Dubai",
+      "days": 4,
+      "activities": [
+        "Visit Burj Khalifa",
+        "Shop at Dubai Mall",
+        "Desert safari adventure",
+        "Explore Old Dubai souks"
+      ],
+      "tips": [
+        "Dress modestly",
+        "Stay hydrated",
+        "Plan visits outside noon heat"
+      ]
+    }
+  }
+]

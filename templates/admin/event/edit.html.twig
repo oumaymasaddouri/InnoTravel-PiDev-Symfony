@@ -1,0 +1,171 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mt-4">Edit Event</h1>
+        <div>
+            <a href="{{ path('admin_events_show', {'id': event.id}) }}" class="btn btn-outline-primary me-2">
+                <i class="fas fa-arrow-left me-2"></i> Back to Event
+            </a>
+            <a href="{{ path('admin_events_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-list me-2"></i> All Events
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-edit me-2"></i> Edit Event Details</h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_row(form.name) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.category) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                {{ form_label(form.description) }}
+                                <div class="d-flex align-items-center mb-2">
+                                    <button type="button" id="generateDescription" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-magic me-1"></i> Generate AI Description
+                                    </button>
+                                    <div id="descriptionSpinner" class="spinner-border spinner-border-sm text-primary ms-2 d-none" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                {{ form_widget(form.description) }}
+                                {{ form_errors(form.description) }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_row(form.location) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.organizer) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_row(form.startDate) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.endDate) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_row(form.capacity) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.price) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form_label(form.imageFile) }}
+                                {% if event.imageFilename %}
+                                    <div class="mb-2">
+                                        <img src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="{{ event.name }}" class="img-thumbnail" style="max-height: 150px;">
+                                    </div>
+                                {% endif %}
+                                {{ form_widget(form.imageFile) }}
+                                {{ form_errors(form.imageFile) }}
+                                <small class="text-muted">Recommended image size: 1200x600 pixels</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.isActive) }}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ path('admin_events_show', {'id': event.id}) }}" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-times me-2"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i> Update Event
+                        </button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const generateBtn = document.getElementById('generateDescription');
+        const spinner = document.getElementById('descriptionSpinner');
+        const nameField = document.getElementById('event_name');
+        const locationField = document.getElementById('event_location');
+        const categoryField = document.getElementById('event_category');
+        const descriptionField = document.getElementById('event_description');
+        
+        generateBtn.addEventListener('click', function() {
+            const name = nameField.value.trim();
+            const location = locationField.value.trim();
+            const category = categoryField.value;
+            
+            if (!name || !location || !category) {
+                alert('Please fill in the name, location, and category fields first.');
+                return;
+            }
+            
+            spinner.classList.remove('d-none');
+            generateBtn.disabled = true;
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('location', location);
+            formData.append('category', category);
+            
+            // Send request to generate description
+            fetch('/admin/events/generate-description', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.description) {
+                    descriptionField.value = data.description;
+                } else if (data.error) {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while generating the description.');
+            })
+            .finally(() => {
+                spinner.classList.add('d-none');
+                generateBtn.disabled = false;
+            });
+        });
+    });
+</script>
+{% endblock %}
+

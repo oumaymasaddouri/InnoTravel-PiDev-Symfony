@@ -1,0 +1,52 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Hotels{% endblock %}
+
+{% block section8 %}
+    <div class="wpo-breadcumb-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="wpo-breadcumb-wrap">
+                        <h2>Our Hotels</h2>
+                        <ul>
+                            <li><a href="{{ path('user_home') }}">Home</a></li>
+                            <li><span>Hotels</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wpo-room-area section-padding">
+        <div class="container">
+            <div class="row">
+                {% for hotel in hotels %}
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="wpo-room-item">
+                            <div class="wpo-room-img">
+                                <img src="{{ hotel.imageUrl ? asset(hotel.imageUrl) : asset('frontoffice/images/room/1.jpg') }}" alt="{{ hotel.name }}">
+                            </div>
+                            <div class="wpo-room-content">
+                                <h2><a href="#">{{ hotel.name }}</a></h2>
+                                <ul>
+                                    <li><i class="fi flaticon-location"></i> {{ hotel.location }}</li>
+                                    <li><i class="fi flaticon-star"></i> {{ hotel.stars }} Stars</li>
+                                </ul>
+                                <h3>{{ hotel.price }} <span>/ Night</span></h3>
+                                <a class="read-more" href="#">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-info text-center">
+                            No hotels available at the moment. Please check back later.
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

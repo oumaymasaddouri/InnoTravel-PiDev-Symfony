@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation Ticket #{{ reservation.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #4285F4;
+            padding-bottom: 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4285F4;
+            margin-bottom: 10px;
+        }
+        .ticket-title {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .ticket-id {
+            font-size: 16px;
+            color: #666;
+        }
+        .ticket-status {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #4285F4;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .info-label {
+            width: 40%;
+            font-weight: bold;
+            color: #555;
+        }
+        .info-value {
+            width: 60%;
+        }
+        .route-info {
+            margin-bottom: 20px;
+        }
+        .route-point {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .route-point:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .pickup:before {
+            background-color: #ff4d4d;
+        }
+        .destination:before {
+            background-color: #4CAF50;
+        }
+        .route-line {
+            position: absolute;
+            left: 5px;
+            top: 15px;
+            width: 2px;
+            height: calc(100% - 15px);
+            background-color: #ccc;
+        }
+        .route-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        .route-address {
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .qr-code {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .qr-code img {
+            width: 150px;
+            height: 150px;
+        }
+        .qr-code-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+        }
+        .special-requests {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            font-style: italic;
+        }
+        .barcode {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px dashed #ccc;
+        }
+        .barcode-number {
+            font-family: monospace;
+            font-size: 16px;
+            letter-spacing: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">InnoTravel</div>
+            <div class="ticket-title">Transportation Reservation Ticket</div>
+            <div class="ticket-id">Reservation #{{ reservation.id }}</div>
+            <div class="ticket-status">CONFIRMED</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Reservation Details</div>
+            <div class="info-row">
+                <div class="info-label">Reservation Date:</div>
+                <div class="info-value">{{ reservation.reservationDate ? reservation.reservationDate|date('F d, Y') : 'Not specified' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Reservation Time:</div>
+                <div class="info-value">{{ reservation.reservationTime ? reservation.reservationTime|date('h:i A') : 'Not specified' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Status:</div>
+                <div class="info-value">{{ reservation.status|upper }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Price:</div>
+                <div class="info-value">{{ reservation.price ? '$' ~ reservation.price : 'To be determined' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Estimated Duration:</div>
+                <div class="info-value">{{ reservation.estimatedDuration ? reservation.estimatedDuration ~ ' minutes' : 'To be determined' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Created On:</div>
+                <div class="info-value">{{ reservation.createdAt|date('F d, Y h:i A') }}</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Route Information</div>
+            <div class="route-info">
+                <div class="route-point pickup">
+                    <div class="route-line"></div>
+                    <div class="route-label">PICKUP LOCATION</div>
+                    <div class="route-address">{{ reservation.pickupAddress }}</div>
+                </div>
+                <div class="route-point destination">
+                    <div class="route-label">DESTINATION</div>
+                    <div class="route-address">{{ reservation.destinationAddress }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Vehicle Information</div>
+            {% if reservation.transport %}
+                <div class="info-row">
+                    <div class="info-label">Vehicle Type:</div>
+                    <div class="info-value">{{ reservation.transport.vehicleType|capitalize }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Car Model:</div>
+                    <div class="info-value">{{ reservation.transport.carModel }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Color:</div>
+                    <div class="info-value">{{ reservation.transport.carColor }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">License Plate:</div>
+                    <div class="info-value">{{ reservation.transport.licensePlate }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Max Luggage:</div>
+                    <div class="info-value">{{ reservation.transport.maxLuggage }}</div>
+                </div>
+            {% else %}
+                <p>No vehicle assigned to this reservation yet.</p>
+            {% endif %}
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Passenger Information</div>
+            <div class="info-row">
+                <div class="info-label">Name:</div>
+                <div class="info-value">{{ user.firstName }} {{ user.lastName }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Email:</div>
+                <div class="info-value">{{ user.email }}</div>
+            </div>
+            {% if user.phone %}
+                <div class="info-row">
+                    <div class="info-label">Phone:</div>
+                    <div class="info-value">{{ user.phone }}</div>
+                </div>
+            {% endif %}
+        </div>
+        
+        {% if reservation.specialRequests %}
+            <div class="section">
+                <div class="section-title">Special Requests</div>
+                <div class="special-requests">
+                    {{ reservation.specialRequests }}
+                </div>
+            </div>
+        {% endif %}
+        
+        <div class="barcode">
+            <div class="barcode-number">{{ 'IT' ~ reservation.id ~ user.id ~ '2024' }}</div>
+        </div>
+        
+        <div class="footer">
+            <p>This ticket serves as proof of your reservation. Please present it to the driver upon pickup.</p>
+            <p>For any questions or changes, please contact our customer service at support@innotravel.com or +1-234-567-8900.</p>
+            <p>&copy; {{ 'now'|date('Y') }} InnoTravel. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

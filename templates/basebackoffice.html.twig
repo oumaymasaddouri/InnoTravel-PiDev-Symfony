@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE Dashboard</title>
+  <link rel="icon" href="{{ asset('frontoffice/images/Innotravel LOGO.png') }}" type="image/x-icon">
+  {{ encore_entry_link_tags('app') }}
+{% block css %}
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="{{ asset('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback')}}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{{ asset('backoffice/plugins/fontawesome-free/css/all.min.css')}}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="{{ asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css')}}">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="{{ asset('backoffice/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{{ asset('backoffice/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="{{ asset('backoffice/plugins/jqvmap/jqvmap.min.css')}}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{ asset('backoffice/dist/css/adminlte.min.css')}}">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="{{ asset('backoffice/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="{{ asset('backoffice/plugins/daterangepicker/daterangepicker.css')}}">
+  <!-- summernote -->
+  <link rel="stylesheet" href="{{ asset('backoffice/plugins/summernote/summernote-bs4.min.css')}}">
+{% endblock %}
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+  {% block navbar %}
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{{ path('admin') }}" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Help</a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Search -->
+      <li class="nav-item">
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+          <i class="fas fa-search"></i>
+        </a>
+        <div class="navbar-search-block">
+          <form class="form-inline">
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                  <i class="fas fa-search"></i>
+                </button>
+                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </li>
+
+      <!-- Notifications Dropdown Menu -->
+      <li class="nav-item dropdown">
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <span class="dropdown-header">3 Notifications</span>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-envelope mr-2"></i> 1 new message
+            <span class="float-right text-muted text-sm">3 mins</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-users mr-2"></i> 1 friend request
+            <span class="float-right text-muted text-sm">12 hours</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-file mr-2"></i> 1 new report
+            <span class="float-right text-muted text-sm">2 days</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+      </li>
+    </ul>
+  {% endblock %}
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  {% block aside %}
+    <!-- Brand Logo -->
+    <a href="{{ path('admin') }}" class="brand-link">
+      <img src="{{ asset('backoffice/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">Admin Panel</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ asset('backoffice/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">Admin User</a>
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Sidebar Menu -->
+<nav class="mt-2">
+  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+    {% set currentRoute = app.request.attributes.get('_route') %}
+
+    <!-- Users -->
+<li class="nav-item has-treeview {% if currentRoute starts with 'admin_users' %}menu-open{% endif %}">
+    <a href="#" class="nav-link {% if currentRoute starts with 'admin_users' %}active{% endif %}">
+        <i class="nav-icon fas fa-users"></i>
+        <p>
+            Users
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ path('admin_users_index') }}" class="nav-link {% if currentRoute == 'admin_users_index' %}active{% endif %}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Manage Users</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ path('admin_users_statistics') }}" class="nav-link {% if currentRoute == 'admin_users_statistics' %}active{% endif %}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>User Statistics</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+
+    <!-- Travel -->
+    <li class="nav-item has-treeview {% if currentRoute starts with 'admin_trip' %}menu-open{% endif %}">
+      <a href="#" class="nav-link {% if currentRoute starts with 'admin_trip' %}active{% endif %}">
+        <i class="nav-icon fas fa-plane"></i>
+        <p>Travel <i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ path('admin_trip_itinerary') }}" class="nav-link {% if currentRoute == 'admin_trip_itinerary' %}active{% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Manage Trips</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('admin_itineraire') }}" class="nav-link {% if currentRoute == 'admin_itineraire' %}active{% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Manage Itineraries</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('admin_trip_statistics') }}" class="nav-link {% if currentRoute == 'admin_trip_statistics' %}active{% endif %}">
+            <i class="far fa-chart-bar nav-icon"></i>
+            <p>Statistics</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Transport -->
+    <li class="nav-item has-treeview {% if currentRoute starts with 'admin_transport' or currentRoute starts with 'admin_reservation' %}menu-open{% endif %}">
+      <a href="#" class="nav-link {% if currentRoute starts with 'admin_transport' or currentRoute starts with 'admin_reservation' %}active{% endif %}">
+        <i class="nav-icon fas fa-car"></i>
+        <p>Transport <i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ path('admin_transport_index') }}" class="nav-link {% if currentRoute starts with 'admin_transport' %}active{% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Manage Vehicles</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('admin_reservation_index') }}" class="nav-link {% if currentRoute starts with 'admin_reservation' %}active{% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Manage Reservations</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Events -->
+    <li class="nav-item has-treeview {% if currentRoute starts with 'admin_events' or currentRoute starts with 'admin_organizers' or currentRoute starts with 'admin_verify' %}menu-open{% endif %}">
+      <a href="#" class="nav-link {% if currentRoute starts with 'admin_events' or currentRoute starts with 'admin_organizers' or currentRoute starts with 'admin_verify' %}active{% endif %}">
+        <i class="nav-icon fas fa-calendar-alt"></i>
+        <p>Events <i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ path('admin_events_index') }}" class="nav-link {% if currentRoute starts with 'admin_events' %}active{% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Manage Events</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('admin_organizers_index') }}" class="nav-link {% if currentRoute starts with 'admin_organizers' %}active{% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Manage Organizers</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('admin_verify_index') }}" class="nav-link {% if currentRoute starts with 'admin_verify' %}active{% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Verify Tickets</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Accomodations -->
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-hotel"></i>
+        <p>Accomodation <i class="right fas fa-angle-left"></i></p>
+      </a>
+       <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ path('app_hotel_index') }}" class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Hotels</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_booking_index') }}" class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Bookings</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Blog Management -->
+    <li class="nav-item">
+      <a href="{{ path('app_blog_admin') }}" class="nav-link">
+        <i class="nav-icon fas fa-blog"></i>
+        <p>Blog</p>
+      </a>
+    </li>
+
+    <!-- Feedbacks -->
+    <li class="nav-item">
+  <a href="{{ path('admin_feedbacks') }}" class="nav-link">
+    <i class="nav-icon fas fa-comment"></i>
+    <p>Feedbacks</p>
+  </a>
+</li>
+
+    <!-- Feedback Analytics -->
+    <!--
+    <li class="nav-item">
+      <a href="{{ path('admin_feedback_analytics') }}" class="nav-link">
+        <i class="nav-icon fas fa-chart-pie"></i>
+        <p>Feedback Analytics</p>
+      </a>
+    </li>
+    -->
+
+  </ul>
+</nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+
+  {% endblock %}
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+  {% block content %}
+    {% block body %}{% endblock %}
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Dashboard</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Info boxes -->
+        <div class="row">
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">CPU Traffic</span>
+                <span class="info-box-number">
+                  10
+                  <small>%</small>
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Likes</span>
+                <span class="info-box-number">41,410</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+
+          <!-- fix for small devices only -->
+          <div class="clearfix hidden-md-up"></div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Sales</span>
+                <span class="info-box-number">760</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">New Members</span>
+                <span class="info-box-number">2,000</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        <!-- Main row -->
+        <div class="row">
+          <!-- Left col -->
+          <div class="col-md-8">
+            <!-- MAP & BOX PANE -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Dashboard Overview</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                <div class="d-md-flex">
+                  <div class="p-3 flex-fill" style="overflow: hidden">
+                    <!-- Chart will go here -->
+                    <div id="world-map-markers" style="height: 325px; overflow: hidden">
+                      <div class="text-center py-5">
+                        <i class="fas fa-chart-line fa-4x text-muted"></i>
+                        <p class="mt-3">Analytics Chart Placeholder</p>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- /.d-md-flex -->
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+            <!-- TABLE -->
+            <div class="card">
+              <div class="card-header border-transparent">
+                <h3 class="card-title">Latest Orders</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table m-0">
+                    <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Item</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td><a href="#">OR9842</a></td>
+                      <td>Product 1</td>
+                      <td><span class="badge badge-success">Shipped</span></td>
+                      <td>04/10/2025</td>
+                    </tr>
+                    <tr>
+                      <td><a href="#">OR1848</a></td>
+                      <td>Product 2</td>
+                      <td><span class="badge badge-warning">Pending</span></td>
+                      <td>04/09/2025</td>
+                    </tr>
+                    <tr>
+                      <td><a href="#">OR7429</a></td>
+                      <td>Product 3</td>
+                      <td><span class="badge badge-danger">Cancelled</span></td>
+                      <td>04/09/2025</td>
+                    </tr>
+                    <tr>
+                      <td><a href="#">OR7429</a></td>
+                      <td>Product 4</td>
+                      <td><span class="badge badge-info">Processing</span></td>
+                      <td>04/08/2025</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.table-responsive -->
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a>
+              </div>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+
+          <div class="col-md-4">
+            <!-- PROFILE CARD -->
+            <div class="card card-primary card-outline" id="profile">
+              <div class="card-header">
+                <h3 class="card-title">User Profile</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body box-profile">
+                <div class="text-center">
+                  <img class="profile-user-img img-fluid img-circle" src="{{ asset('backoffice/dist/img/user2-160x160.jpg') }}" alt="User profile picture">
+                </div>
+
+                <h3 class="profile-username text-center">Admin User</h3>
+
+                <p class="text-muted text-center">Administrator</p>
+
+                <ul class="list-group list-group-unbordered mb-3">
+                  <li class="list-group-item">
+                    <b>Role</b> <a class="float-right">Admin</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Last Login</b> <a class="float-right">April 14, 2025</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Status</b> <a class="float-right">Active</a>
+                  </li>
+                </ul>
+
+                <a href="#edit-profile" class="btn btn-primary btn-block"><b>Edit Profile</b></a>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+            <!-- FORM CARD -->
+            <div class="card card-primary" id="input-form">
+              <div class="card-header">
+                <h3 class="card-title">Quick Form</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleSelectRounded0">Select</label>
+                    <select class="custom-select rounded-0" id="exampleSelectRounded0">
+                      <option>Option 1</option>
+                      <option>Option 2</option>
+                      <option>Option 3</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputFile">File input</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!--/. container-fluid -->
+    </section>
+    <!-- /.content -->
+  {% endblock %}
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+  {% block footer %}
+    <strong>Copyright &copy; 2025 <a href="#">Your Company</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b>Version</b> 1.0.0
+    </div>
+  {% endblock %}
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+{% block js %}
+<!-- jQuery -->
+<script src="{{ asset('backoffice/plugins/jquery/jquery.min.js')}}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{{ asset('backoffice/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="{{ asset('backoffice/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<!-- ChartJS -->
+<script src="{{ asset('backoffice/plugins/chart.js/Chart.min.js')}}"></script>
+<!-- Sparkline -->
+<script src="{{ asset('backoffice/plugins/sparklines/sparkline.js')}}"></script>
+<!-- JQVMap -->
+<script src="{{ asset('backoffice/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
+<script src="{{ asset('backoffice/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
+<!-- jQuery Knob Chart -->
+<script src="{{ asset('backoffice/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
+<!-- daterangepicker -->
+<script src="{{ asset('backoffice/plugins/moment/moment.min.js')}}"></script>
+<script src="{{ asset('backoffice/plugins/daterangepicker/daterangepicker.js')}}"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{{ asset('backoffice/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+<!-- Summernote -->
+<script src="{{ asset('backoffice/plugins/summernote/summernote-bs4.min.js')}}"></script>
+<!-- overlayScrollbars -->
+<script src="{{ asset('backoffice/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+<!-- AdminLTE App -->
+<script src="{{ asset('backoffice/dist/js/adminlte.js')}}"></script>
+
+<!-- Chart.js Configuration -->
+<script>
+    // Make sure Chart.js is properly initialized
+    if (typeof Chart !== 'undefined') {
+        // Set default options for all charts
+        Chart.defaults.font.family = "'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+        Chart.defaults.color = '#666';
+        Chart.defaults.responsive = true;
+    }
+</script>
+
+    {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('app') }}
+    {{ stimulus_controller('chart') }}
+{% endblock %}
+</body>
+</html>
+

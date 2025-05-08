@@ -1,0 +1,92 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Log in - InnoTravel{% endblock %}
+
+{% block section8 %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <img src="{{ asset('frontoffice/images/InnoTravelLOGO.png') }}" alt="InnoTravel Logo" width="120" class="mb-3">
+                        <h2 class="mb-1">Welcome Back</h2>
+                        <p class="text-muted">Sign in to continue to InnoTravel</p>
+                    </div>
+
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            {% if error is iterable %}
+                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                            {% else %}
+                                {{ error }}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    <form method="post">
+                        {% if returnTo is defined and returnTo %}
+                            <input type="hidden" name="_target_path" value="{{ returnTo }}">
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="inputEmail" class="form-label">Email</label>
+                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="inputPassword" class="form-label">Password</label>
+                            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" name="_remember_me">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-lg" type="submit">
+                                Sign in
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Don't have an account? <a href="{{ path('app_register') }}" class="text-decoration-none">Register</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .form-control:focus {
+        border-color: #2979FE;
+        box-shadow: 0 0 0 0.25rem rgba(41, 121, 254, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #2979FE;
+        border-color: #2979FE;
+    }
+
+    .btn-primary:hover {
+        background-color: #1a68e0;
+        border-color: #1a68e0;
+    }
+</style>
+{% endblock %}

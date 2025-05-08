@@ -1,0 +1,112 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block stylesheets %}
+    <link href="{{ asset('frontoffice/css/home.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block section8 %}
+
+
+<!-- About Tunisia Section -->
+<section class="wpo-about-section section-padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="wpo-about-img">
+                    <img src="{{ asset('frontoffice/images/tunisia/tunisia-map.jpg') }}" alt="Map of Tunisia">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="wpo-about-text">
+                    <p>Tunisia, the northernmost country in Africa, is a land where diverse civilizations have left their mark. From Phoenicians and Romans to Arabs and Ottomans, this cultural tapestry is woven into every aspect of Tunisian life.</p>
+                    <p>With over 1,300 km of Mediterranean coastline, Tunisia offers pristine beaches alongside ancient medinas, vast Saharan dunes, and lush oases. The country's compact size makes it possible to experience desert adventures and seaside relaxation in a single trip.</p>
+                    <p>At Innotravel, we specialize in showcasing the authentic Tunisia that lies beyond the tourist brochures. Our local expertise and passion for our homeland ensures you'll experience the true essence of Tunisian hospitality.</p>
+                    <div class="btns">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
+<script>
+    // Initialize the hero slider
+    var interleaveOffset = 0.5;
+    var swiperOptions = {
+        loop: true,
+        speed: 1000,
+        parallax: true,
+        autoplay: {
+            delay: 6500,
+            disableOnInteraction: false,
+        },
+        watchSlidesProgress: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        on: {
+            progress: function() {
+                var swiper = this;
+                for (var i = 0; i < swiper.slides.length; i++) {
+                    var slideProgress = swiper.slides[i].progress;
+                    var innerOffset = swiper.width * interleaveOffset;
+                    var innerTranslate = slideProgress * innerOffset;
+                    swiper.slides[i].querySelector(".slide-inner").style.transform =
+                        "translate3d(" + innerTranslate + "px, 0, 0)";
+                }
+            },
+            touchStart: function() {
+                var swiper = this;
+                for (var i = 0; i < swiper.slides.length; i++) {
+                    swiper.slides[i].style.transition = "";
+                }
+            },
+            setTransition: function(speed) {
+                var swiper = this;
+                for (var i = 0; i < swiper.slides.length; i++) {
+                    swiper.slides[i].style.transition = speed + "ms";
+                    swiper.slides[i].querySelector(".slide-inner").style.transition =
+                        speed + "ms";
+                }
+            }
+        }
+    };
+
+    var swiper = new Swiper(".swiper-container", swiperOptions);
+
+    // Initialize testimonial slider
+    var testimonialSlider = new Swiper('.testimonial-slider', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        autoplay: {
+            delay: 5000,
+        },
+        breakpoints: {
+            768: {
+                slidesPerView: 2,
+            },
+            992: {
+                slidesPerView: 3,
+            }
+        }
+    });
+
+    // Initialize background images
+    document.addEventListener('DOMContentLoaded', function() {
+        var sliders = document.querySelectorAll('.slide-bg-image');
+        sliders.forEach(function(slider) {
+            var imgUrl = slider.getAttribute('data-background');
+            slider.style.backgroundImage = 'url(' + imgUrl + ')';
+        });
+    });
+</script>
+{% endblock %}

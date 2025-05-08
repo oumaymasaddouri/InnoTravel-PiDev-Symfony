@@ -1,0 +1,73 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}My Account{% endblock %}
+
+{% block section8 %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-body text-center p-5">
+
+                    <h2 class="mb-4 text-primary fw-bold">👤 My Profile</h2>
+
+                    <div class="d-flex justify-content-center mb-4">
+                        <img src="{{ user.profilePictureUrl ? asset('uploads/profile_pictures/' ~ user.profilePictureUrl) : asset('uploads/profile_pictures/default.png') }}"
+                             alt="Profile Picture"
+                             class="rounded-circle shadow-sm border"
+                             width="150"
+                             height="150"
+                             style="object-fit: cover;"
+                             onerror="this.onerror=null;this.src='{{ asset('uploads/profile_pictures/default.png') }}';">
+                    </div>
+
+                    <ul class="list-group list-group-flush text-start">
+                        <li class="list-group-item">
+                            <strong>👥 Full Name:</strong> {{ user.firstName }} {{ user.lastName }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>⚥ Gender:</strong> {{ user.gender }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>🎂 Date of Birth:</strong> {{ user.dateOfBirth|date('Y-m-d') }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>📧 Email:</strong> {{ user.email }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>🌍 Country:</strong> {{ user.country }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>📞 Phone:</strong> {{ user.phoneNumber }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>📝 Feedback:</strong>
+                            {% if feedback %}
+                                <a href="{{ path('feedback_show', {'id': feedback.id}) }}" class="btn btn-outline-info btn-sm ms-2">
+                                    👀 Consult
+                                </a>
+                                <button class="btn btn-outline-secondary btn-sm ms-2" disabled>➕ Add</button>
+                            {% else %}
+                                <button class="btn btn-outline-info btn-sm ms-2" disabled>👀 Consult</button>
+                                <a href="{{ path('feedback_new') }}" class="btn btn-outline-success btn-sm ms-2">
+                                    ➕ Add
+                                </a>
+                            {% endif %}
+                        </li>
+                    </ul>
+
+                    <div class="mt-4">
+                        <a href="{{ path('account_edit') }}" class="btn btn-outline-primary me-2 px-4">
+                            ✏️ Edit
+                        </a>
+                        <a href="{{ path('account_delete') }}" class="btn btn-outline-danger px-4">
+                            🗑️ Delete
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

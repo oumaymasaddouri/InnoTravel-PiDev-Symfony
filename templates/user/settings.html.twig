@@ -1,0 +1,57 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}App Settings{% endblock %}
+
+{% block section8 %}
+<div class="container" style="max-width: 600px; margin: 50px auto; background-color: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.07); font-family: 'Segoe UI', sans-serif;">
+
+    <h2 style="margin-bottom: 30px; color: #2979FE; font-weight: 600;">⚙️ Application Settings</h2>
+
+    <form method="post">
+        <!-- Theme Preference -->
+        <div class="mb-4">
+            <label for="theme" class="form-label" style="font-weight: 500;">Theme Mode</label>
+            <select id="theme" name="theme" class="form-control" style="border-radius: 8px; padding: 10px;">
+                <option value="light">☀️ Light Mode</option>
+                <option value="dark">🌙 Dark Mode</option>
+            </select>
+        </div>
+
+        <!-- Language -->
+        <div class="mb-4">
+            <label for="language" class="form-label" style="font-weight: 500;">Preferred Language</label>
+            <select id="language" name="language" class="form-control" style="border-radius: 8px; padding: 10px;">
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="ar">العربية</option>
+            </select>
+        </div>
+
+        <!-- Currency -->
+        <div class="mb-4">
+            <label for="currency" class="form-label" style="font-weight: 500;">Default Currency</label>
+            <select id="currency" name="currency" class="form-control" style="border-radius: 8px; padding: 10px;">
+                <option value="TND">Tunisian Dinar (TND)</option>
+                <option value="USD">US Dollar (USD)</option>
+                <option value="EUR">Euro (EUR)</option>
+            </select>
+        </div>
+
+        <!-- Notifications -->
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="notifications" name="notifications" checked>
+            <label class="form-check-label" for="notifications">Enable push notifications</label>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="form-check form-switch mb-4">
+            <input class="form-check-input" type="checkbox" id="newsletter" name="newsletter">
+            <label class="form-check-label" for="newsletter">Receive monthly newsletter</label>
+        </div>
+
+        <button type="submit" class="btn" style="background-color: #2979FE; color: white; border-radius: 10px; padding: 10px 24px; font-weight: 500;">
+            💾 Save Settings
+        </button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,402 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Reservation Management{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h2 mb-0">Reservation Management</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent p-0">
+                        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Reservations</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon-box bg-primary text-white mr-3">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Total Reservations</h6>
+                            <h3 class="mb-0">{{ stats.statusCounts.pending|default(0) + stats.statusCounts.confirmed|default(0) + stats.statusCounts.canceled|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon-box bg-warning text-white mr-3">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Pending</h6>
+                            <h3 class="mb-0">{{ stats.statusCounts.pending|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon-box bg-success text-white mr-3">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Confirmed</h6>
+                            <h3 class="mb-0">{{ stats.statusCounts.confirmed|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon-box bg-danger text-white mr-3">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Canceled</h6>
+                            <h3 class="mb-0">{{ stats.statusCounts.canceled|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon-box bg-info text-white mr-3">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Recent Reservations (30 days)</h6>
+                            <h3 class="mb-0">{{ stats.recentCount|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon-box bg-secondary text-white mr-3">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Average Price</h6>
+                            <h3 class="mb-0">${{ stats.averagePrice|default(0)|number_format(2) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Reservation List</h5>
+                        <a href="{{ path('admin_reservation_new') }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus mr-1"></i> Add Reservation
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <form method="get" action="{{ path('admin_reservation_index') }}" class="row">
+                                    <div class="col-md-8 mb-3 mb-md-0">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
+                                            </div>
+                                            <input type="text" name="search" class="form-control" placeholder="Search by pickup, destination, or vehicle..." value="{{ searchTerm }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mb-3 mb-md-0">
+                                        <select name="status" class="form-control">
+                                            <option value="">All Statuses</option>
+                                            <option value="pending" {% if selectedStatus == 'pending' %}selected{% endif %}>Pending</option>
+                                            <option value="confirmed" {% if selectedStatus == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                                            <option value="canceled" {% if selectedStatus == 'canceled' %}selected{% endif %}>Canceled</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                        
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>User</th>
+                                        <th>Vehicle</th>
+                                        <th>Pickup</th>
+                                        <th>Destination</th>
+                                        <th>Date/Time</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for reservation in pagination %}
+                                        <tr>
+                                            <td>{{ reservation.id }}</td>
+                                            <td>
+                                                {% if reservation.user %}
+                                                    {{ reservation.user.firstName }} {{ reservation.user.lastName }}
+                                                {% else %}
+                                                    N/A
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if reservation.transport %}
+                                                    {{ reservation.transport.vehicleType|capitalize }} - {{ reservation.transport.carModel }}
+                                                {% else %}
+                                                    Not assigned
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ reservation.pickupAddress|length > 20 ? reservation.pickupAddress|slice(0, 20) ~ '...' : reservation.pickupAddress }}</td>
+                                            <td>{{ reservation.destinationAddress|length > 20 ? reservation.destinationAddress|slice(0, 20) ~ '...' : reservation.destinationAddress }}</td>
+                                            <td>
+                                                {% if reservation.reservationDate %}
+                                                    {{ reservation.reservationDate|date('M d, Y') }}
+                                                    {% if reservation.reservationTime %}
+                                                        <br>{{ reservation.reservationTime|date('h:i A') }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    Not specified
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if reservation.price %}
+                                                    ${{ reservation.price }}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-pill 
+                                                    {% if reservation.status == 'confirmed' %}badge-success
+                                                    {% elseif reservation.status == 'pending' %}badge-warning
+                                                    {% else %}badge-danger{% endif %}">
+                                                    {{ reservation.status|capitalize }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="{{ path('admin_reservation_show', {'id': reservation.id}) }}" class="btn btn-info">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="{{ path('admin_reservation_edit', {'id': reservation.id}) }}" class="btn btn-warning">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ reservation.id }}">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteModal{{ reservation.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ reservation.id }}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel{{ reservation.id }}">Confirm Delete</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure you want to delete this reservation?<br>
+                                                        <strong>Reservation #{{ reservation.id }}</strong><br>
+                                                        This action cannot be undone.
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <form method="post" action="{{ path('admin_reservation_delete', {'id': reservation.id}) }}">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.id) }}">
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="9" class="text-center py-4">
+                                                <div class="empty-state">
+                                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                                    <h5>No reservations found</h5>
+                                                    <p class="text-muted">No reservations match your search criteria.</p>
+                                                    <a href="{{ path('admin_reservation_new') }}" class="btn btn-primary btn-sm mt-2">
+                                                        <i class="fas fa-plus mr-1"></i> Add Reservation
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ knp_pagination_render(pagination) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Reservation Status Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="statusChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Recent Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="recent-activity">
+                            {% for reservation in pagination|slice(0, 5) %}
+                                <div class="activity-item d-flex align-items-start mb-3">
+                                    <div class="activity-icon mr-3">
+                                        {% if reservation.status == 'confirmed' %}
+                                            <div class="icon-box bg-success text-white">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                        {% elseif reservation.status == 'pending' %}
+                                            <div class="icon-box bg-warning text-white">
+                                                <i class="fas fa-clock"></i>
+                                            </div>
+                                        {% else %}
+                                            <div class="icon-box bg-danger text-white">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="mb-1">Reservation #{{ reservation.id }}</h6>
+                                            <small class="text-muted">{{ reservation.createdAt|date('M d, Y') }}</small>
+                                        </div>
+                                        <p class="mb-1">
+                                            {% if reservation.user %}
+                                                {{ reservation.user.firstName }} {{ reservation.user.lastName }}
+                                            {% else %}
+                                                Unknown User
+                                            {% endif %}
+                                            - {{ reservation.status|capitalize }}
+                                        </p>
+                                        <small class="text-muted">
+                                            {{ reservation.pickupAddress|length > 25 ? reservation.pickupAddress|slice(0, 25) ~ '...' : reservation.pickupAddress }}
+                                            → 
+                                            {{ reservation.destinationAddress|length > 25 ? reservation.destinationAddress|slice(0, 25) ~ '...' : reservation.destinationAddress }}
+                                        </small>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-info-circle fa-2x text-muted mb-2"></i>
+                                    <p class="mb-0">No recent activity to display.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Status Chart
+        var statusCtx = document.getElementById('statusChart').getContext('2d');
+        var statusData = {
+            labels: ['Pending', 'Confirmed', 'Canceled'],
+            datasets: [{
+                data: [
+                    {{ stats.statusCounts.pending|default(0) }},
+                    {{ stats.statusCounts.confirmed|default(0) }},
+                    {{ stats.statusCounts.canceled|default(0) }}
+                ],
+                backgroundColor: [
+                    '#FBBC05', // Warning/Pending
+                    '#34A853', // Success/Confirmed
+                    '#EA4335'  // Danger/Canceled
+                ],
+                borderWidth: 1
+            }]
+        };
+        var statusChart = new Chart(statusCtx, {
+            type: 'pie',
+            data: statusData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.label || '';
+                                var value = context.raw || 0;
+                                var total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                var percentage = Math.round((value / total) * 100);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

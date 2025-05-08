@@ -1,0 +1,260 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Events{% endblock %}
+
+{% block section8 %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <h1 class="display-4 fw-bold mb-3">Discover Events</h1>
+            <p class="lead text-muted">Find and join exciting events happening in Tunisia</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-filter me-2"></i> Filter Events</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" action="{{ path('events_index') }}">
+                        <div class="mb-3">
+                            <label for="search" class="form-label fw-bold">Search</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
+                                <input type="text" id="search" name="search" class="form-control" placeholder="Search events" value="{{ search }}">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="category" class="form-label fw-bold">Category</label>
+                            <select id="category" name="category" class="form-select">
+                                <option value="">All Categories</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat }}" {% if category == cat %}selected{% endif %}>{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="start_date" class="form-label fw-bold">Start Date</label>
+                            <input type="date" id="start_date" name="start_date" class="form-control" value="{{ startDate }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="end_date" class="form-label fw-bold">End Date</label>
+                            <input type="date" id="end_date" name="end_date" class="form-control" value="{{ endDate }}">
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter me-2"></i> Apply Filters
+                            </button>
+                            <a href="{{ path('events_index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-redo me-2"></i> Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i> Upcoming Events</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for event in upcomingEvents %}
+                            <li class="list-group-item p-3">
+                                <div class="d-flex">
+                                    {% if event.imageFilename %}
+                                        <img src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="{{ event.name }}" class="me-3 rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="me-3 rounded bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                            <i class="fas fa-calendar-day text-secondary"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <a href="{{ path('events_show', {'id': event.id}) }}" class="text-decoration-none text-dark">{{ event.name }}</a>
+                                        </h6>
+                                        <div class="small text-muted mb-1">
+                                            <i class="fas fa-calendar-alt me-1"></i> {{ event.startDate|date('M d, Y') }}
+                                        </div>
+                                        <div class="small text-muted">
+                                            <i class="fas fa-map-marker-alt me-1"></i> {{ event.location }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item p-4 text-center">
+                                <i class="fas fa-calendar-times text-muted mb-2 d-block"></i>
+                                <span class="text-muted">No upcoming events</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i> Events List</h5>
+                    <span class="badge bg-light text-primary rounded-pill">{{ events|length }} events found</span>
+                </div>
+                <div class="card-body">
+                    {% if events|length > 0 %}
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                            {% for event in events %}
+                                <div class="col">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        {% if event.imageFilename %}
+                                            <img src="{{ vich_uploader_asset(event, 'imageFile') }}" class="card-img-top" alt="{{ event.name }}" style="height: 160px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 160px;">
+                                                <i class="fas fa-calendar-day fa-3x text-secondary"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <span class="badge bg-info rounded-pill px-2 py-1">{{ event.category }}</span>
+                                                <span class="badge {{ event.price > 0 ? 'bg-warning' : 'bg-success' }} rounded-pill px-2 py-1">
+                                                    {{ event.price > 0 ? event.price ~ ' TND' : 'Free' }}
+                                                </span>
+                                            </div>
+                                            <h5 class="card-title">{{ event.name }}</h5>
+                                            <p class="card-text small text-muted mb-3">{{ event.description|length > 100 ? event.description|slice(0, 100) ~ '...' : event.description }}</p>
+                                            <div class="d-flex align-items-center mb-2 small">
+                                                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                                                <span>{{ event.startDate|date('M d, Y') }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2 small">
+                                                <i class="fas fa-clock text-info me-2"></i>
+                                                <span>{{ event.startDate|date('H:i') }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-3 small">
+                                                <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                                                <span>{{ event.location }}</span>
+                                            </div>
+                                            <div class="d-grid">
+                                                <a href="{{ path('events_show', {'id': event.id}) }}" class="btn btn-primary">
+                                                    <i class="fas fa-info-circle me-2"></i> View Details
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-white border-0 d-flex align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                {% if event.organizer.logoFilename %}
+                                                    <img src="{{ vich_uploader_asset(event.organizer, 'logoFile') }}" alt="{{ event.organizer.name }}" class="me-2 rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
+                                                {% else %}
+                                                    <div class="me-2 rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                                                        <i class="fas fa-building text-secondary"></i>
+                                                    </div>
+                                                {% endif %}
+                                                <small class="text-muted">{{ event.organizer.name }}</small>
+                                            </div>
+                                            {% if event.organizer.isVerified %}
+                                                <span class="ms-auto badge bg-success rounded-pill" title="Verified Organizer">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                            <h4 class="text-primary fw-bold mb-3">No events found</h4>
+                            <p class="text-muted mb-4">No events match your search criteria or no events are currently available.</p>
+                            <a href="{{ path('events_index') }}" class="btn btn-primary btn-lg shadow px-4">
+                                <i class="fas fa-redo me-2"></i> Reset Filters
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if totalPages > 1 %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if currentPage > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link rounded-pill shadow-sm" href="{{ path('events_index', {'page': currentPage - 1, 'search': search, 'category': category, 'start_date': startDate, 'end_date': endDate}) }}">
+                                        <i class="fas fa-chevron-left me-1"></i> Previous
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link rounded-pill">
+                                        <i class="fas fa-chevron-left me-1"></i> Previous
+                                    </span>
+                                </li>
+                            {% endif %}
+
+                            {% for i in 1..totalPages %}
+                                <li class="page-item {{ i == currentPage ? 'active' : '' }}">
+                                    <a class="page-link rounded-circle shadow-sm mx-1" href="{{ path('events_index', {'page': i, 'search': search, 'category': category, 'start_date': startDate, 'end_date': endDate}) }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+
+                            {% if currentPage < totalPages %}
+                                <li class="page-item">
+                                    <a class="page-link rounded-pill shadow-sm" href="{{ path('events_index', {'page': currentPage + 1, 'search': search, 'category': category, 'start_date': startDate, 'end_date': endDate}) }}">
+                                        Next <i class="fas fa-chevron-right ms-1"></i>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link rounded-pill">
+                                        Next <i class="fas fa-chevron-right ms-1"></i>
+                                    </span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    
+    .badge {
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    .page-link {
+        color: #0d6efd;
+        border: 1px solid #dee2e6;
+        padding: 0.5rem 0.75rem;
+        margin: 0 3px;
+        transition: all 0.3s;
+    }
+    
+    .page-item.active .page-link {
+        background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+        border-color: #0a58ca;
+    }
+</style>
+{% endblock %}

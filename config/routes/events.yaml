@@ -1,0 +1,113 @@
+# Admin Event Routes
+admin_events_index:
+    path: /admin/events
+    controller: App\Controller\AdminEventController::index
+    methods: [GET]
+
+admin_verify_index:
+    path: /admin/verify
+    controller: App\Controller\AdminVerifyController::index
+    methods: [GET]
+
+admin_events_new:
+    path: /admin/events/new
+    controller: App\Controller\AdminEventController::new
+    methods: [GET, POST]
+
+admin_events_show:
+    path: /admin/events/{id}
+    controller: App\Controller\AdminEventController::show
+    methods: [GET]
+
+admin_events_edit:
+    path: /admin/events/{id}/edit
+    controller: App\Controller\AdminEventController::edit
+    methods: [GET, POST]
+
+admin_events_toggle_status:
+    path: /admin/events/{id}/toggle-status
+    controller: App\Controller\AdminEventController::toggleStatus
+    methods: [POST]
+
+admin_events_delete:
+    path: /admin/events/{id}/delete
+    controller: App\Controller\AdminEventController::delete
+    methods: [POST]
+
+admin_events_participations:
+    path: /admin/events/{id}/participations
+    controller: App\Controller\AdminEventController::participations
+    methods: [GET]
+
+admin_events_generate_description:
+    path: /admin/events/generate-description
+    controller: App\Controller\AdminEventController::generateDescription
+    methods: [POST]
+
+# Admin Organizer Routes
+admin_organizers_index:
+    path: /admin/organizers
+    controller: App\Controller\AdminOrganizerController::index
+    methods: [GET]
+
+admin_organizers_new:
+    path: /admin/organizers/new
+    controller: App\Controller\AdminOrganizerController::new
+    methods: [GET, POST]
+
+admin_organizers_show:
+    path: /admin/organizers/{id}
+    controller: App\Controller\AdminOrganizerController::show
+    methods: [GET]
+
+admin_organizers_edit:
+    path: /admin/organizers/{id}/edit
+    controller: App\Controller\AdminOrganizerController::edit
+    methods: [GET, POST]
+
+admin_organizers_toggle_verification:
+    path: /admin/organizers/{id}/toggle-verification
+    controller: App\Controller\AdminOrganizerController::toggleVerification
+    methods: [POST]
+
+admin_organizers_delete:
+    path: /admin/organizers/{id}/delete
+    controller: App\Controller\AdminOrganizerController::delete
+    methods: [POST]
+
+# Frontend Event Routes
+events_index:
+    path: /events
+    controller: App\Controller\EventController::index
+    methods: [GET]
+
+events_show:
+    path: /events/{id}
+    controller: App\Controller\EventController::show
+    methods: [GET, POST]
+
+events_by_category:
+    path: /events/category/{category}
+    controller: App\Controller\EventController::byCategory
+    methods: [GET]
+
+# Participation Routes
+participations_index:
+    path: /participations
+    controller: App\Controller\ParticipationController::index
+    methods: [GET]
+
+participations_show:
+    path: /participations/{id}
+    controller: App\Controller\ParticipationController::show
+    methods: [GET]
+
+participations_cancel:
+    path: /participations/{id}/cancel
+    controller: App\Controller\ParticipationController::cancel
+    methods: [POST]
+
+participation_verify:
+    path: /participations/verify/{ticketCode}
+    controller: App\Controller\ParticipationController::verify
+    methods: [GET, POST]

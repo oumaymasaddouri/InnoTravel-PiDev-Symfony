@@ -1,0 +1,96 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Edit Post - InnoTravel{% endblock %}
+
+{% block section8 %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-body text-center p-5">
+                    <h2 class="mb-4">Edit Post</h2>
+
+                    <div class="d-flex align-items-center mb-4">
+                        <img src="{{ user.profilePictureUrl ? asset('uploads/profile_pictures/' ~ user.profilePictureUrl) : asset('uploads/profile_pictures/default.png') }}" class="rounded-circle me-3" width="50" height="50" alt="Avatar">
+                        <div class="text-start">
+                            <h5 class="mb-0">{{ user.firstName }} {{ user.lastName }}</h5>
+                            <small class="text-muted">Editing post from {{ post.createdAt|date('d/m/Y H:i') }}</small>
+                        </div>
+                    </div>
+
+                    {{ form_start(form, {'attr': {'class': 'text-start'}}) }}
+                        <div class="mb-3">
+                            {{ form_label(form.title) }}
+                            {{ form_widget(form.title) }}
+                            {{ form_errors(form.title) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.content) }}
+                            {{ form_widget(form.content) }}
+                            {{ form_errors(form.content) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.location) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                {{ form_widget(form.location) }}
+                            </div>
+                            {{ form_errors(form.location) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.email) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                {{ form_widget(form.email) }}
+                            </div>
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.num) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                {{ form_widget(form.num) }}
+                            </div>
+                            {{ form_errors(form.num) }}
+                        </div>
+
+                        {% if post.imageUrls %}
+                            <div class="mb-3">
+                                <label class="form-label">Current Image</label>
+                                <div class="text-center">
+                                    <img src="{{ asset('images/' ~ post.imageUrls) }}" class="img-thumbnail" style="max-height: 200px;" alt="Current image">
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            {{ form_label(form.imageFile) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-image"></i></span>
+                                {{ form_widget(form.imageFile) }}
+                            </div>
+                            {{ form_errors(form.imageFile) }}
+                            <small class="form-text text-muted">Leave empty to keep the current image</small>
+                        </div>
+
+                        {{ form_row(form.user, {'attr': {'class': 'd-none'}}) }}
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ path('app_blog') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

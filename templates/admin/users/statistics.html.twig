@@ -1,0 +1,316 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}User Statistics{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .chart-container {
+        position: relative;
+        margin: auto;
+        height: 250px;
+    }
+
+    .info-box {
+        transition: all 0.3s ease;
+    }
+
+    .info-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .card {
+        transition: all 0.3s ease;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+        background-color: rgba(0,0,0,0.03);
+    }
+
+    .table-bordered th {
+        background-color: rgba(0,0,0,0.03);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">User Statistics</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ path('admin_home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('admin_users_index') }}">Users</a></li>
+                    <li class="breadcrumb-item active">Statistics</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- Info boxes -->
+        <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Users</span>
+                        <span class="info-box-number">{{ totalUsers }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                    <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-ban"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Banned Users</span>
+                        <span class="info-box-number">{{ bannedUsers }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix hidden-md-up"></div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-user-plus"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">New Users (30 days)</span>
+                        <span class="info-box-number">{{ newUsers }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                    <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-globe"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Countries Represented</span>
+                        <span class="info-box-number">{{ countries|length }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Gender Distribution Chart -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Gender Distribution (Male/Female)</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="genderChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Countries Chart -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Top 5 Countries</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="countriesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">User Statistics Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width: 50%">Total Users</th>
+                                                <td>{{ totalUsers }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Active Users</th>
+                                                <td>{{ totalUsers - bannedUsers }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Banned Users</th>
+                                                <td>{{ bannedUsers }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Admin Users</th>
+                                                <td>{{ adminCount }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Regular Users</th>
+                                                <td>{{ regularUserCount }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width: 50%">Male Users</th>
+                                                <td>{{ maleUsers }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Female Users</th>
+                                                <td>{{ femaleUsers }}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>New Users (30 days)</th>
+                                                <td>{{ newUsers }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Countries Represented</th>
+                                                <td>{{ countries|length }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ path('admin_users_index') }}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Users List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
+<script>
+    // Wait for the page to be fully loaded
+    window.addEventListener('load', function() {
+        // Destroy any existing charts to prevent conflicts
+        Chart.helpers.each(Chart.instances, function(instance) {
+            instance.destroy();
+        });
+
+        // Gender Chart - Only Male and Female
+        var genderCtx = document.getElementById('genderChart').getContext('2d');
+        var genderChart = new Chart(genderCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Male', 'Female'],
+                datasets: [{
+                    data: [{{ maleUsers }}, {{ femaleUsers }}],
+                    backgroundColor: ['#3c8dbc', '#f56954'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.label || '';
+                                var value = context.raw || 0;
+                                var total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                var percentage = Math.round((value / total) * 100);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Countries Chart - converted to pie chart
+        var countriesCtx = document.getElementById('countriesChart').getContext('2d');
+        var countriesChart = new Chart(countriesCtx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    {% for country in countries %}
+                        '{{ country.country }}',
+                    {% endfor %}
+                ],
+                datasets: [{
+                    data: [
+                        {% for country in countries %}
+                            {{ country.userCount }},
+                        {% endfor %}
+                    ],
+                    backgroundColor: [
+                        '#00a65a',  // Green
+                        '#f39c12',  // Yellow
+                        '#00c0ef',  // Blue
+                        '#dd4b39',  // Red
+                        '#605ca8'   // Purple
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.label || '';
+                                var value = context.raw || 0;
+                                var total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                var percentage = Math.round((value / total) * 100);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,749 @@
+/* Transport Module Custom Styles */
+
+/* Card hover effects */
+.vehicle-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.vehicle-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/* Vehicle image wrapper and overlay */
+.vehicle-image-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.vehicle-card:hover .image-overlay {
+    opacity: 0.4;
+}
+
+/* Vehicle type badges */
+.card-type {
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.vehicle-card:hover .card-type {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Status badges */
+.card-status {
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.vehicle-card:hover .card-status {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Feature items */
+.feature-item {
+    transition: transform 0.2s ease;
+}
+
+.feature-item:hover {
+    transform: translateX(5px);
+}
+
+.feature-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover .feature-icon {
+    background-color: #e9f0ff !important;
+    transform: scale(1.1);
+}
+
+.font-weight-medium {
+    font-weight: 500;
+}
+
+/* Luggage icons */
+.luggage-icons {
+    letter-spacing: 2px;
+}
+
+.opacity-25 {
+    opacity: 0.25;
+}
+
+/* Vehicle features */
+.vehicle-features i {
+    width: 20px;
+    text-align: center;
+    margin-right: 8px;
+}
+
+/* Reservation cards */
+.reservation-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reservation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Route visualization */
+.route-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.route-line {
+    position: relative;
+}
+
+.route-line::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ff4d4d 0%, #4CAF50 100%);
+    z-index: -1;
+}
+
+/* Map container */
+.map-container {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom markers */
+.custom-marker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.pickup-marker {
+    background-color: #ff4d4d;
+}
+
+.destination-marker {
+    background-color: #4CAF50;
+}
+
+/* Form enhancements */
+.form-control:focus {
+    border-color: #4285F4;
+    box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, 0.25);
+}
+
+/* Button styles */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #4285F4;
+    border-color: #4285F4;
+}
+
+.btn-primary:hover {
+    background-color: #3367d6;
+    border-color: #3367d6;
+}
+
+.btn-success {
+    background-color: #34A853;
+    border-color: #34A853;
+}
+
+.btn-success:hover {
+    background-color: #2d9249;
+    border-color: #2d9249;
+}
+
+.btn-outline-primary {
+    color: #4285F4;
+    border-color: #4285F4;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4285F4;
+    border-color: #4285F4;
+    color: white;
+}
+
+.btn-outline-warning {
+    color: #FBBC05;
+    border-color: #FBBC05;
+}
+
+.btn-outline-warning:hover {
+    background-color: #FBBC05;
+    border-color: #FBBC05;
+    color: white;
+}
+
+.btn-outline-danger {
+    color: #EA4335;
+    border-color: #EA4335;
+}
+
+.btn-outline-danger:hover {
+    background-color: #EA4335;
+    border-color: #EA4335;
+    color: white;
+}
+
+/* Status colors */
+.status-pending {
+    color: #FBBC05;
+}
+
+.status-confirmed {
+    color: #34A853;
+}
+
+.status-canceled {
+    color: #EA4335;
+}
+
+/* Vehicle details page */
+.vehicle-image img {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-item h5 {
+    position: relative;
+    padding-left: 15px;
+}
+
+.info-item h5::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 20px;
+    background-color: #4285F4;
+    border-radius: 3px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .vehicle-actions {
+        flex-direction: column;
+    }
+
+    .vehicle-actions .btn {
+        margin-bottom: 10px;
+    }
+}
+
+/* Title styling */
+.title-underline {
+    width: 80px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: #4285F4;
+    margin: 0 auto;
+}
+
+/* Reservation form enhancements */
+.reservation-form-section {
+    position: relative;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 35px;
+    background-color: #ffffff;
+    border-left: 5px solid #4285F4;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.reservation-form-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(66, 133, 244, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.reservation-form-section:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    border-left-width: 8px;
+}
+
+.reservation-form-section h4 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    color: #4285F4;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 12px;
+}
+
+.reservation-form-section h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #4285F4, #8ab4f8);
+    border-radius: 3px;
+}
+
+.reservation-form-section h4 i {
+    margin-right: 12px;
+    background: linear-gradient(135deg, #4285F4 0%, #356ac3 100%);
+    color: white;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(66, 133, 244, 0.3);
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+
+.form-group label i {
+    margin-right: 8px;
+    color: #4285F4;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    padding: 12px 18px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    background-color: #f9fafc;
+}
+
+.form-control:hover {
+    background-color: #ffffff;
+    border-color: #d0d0d0;
+}
+
+.form-control:focus {
+    border-color: #4285F4;
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+    background-color: #ffffff;
+}
+
+.input-group {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.input-group:hover {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.input-group:focus-within {
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+}
+
+.input-group-text {
+    border-radius: 10px 0 0 10px !important;
+    border: 1px solid #e0e0e0;
+    background-color: #f9fafc;
+    color: #4285F4;
+    padding: 0 15px;
+    transition: all 0.3s ease;
+}
+
+.input-group:hover .input-group-text {
+    background-color: #ffffff;
+    border-color: #d0d0d0;
+}
+
+.input-group:focus-within .input-group-text {
+    border-color: #4285F4;
+    background-color: #ffffff;
+}
+
+.input-group .form-control {
+    border-radius: 0 10px 10px 0 !important;
+    box-shadow: none;
+}
+
+.form-control::placeholder {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.selected-vehicle-card {
+    background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #d0e3ff;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(66, 133, 244, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.selected-vehicle-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(66, 133, 244, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.selected-vehicle-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(66, 133, 244, 0.15);
+}
+
+.selected-vehicle-card .vehicle-icon {
+    background: linear-gradient(135deg, #4285F4 0%, #356ac3 100%);
+    color: white;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    margin-right: 20px;
+    font-size: 2rem;
+    box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.selected-vehicle-card .vehicle-info {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.selected-vehicle-card .vehicle-info h5 {
+    margin-bottom: 10px;
+    color: #4285F4;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.vehicle-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.vehicle-details span {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.vehicle-details span:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.vehicle-details span i {
+    margin-right: 5px;
+    font-size: 0.9rem;
+}
+
+.vehicle-type {
+    background: linear-gradient(135deg, #4285F4 0%, #356ac3 100%) !important;
+    color: white;
+    font-weight: 600;
+}
+
+.vehicle-color i {
+    margin-right: 5px;
+    font-size: 0.8rem;
+}
+
+.vehicle-license i {
+    color: #EA4335;
+}
+
+.vehicle-luggage i {
+    color: #FBBC05;
+}
+
+.vehicle-features {
+    background-color: white;
+    border-radius: 15px;
+    padding: 15px 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.vehicle-features:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.feature-title {
+    font-weight: 600;
+    color: #4285F4;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.feature-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    transition: all 0.2s ease;
+}
+
+.feature-item:hover {
+    transform: translateX(5px);
+}
+
+.feature-item i {
+    color: #34A853;
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+.address-input-wrapper {
+    position: relative;
+}
+
+.address-input-wrapper i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4285F4;
+}
+
+.address-input-wrapper input {
+    padding-left: 35px;
+}
+
+.map-container {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: 3px solid #fff;
+    transition: all 0.3s ease;
+}
+
+.map-container:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
+.map-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: 30px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(66, 133, 244, 0.2);
+}
+
+.map-overlay:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.map-overlay i {
+    color: #4285F4;
+    margin-right: 8px;
+}
+
+.submit-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+    transition: all 0.3s ease;
+}
+
+.submit-btn-wrapper:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(66, 133, 244, 0.4);
+}
+
+.submit-btn-wrapper .btn {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    padding: 15px 40px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #4285F4 0%, #356ac3 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.submit-btn-wrapper .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: all 0.6s;
+    z-index: -1;
+}
+
+.submit-btn-wrapper .btn:hover::before {
+    left: 100%;
+}
+
+.submit-btn-wrapper .btn i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+    vertical-align: middle;
+    transition: all 0.3s ease;
+}
+
+.submit-btn-wrapper:hover .btn i {
+    transform: translateX(3px);
+}
+
+/* Enhance the overall card */
+.card {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.card-body {
+    padding: 30px !important;
+}
+
+/* Enhance the back button */
+.btn-outline-secondary {
+    border-radius: 30px;
+    padding: 12px 25px;
+    font-weight: 500;
+    border-width: 2px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}

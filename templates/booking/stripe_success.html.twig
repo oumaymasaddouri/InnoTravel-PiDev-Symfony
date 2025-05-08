@@ -1,0 +1,84 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Payment Successful{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .card-title {
+        font-weight: 700;
+        font-size: 1.8rem;
+    }
+    .btn {
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+    }
+    .badge {
+        font-size: 1rem;
+    }
+    /* Animation effects */
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+        0% { transform: scale(0.5); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    .scale-in {
+        animation: scaleIn 0.5s ease-in-out;
+    }
+</style>
+{% endblock %}
+
+{% block section8 %}
+<div class="container py-5">
+
+    <div class="text-center fade-in">
+        <i class="fas fa-check-circle fa-5x text-success scale-in"></i>
+        <h1 class="my-4 fw-bold">Payment Successful!</h1>
+        <p class="lead">Thank you for your booking. A confirmation email has been sent to you. We look forward to welcoming you!</p>
+    </div>
+
+    <div class="card shadow-lg border-0 mt-5 mx-auto fade-in" style="max-width: 700px;">
+        <div class="card-body p-4">
+            <h4 class="card-title mb-4 text-center">Booking Details</h4>
+
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item"><strong>Hotel:</strong> {{ booking.hotelId.name }}</li>
+                <li class="list-group-item"><strong>Check-in Date:</strong> {{ booking.startdate|date('Y-m-d') }}</li>
+                <li class="list-group-item"><strong>Check-out Date:</strong> {{ booking.enddate|date('Y-m-d') }}</li>
+                <li class="list-group-item"><strong>Duration:</strong>
+                    {% set calculatedNights = nights|default(((booking.enddate|date('U') - booking.startdate|date('U')) // 86400)) %}
+                    {{ calculatedNights }} {{ calculatedNights == 1 ? 'night' : 'nights' }}
+                </li>
+                <li class="list-group-item"><strong>Price per Night:</strong> ${{ booking.hotelId.pricepernight|number_format(2, '.', ',') }}</li>
+                <li class="list-group-item"><strong>Total Amount:</strong> <span class="text-success fw-bold">${{ totalAmount|default(booking.hotelId.pricepernight * calculatedNights)|number_format(2, '.', ',') }}</span></li>
+                <li class="list-group-item"><strong>Status:</strong>
+                    <span class="badge bg-success">{{ booking.status|capitalize }}</span>
+                </li>
+                <li class="list-group-item"><strong>Booking ID:</strong> #{{ booking.id }}</li>
+            </ul>
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="{{ path('user_booking_index') }}" class="btn btn-primary">
+                    <i class="fas fa-calendar-alt me-1"></i> View My Bookings
+                </a>
+                <a href="{{ path('booking_invoice_download', {id: booking.id}) }}" class="btn btn-outline-primary">
+                    <i class="fas fa-file-pdf me-1"></i> Download Invoice
+                </a>
+            </div>
+
+            <div class="text-center mt-5">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ url('booking_invoice_download', {id: booking.id}) }}" alt="Booking QR Code">
+                <p class="text-muted small mt-2">Scan to download your booking invoice (PDF)</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

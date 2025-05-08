@@ -1,0 +1,275 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}{{ hotel.name }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .hotel-detail-container {
+        max-width: 700px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.08);
+        padding: 2.5rem 2rem 2rem 2rem;
+        text-align: center;
+    }
+
+    /* Price animation */
+    .price-animated {
+        transition: all 0.3s ease;
+    }
+    .price-animated:hover {
+        color: #007bff;
+        transform: scale(1.05);
+    }
+    .hotel-image {
+        width: 100%;
+        max-height: 340px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+    .hotel-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 1.2rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .hotel-info-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .hotel-info-item {
+        flex: 1 1 180px;
+        min-width: 160px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.2rem 0.8rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .hotel-info-item i {
+        font-size: 1.3rem;
+        color: #007bff;
+        margin-bottom: 0.5rem;
+    }
+    .hotel-info-label {
+        font-size: 0.95rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        margin-bottom: 0.3rem;
+        font-weight: 600;
+    }
+    .hotel-info-value {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #222;
+    }
+    .hotel-description {
+        text-align: left;
+        margin: 2rem 0 1.5rem 0;
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        font-size: 1.05rem;
+        color: #444;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .hotel-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    .btn-action {
+        min-width: 160px;
+        padding: 0.9rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+    }
+    .btn-back {
+        background: #6c757d;
+        color: #fff;
+        border: none;
+    }
+    .btn-back:hover {
+        background: #495057;
+    }
+    .btn-book {
+        background: #007bff;
+        color: #fff;
+        border: none;
+    }
+    .btn-book:hover {
+        background: #0056b3;
+    }
+    .badge {
+        padding: 0.4rem 1rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 30px;
+        margin-top: 0.5rem;
+    }
+    .badge-success {
+        background: #28a745;
+        color: #fff;
+    }
+    .badge-secondary {
+        background: #6c757d;
+        color: #fff;
+    }
+    @media (max-width: 600px) {
+        .hotel-detail-container {
+            padding: 1rem 0.5rem;
+        }
+        .hotel-info-row {
+            flex-direction: column;
+            gap: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation to prices on hover
+    const priceElement = document.querySelector('.price-animated');
+    if (priceElement) {
+        priceElement.addEventListener('mouseenter', function() {
+            this.style.color = '#007bff';
+            this.style.transform = 'scale(1.05)';
+        });
+        priceElement.addEventListener('mouseleave', function() {
+            this.style.color = '';
+            this.style.transform = '';
+        });
+    }
+
+    // Auto-refresh when currency changes
+    const currencySelect = document.querySelector('select[name="currency"]');
+    if (currencySelect) {
+        currencySelect.addEventListener('change', function() {
+            // Get all current URL parameters
+            const params = new URLSearchParams(window.location.search);
+            // Update currency
+            params.set('currency', this.value);
+            // Navigate with updated parameters
+            window.location.href = `${window.location.pathname}?${params.toString()}`;
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% block section8 %}
+<section class="places-section section-padding">
+    <div class="container">
+        <div class="hotel-detail-wrapper" style="max-width: 800px; margin: 0 auto; background: #fff; padding: 40px 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center;">
+
+            <!-- Hotel Image -->
+            <div class="hotel-image" style="margin-bottom: 30px; position: relative;">
+                {% if hotel.image %}
+                    <img src="{{ asset('uploads/hotels/' ~ hotel.image) }}" alt="{{ hotel.name }}" style="width: 100%; max-width: 500px; height: auto; border-radius: 10px;">
+                {% else %}
+                    <img src="{{ asset('frontoffice/images/error-404.png') }}" alt="No image available" style="width: 100%; max-width: 500px; height: auto; border-radius: 10px;">
+                {% endif %}
+
+                <!-- Currency Badge -->
+                <div style="position: absolute; top: 10px; right: 10px; background-color: rgba(0, 123, 255, 0.8); color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    {{ currencySymbol }}
+                </div>
+            </div>
+
+            <!-- Hotel Title -->
+            <h1 style="font-size: 2.2rem; font-weight: bold; color: #222; margin-bottom: 20px;">{{ hotel.name }}</h1>
+
+            <!-- Hotel Info Boxes -->
+            <div class="row justify-content-center" style="margin-bottom: 30px;">
+                <div class="col-md-4 col-12 mb-3">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="font-size: 0.9rem; color: #6c757d;">Price/Night</div>
+                        <div style="font-size: 1.2rem; font-weight: bold;" class="price-animated">
+                            {% set convertedPrice = hotel.pricepernight * exchangeRate %}
+                            {{ currencySymbol }}{{ convertedPrice|round(2) }}
+                            {% if selectedCurrency != 'USD' %}
+                                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 5px;">(Original USD: ${{ hotel.pricepernight|round(2) }})</div>
+                            {% endif %}
+                        </div>
+                        
+                        {# Currency Selector moved here #}
+                        <div class="mt-3">
+                            <form method="get" class="d-inline-block" style="width: 200px;">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
+                                    <select name="currency" class="form-select form-select-sm" onchange="this.form.submit()">
+                                        {% for code, name in currencies %}
+                                            <option value="{{ code }}" {% if selectedCurrency == code %}selected{% endif %}>{{ code }} - {{ name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12 mb-3">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="font-size: 0.9rem; color: #6c757d;">Location</div>
+                        <div style="font-size: 1.2rem; font-weight: bold;">{{ hotel.location }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12 mb-3">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="font-size: 0.9rem; color: #6c757d;">Eco Status</div>
+                        <div style="font-size: 1.2rem; font-weight: bold;">
+                            {% if hotel.ecocertification %}
+                                <span style="color: #28a745;">Eco Certified</span>
+                            {% else %}
+                                <span style="color: #dc3545;">Not Certified</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hotel Description -->
+            <div class="hotel-description" style="text-align: left; background: #f8f9fa; padding: 20px 25px; border-radius: 10px; margin-bottom: 30px; font-size: 1.05rem; color: #444;">
+                <strong>Description:</strong><br>
+                {% if hotel.description %}
+                    {{ hotel.description }}
+                {% else %}
+                    <em>No description available for this hotel.</em>
+                {% endif %}
+            </div>
+
+
+            <!-- Action Buttons -->
+            <div style="display: flex; justify-content: center; gap: 20px;">
+                <a href="{{ path('user_hotel_index', {'currency': selectedCurrency}) }}" class="theme-btn-s2" style="padding: 10px 20px; border-radius: 8px;">Back to List</a>
+                <a href="{{ path('user_booking_new', { 'slug': hotel.slug }) }}" class="theme-btn" style="padding: 10px 20px; border-radius: 8px;">Book Now</a>
+            </div>
+
+            {% if app.environment == 'dev' %}
+            <div class="mt-4 p-2 bg-light border rounded text-center">
+                <small>Debug: Selected Currency: {{ selectedCurrency }}, Exchange Rate: {{ exchangeRate }}</small>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+{% endblock %}
+

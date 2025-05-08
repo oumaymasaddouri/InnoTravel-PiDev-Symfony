@@ -1,0 +1,131 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Edit Transport Vehicle{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h2 mb-0">Edit Vehicle</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent p-0">
+                        <li class="breadcrumb-item"><a href="{{ path('admin_transport_index') }}">Transport Management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Vehicle</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Edit Vehicle Information</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.vehicleType) }}
+                                        {{ form_widget(form.vehicleType, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.vehicleType) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.carModel) }}
+                                        {{ form_widget(form.carModel, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.carModel) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.carColor) }}
+                                        {{ form_widget(form.carColor, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.carColor) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.licensePlate) }}
+                                        {{ form_widget(form.licensePlate, {'attr': {'class': 'form-control'}}) }}
+                                        <small class="form-text text-muted">{{ form_help(form.licensePlate) }}</small>
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.licensePlate) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.maxLuggage) }}
+                                        {{ form_widget(form.maxLuggage, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.maxLuggage) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.status) }}
+                                        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="form-error text-danger">
+                                            {{ form_errors(form.status) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form_label(form.imageFile) }}
+                                {% if transport.imageFilename %}
+                                    <div class="mb-2">
+                                        <img src="{{ asset('uploads/transport_images/' ~ transport.imageFilename) }}" alt="{{ transport.carModel }}" class="img-thumbnail" style="max-height: 150px;">
+                                        <p class="text-muted small mt-1">Current image. Upload a new one to replace it.</p>
+                                    </div>
+                                {% endif %}
+                                {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                                <small class="form-text text-muted">{{ form_help(form.imageFile) }}</small>
+                                <div class="form-error text-danger">
+                                    {{ form_errors(form.imageFile) }}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save mr-1"></i> Update Vehicle
+                                </button>
+                                <a href="{{ path('admin_transport_index') }}" class="btn btn-secondary ml-2">
+                                    <i class="fas fa-times mr-1"></i> Cancel
+                                </a>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    $(document).ready(function() {
+        // Add any JavaScript needed for the form
+    });
+</script>
+{% endblock %}

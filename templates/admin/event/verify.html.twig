@@ -1,0 +1,221 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Verify Tickets{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4 mb-4">Ticket Verification</h1>
+    
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-qrcode me-2"></i> Scan QR Code</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <p>Use your device's camera to scan the attendee's QR code or enter the ticket code manually.</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div id="reader" class="border rounded" style="width: 100%; height: 300px;"></div>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <p class="mb-1">- OR -</p>
+                        <p>Enter the ticket code manually:</p>
+                    </div>
+                    
+                    <form id="manualForm" action="{{ path('participation_verify', {'ticketCode': 'PLACEHOLDER'}) }}" method="get">
+                        <div class="input-group mb-3">
+                            <input type="text" id="ticketCode" class="form-control" placeholder="Enter ticket code" required>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search me-2"></i> Verify
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Instructions</h5>
+                </div>
+                <div class="card-body">
+                    <ol class="mb-0">
+                        <li class="mb-2">Ask the attendee to show their ticket QR code.</li>
+                        <li class="mb-2">Position the QR code in front of your device's camera.</li>
+                        <li class="mb-2">The system will automatically detect and verify the ticket.</li>
+                        <li class="mb-2">If the QR code is valid, you'll see the attendee's information.</li>
+                        <li>Confirm attendance by clicking the "Confirm Attendance" button.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-6">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i> Recent Verifications</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="py-3">Ticket Code</th>
+                                    <th class="py-3">Attendee</th>
+                                    <th class="py-3">Event</th>
+                                    <th class="py-3">Time</th>
+                                    <th class="py-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <i class="fas fa-info-circle text-muted mb-2"></i>
+                                        <p class="mb-0">Recent verifications will appear here.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i> Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="cameraSwitch" checked>
+                        <label class="form-check-label" for="cameraSwitch">Enable Camera</label>
+                    </div>
+                    
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="soundSwitch" checked>
+                        <label class="form-check-label" for="soundSwitch">Enable Sound</label>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="cameraSelect" class="form-label">Camera</label>
+                        <select class="form-select" id="cameraSelect">
+                            <option value="">Loading cameras...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://unpkg.com/html5-qrcode@2.3.4/html5-qrcode.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const html5QrCode = new Html5Qrcode("reader");
+        const cameraSwitch = document.getElementById('cameraSwitch');
+        const soundSwitch = document.getElementById('soundSwitch');
+        const cameraSelect = document.getElementById('cameraSelect');
+        const manualForm = document.getElementById('manualForm');
+        const ticketCodeInput = document.getElementById('ticketCode');
+        
+        // Load cameras
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                cameraSelect.innerHTML = '';
+                devices.forEach(device => {
+                    const option = document.createElement('option');
+                    option.value = device.id;
+                    option.text = device.label || `Camera ${cameraSelect.options.length + 1}`;
+                    cameraSelect.appendChild(option);
+                });
+                
+                // Start scanner with the first camera
+                startScanner(devices[0].id);
+            } else {
+                cameraSelect.innerHTML = '<option value="">No cameras found</option>';
+            }
+        }).catch(err => {
+            console.error('Error getting cameras', err);
+            cameraSelect.innerHTML = '<option value="">Error loading cameras</option>';
+        });
+        
+        // Camera select change
+        cameraSelect.addEventListener('change', function() {
+            if (this.value) {
+                html5QrCode.stop().then(() => {
+                    startScanner(this.value);
+                }).catch(err => {
+                    console.error('Error stopping scanner', err);
+                });
+            }
+        });
+        
+        // Camera switch toggle
+        cameraSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                startScanner(cameraSelect.value);
+            } else {
+                html5QrCode.stop().catch(err => {
+                    console.error('Error stopping scanner', err);
+                });
+            }
+        });
+        
+        // Manual form submit
+        manualForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const ticketCode = ticketCodeInput.value.trim();
+            if (ticketCode) {
+                window.location.href = "{{ path('participation_verify', {'ticketCode': 'PLACEHOLDER'}) }}".replace('PLACEHOLDER', ticketCode);
+            }
+        });
+        
+        // Start scanner function
+        function startScanner(cameraId) {
+            if (!cameraSwitch.checked || !cameraId) return;
+            
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+            
+            html5QrCode.start(
+                cameraId, 
+                config,
+                (decodedText) => {
+                    // Play sound if enabled
+                    if (soundSwitch.checked) {
+                        const beep = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU");
+                        beep.play();
+                    }
+                    
+                    // Extract ticket code from QR data
+                    let ticketCode;
+                    try {
+                        const data = JSON.parse(decodedText);
+                        ticketCode = data.ticket_code;
+                    } catch (e) {
+                        // If not JSON, use the text as is
+                        ticketCode = decodedText;
+                    }
+                    
+                    // Navigate to verification page
+                    window.location.href = "{{ path('participation_verify', {'ticketCode': 'PLACEHOLDER'}) }}".replace('PLACEHOLDER', ticketCode);
+                },
+                (errorMessage) => {
+                    // Ignore errors during scanning
+                }
+            ).catch((err) => {
+                console.error(`Error starting scanner: ${err}`);
+            });
+        }
+    });
+</script>
+{% endblock %}
+

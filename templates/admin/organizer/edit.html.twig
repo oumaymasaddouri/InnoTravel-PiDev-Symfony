@@ -1,0 +1,85 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Edit Organizer{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mt-4">Edit Organizer</h1>
+        <div>
+            <a href="{{ path('admin_organizers_show', {'id': organizer.id}) }}" class="btn btn-outline-primary me-2">
+                <i class="fas fa-arrow-left me-2"></i> Back to Organizer
+            </a>
+            <a href="{{ path('admin_organizers_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-list me-2"></i> All Organizers
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-edit me-2"></i> Edit Organizer Details</h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_row(form.name) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.isVerified) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            {{ form_row(form.description) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_row(form.email) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.phone) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_row(form.website) }}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form_label(form.logoFile) }}
+                                {% if organizer.logoFilename %}
+                                    <div class="mb-2">
+                                        <img src="{{ vich_uploader_asset(organizer, 'logoFile') }}" alt="{{ organizer.name }}" class="img-thumbnail rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                    </div>
+                                {% endif %}
+                                {{ form_widget(form.logoFile) }}
+                                {{ form_errors(form.logoFile) }}
+                                <small class="text-muted">Recommended image size: 400x400 pixels</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ path('admin_organizers_show', {'id': organizer.id}) }}" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-times me-2"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i> Update Organizer
+                        </button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

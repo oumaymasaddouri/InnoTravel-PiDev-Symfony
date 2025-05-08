@@ -1,0 +1,105 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}New Transport Vehicle{% endblock %}
+
+{% block section8 %}
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 rounded-0 shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Add New Vehicle</h3>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.vehicleType) }}
+                                        {{ form_widget(form.vehicleType) }}
+                                        <div class="form-error">
+                                            {{ form_errors(form.vehicleType) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.carModel) }}
+                                        {{ form_widget(form.carModel) }}
+                                        <div class="form-error">
+                                            {{ form_errors(form.carModel) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.carColor) }}
+                                        {{ form_widget(form.carColor) }}
+                                        <div class="form-error">
+                                            {{ form_errors(form.carColor) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.licensePlate) }}
+                                        {{ form_widget(form.licensePlate) }}
+                                        <small class="form-text text-muted">{{ form_help(form.licensePlate) }}</small>
+                                        <div class="form-error">
+                                            {{ form_errors(form.licensePlate) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.maxLuggage) }}
+                                        {{ form_widget(form.maxLuggage) }}
+                                        <div class="form-error">
+                                            {{ form_errors(form.maxLuggage) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.status) }}
+                                        {{ form_widget(form.status) }}
+                                        <div class="form-error">
+                                            {{ form_errors(form.status) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.imageFile) }}
+                                {{ form_widget(form.imageFile) }}
+                                <small class="form-text text-muted">{{ form_help(form.imageFile) }}</small>
+                                <div class="form-error">
+                                    {{ form_errors(form.imageFile) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary btn-block">Create Vehicle</button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ path('app_transport_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Back to list
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

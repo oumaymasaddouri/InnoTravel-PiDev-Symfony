@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>New Trip Created</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4a6fdc;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+        .trip-details {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4a6fdc;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>New Trip Created</h1>
+    </div>
+    <div class="content">
+        <p>Hello {{ admin.firstName }},</p>
+        
+        <p>A new trip has been created by {{ user.firstName }} {{ user.lastName }}.</p>
+        
+        <div class="trip-details">
+            <h3>Trip Details:</h3>
+            <p><strong>Departure:</strong> {{ trip.departure|date('Y-m-d H:i') }}</p>
+            <p><strong>Arrival:</strong> {{ trip.arrivalDate|date('Y-m-d H:i') }}</p>
+            <p><strong>Budget:</strong> {{ trip.budget }}</p>
+            <p><strong>Status:</strong> {{ trip.status }}</p>
+        </div>
+        
+        <p>Please review this trip and update its status as needed.</p>
+        
+        <a href="{{ url('admin_view_trip', {'id': trip.id}) }}" class="button">View Trip</a>
+    </div>
+    <div class="footer">
+        <p>This is an automated message from InnoTravel. Please do not reply to this email.</p>
+    </div>
+</body>
+</html>

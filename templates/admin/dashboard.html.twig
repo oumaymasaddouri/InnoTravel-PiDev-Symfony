@@ -1,0 +1,10 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block content %}
+    {{ parent() }}
+
+    {% block main %}
+        {# Here the EasyAdmin content will be injected #}
+        {{ ea_content() }}
+    {% endblock %}
+{% endblock %}

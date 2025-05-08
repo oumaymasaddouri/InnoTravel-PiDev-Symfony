@@ -1,0 +1,682 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Blog - InnoTravel{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Enhanced comment styles */
+    .comment-list {
+        max-height: 400px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+    }
+
+    .comment-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .comment-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .comment-list::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+
+    .comment-list::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    .comment-content {
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        padding: 10px 15px;
+        position: relative;
+    }
+
+    .rounded-pill-start {
+        border-top-left-radius: 50rem !important;
+        border-bottom-left-radius: 50rem !important;
+    }
+
+    .rounded-pill-end {
+        border-top-right-radius: 50rem !important;
+        border-bottom-right-radius: 50rem !important;
+    }
+
+    .comment-form-container {
+        position: sticky;
+        bottom: 0;
+        background-color: white;
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+    }
+
+    /* Animation for new comments */
+    @keyframes highlightComment {
+        0% { background-color: rgba(13, 110, 253, 0.2); }
+        100% { background-color: transparent; }
+    }
+
+    .comment-new {
+        animation: highlightComment 2s ease-out;
+    }
+
+    /* Post action buttons */
+    .post-actions .btn-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        padding: 0;
+        font-size: 1.1rem;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        border: none;
+        position: relative;
+        z-index: 2;
+    }
+
+    .post-actions .btn-icon:hover {
+        transform: translateY(-3px) scale(1.1);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    .post-actions .btn-icon:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .post-actions .btn-primary {
+        background-color: #2979FE;
+        color: white;
+    }
+
+    .post-actions .btn-primary:hover {
+        background-color: #1a68e0;
+    }
+
+    .post-actions .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .post-actions .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    /* Add a subtle pulse animation on hover */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .post-actions .btn-icon:hover i {
+        animation: pulse 1s infinite;
+    }
+
+    /* Highlight user's own posts */
+    .user-post {
+        position: relative;
+    }
+
+    .user-post::after {
+        content: 'Your Post';
+        position: absolute;
+        top: 10px;
+        right: -5px;
+        background-color: #2979FE;
+        color: white;
+        padding: 2px 10px;
+        font-size: 0.7rem;
+        border-radius: 3px 0 0 3px;
+        transform: rotate(0deg);
+        box-shadow: -2px 2px 5px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
+
+    /* Card hover effects */
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    .user-post:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(41, 121, 254, 0.15) !important;
+    }
+</style>
+{% endblock %}
+
+{% block section8 %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-body text-center p-5">
+                    <h2 class="mb-4">InnoTravel Blog</h2>
+
+                    {# Button to add a post #}
+                    <div class="mb-4 text-end">
+                        <a href="{{ path('add_post') }}" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Add Post
+                        </a>
+                    </div>
+
+                    {# Search bar #}
+                    <form action="{{ path('app_blog') }}" method="GET" class="mb-4 input-group">
+                        <input type="text" name="search" class="form-control"
+                               placeholder="Search posts..."
+                               value="{{ app.request.query.get('search') }}">
+                        <button class="btn btn-primary input-group-append">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+
+                    {# Emoji map for reactions #}
+                    {% set reactionMap = {
+                        1: '👍',
+                        2: '😍',
+                        3: '😂',
+                        4: '😢',
+                        5: '😡'
+                    } %}
+
+                    {# Posts list #}
+                    {% for post in posts %}
+                        {% set counts = reactionCounts[post.id] ?? {} %}
+                        <div class="card mb-4 shadow-sm {% if post.user.id == user.id %}border-start border-primary border-4 user-post{% endif %}">
+                            <div class="card-body {% if post.user.id == user.id %}bg-light bg-opacity-50{% endif %}">
+                                <div class="d-flex align-items-center mb-3">
+                                    <img src="{{ post.user.profilePictureUrl ? asset('uploads/profile_pictures/' ~ post.user.profilePictureUrl) : asset('uploads/profile_pictures/default.png') }}"
+                                         class="rounded-circle me-2 {% if post.user.id == user.id %}border border-primary border-2{% endif %}"
+                                         width="40"
+                                         height="40"
+                                         alt="Avatar"
+                                         style="object-fit: cover;"
+                                         onerror="this.onerror=null;this.src='{{ asset('uploads/profile_pictures/default.png') }}';">
+                                    <div>
+                                        <div class="d-flex align-items-center">
+                                            <h5 class="mb-0">{{ post.user.firstName }} {{ post.user.lastName }}</h5>
+                                            {% if post.user.id == user.id %}
+                                                <span class="badge bg-primary ms-2">You</span>
+                                            {% endif %}
+                                        </div>
+                                        <small class="text-muted">{{ post.createdAt|date('d/m/Y H:i') }}</small>
+                                    </div>
+                                </div>
+
+                                <h4 class="card-title">{{ post.title }}</h4>
+                                <p class="card-text">{{ post.content }}</p>
+
+                                {% if post.imageUrls %}
+                                    <div class="text-center mb-3">
+                                        <img src="{{ asset('images/' ~ post.imageUrls) }}" class="img-fluid rounded" alt="Post image" style="max-height: 300px; width: auto;">
+                                    </div>
+                                {% endif %}
+
+                                {% if post.location %}
+                                    <p><i class="fas fa-map-marker-alt text-danger"></i> {{ post.location }}</p>
+                                {% endif %}
+
+                                {% if post.email %}
+                                    <p><i class="fas fa-envelope text-primary"></i> {{ post.email }}</p>
+                                {% endif %}
+
+                                {% if post.num %}
+                                    <p><i class="fas fa-phone text-success"></i> {{ post.num }}</p>
+                                {% endif %}
+
+                                {# Réactions #}
+                                <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-3">
+                                    <div class="reaction-summary">
+                                        {% for typeIndex, count in counts %}
+                                            {% if count > 0 %}
+                                                <span class="badge bg-light text-dark me-1">
+                                                    {% if typeIndex in reactionMap|keys %}
+                                                        {{ reactionMap[typeIndex] }} {{ count }}
+                                                    {% else %}
+                                                        <i class="far fa-thumbs-up"></i> {{ count }}
+                                                    {% endif %}
+                                                </span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                    <div>
+                                        <span class="text-muted">{{ post.comments|length }} comments</span>
+                                    </div>
+                                </div>
+
+                                {# Boutons d'action #}
+                                <div class="d-flex {% if post.user.id == user.id %}justify-content-between{% else %}justify-content-start{% endif %} mt-2 border-top pt-3">
+                                    <div class="d-flex">
+                                        <div class="dropdown me-2">
+                                            <button class="btn btn-light dropdown-toggle" type="button" id="reactionDropdown{{ post.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="far fa-thumbs-up"></i> React
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="reactionDropdown{{ post.id }}">
+                                                {% for type, emoji in reactionMap %}
+                                                    <li><button type="button" class="dropdown-item reaction-btn" data-post-id="{{ post.id }}" data-emoji="{{ emoji }}" data-type="{{ type }}">{{ emoji }} {{ type == 1 ? 'Like' : type == 2 ? 'Love' : type == 3 ? 'Haha' : type == 4 ? 'Sad' : 'Angry' }}</button></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+
+                                        <button class="btn btn-light comment-btn position-relative" type="button" data-post-id="{{ post.id }}">
+                                            <i class="far fa-comment"></i> Comment
+                                            {% if post.comments|length > 0 %}
+                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                                                    {{ post.comments|length }}
+                                                    <span class="visually-hidden">comments</span>
+                                                </span>
+                                            {% endif %}
+                                        </button>
+                                    </div>
+
+                                    {% if post.user.id == user.id %}
+                                        <div class="post-actions d-flex">
+                                            <a href="{{ path('edit_post', {'id': post.id}) }}"
+                                               class="btn btn-icon btn-primary"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-placement="top"
+                                               title="Edit post">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{{ path('delete_post', {'id': post.id}) }}"
+                                               class="btn btn-icon btn-danger ms-2"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-placement="top"
+                                               title="Delete post"
+                                               onclick="return confirm('Are you sure you want to delete this post?');">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                {# Comments section #}
+                                <div id="comments-{{ post.id }}" class="mt-3 d-none">
+                                    <div class="card shadow-sm border-0">
+                                        <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
+                                            <h6 class="card-title mb-0">
+                                                <i class="far fa-comments me-2 text-primary"></i>Comments ({{ post.comments|length }})
+                                            </h6>
+                                            <button type="button" class="btn-close" aria-label="Close" onclick="toggleComments({{ post.id }})"></button>
+                                        </div>
+                                        <div class="card-body">
+                                            {% if post.comments|length > 0 %}
+                                                <div class="comment-list">
+                                                    {% set displayLimit = 5 %}
+                                                    {% set totalComments = post.comments|length %}
+                                                    {% set hasMoreComments = totalComments > displayLimit %}
+
+                                                    {% for comment in post.comments|slice(0, displayLimit) %}
+                                                        <div class="d-flex mb-3 {% if not loop.last or hasMoreComments %}pb-3 border-bottom{% endif %} comment-item">
+                                                            <img src="{{ comment.user.profilePictureUrl ? asset('uploads/profile_pictures/' ~ comment.user.profilePictureUrl) : asset('uploads/profile_pictures/default.png') }}"
+                                                                 class="rounded-circle me-3"
+                                                                 width="40"
+                                                                 height="40"
+                                                                 alt="Avatar"
+                                                                 style="object-fit: cover;"
+                                                                 onerror="this.onerror=null;this.src='{{ asset('uploads/profile_pictures/default.png') }}';">
+                                                            <div class="comment-content w-100">
+                                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                    <div>
+                                                                        <span class="fw-bold">{{ comment.user.firstName }} {{ comment.user.lastName }}</span>
+                                                                        {% if comment.user.id == post.user.id %}
+                                                                            <span class="badge bg-primary ms-2">Author</span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <small class="text-muted">{{ comment.createdAt|date('M d, Y H:i') }}</small>
+                                                                </div>
+                                                                <p class="mb-1">{{ comment.content }}</p>
+
+                                                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                                                    <small class="text-muted">
+                                                                        <i class="far fa-clock me-1"></i>{{ comment.createdAt|date('d/m/Y') == "now"|date('d/m/Y') ? 'Today' : comment.createdAt|date('d/m/Y') }}
+                                                                    </small>
+                                                                    {% if comment.user.id == user.id %}
+                                                                        <a href="{{ path('delete_comment', {'id': comment.id}) }}"
+                                                                           class="text-danger"
+                                                                           onclick="return confirm('Delete this comment?');">
+                                                                            <small><i class="fas fa-trash me-1"></i>Delete</small>
+                                                                        </a>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+
+                                                    {% if hasMoreComments %}
+                                                        <div class="text-center py-2 load-more-container">
+                                                            <button type="button" class="btn btn-sm btn-outline-primary load-more-comments"
+                                                                    data-post-id="{{ post.id }}"
+                                                                    data-remaining="{{ totalComments - displayLimit }}">
+                                                                <i class="fas fa-chevron-down me-1"></i>
+                                                                Show {{ totalComments - displayLimit }} more comments
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="d-none hidden-comments">
+                                                            {% for comment in post.comments|slice(displayLimit) %}
+                                                                <div class="d-flex mb-3 {% if not loop.last %}pb-3 border-bottom{% endif %} comment-item">
+                                                                    <img src="{{ comment.user.profilePictureUrl ? asset('uploads/profile_pictures/' ~ comment.user.profilePictureUrl) : asset('uploads/profile_pictures/default.png') }}"
+                                                                         class="rounded-circle me-3"
+                                                                         width="40"
+                                                                         height="40"
+                                                                         alt="Avatar"
+                                                                         style="object-fit: cover;"
+                                                                         onerror="this.onerror=null;this.src='{{ asset('uploads/profile_pictures/default.png') }}';">
+                                                                    <div class="comment-content w-100">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                            <div>
+                                                                                <span class="fw-bold">{{ comment.user.firstName }} {{ comment.user.lastName }}</span>
+                                                                                {% if comment.user.id == post.user.id %}
+                                                                                    <span class="badge bg-primary ms-2">Author</span>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                            <small class="text-muted">{{ comment.createdAt|date('M d, Y H:i') }}</small>
+                                                                        </div>
+                                                                        <p class="mb-1">{{ comment.content }}</p>
+
+                                                                        <div class="d-flex justify-content-between align-items-center mt-1">
+                                                                            <small class="text-muted">
+                                                                                <i class="far fa-clock me-1"></i>{{ comment.createdAt|date('d/m/Y') == "now"|date('d/m/Y') ? 'Today' : comment.createdAt|date('d/m/Y') }}
+                                                                            </small>
+                                                                            {% if comment.user.id == user.id %}
+                                                                                <a href="{{ path('delete_comment', {'id': comment.id}) }}"
+                                                                                   class="text-danger"
+                                                                                   onclick="return confirm('Delete this comment?');">
+                                                                                    <small><i class="fas fa-trash me-1"></i>Delete</small>
+                                                                                </a>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% else %}
+                                                <div class="text-center py-4">
+                                                    <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
+                                                    <p class="text-muted">No comments yet. Be the first to comment!</p>
+                                                </div>
+                                            {% endif %}
+
+                                            {# Comment form #}
+                                            <div class="comment-form-container pt-3 mt-3 border-top">
+                                                <form action="{{ path('add_comment', {'id': post.id}) }}" method="post" class="comment-form" data-post-id="{{ post.id }}">
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="{{ user.profilePictureUrl ? asset('uploads/profile_pictures/' ~ user.profilePictureUrl) : asset('uploads/profile_pictures/default.png') }}"
+                                                             class="rounded-circle me-2"
+                                                             width="36"
+                                                             height="36"
+                                                             alt="Your Avatar"
+                                                             style="object-fit: cover;"
+                                                             onerror="this.onerror=null;this.src='{{ asset('uploads/profile_pictures/default.png') }}';">
+                                                        <div class="input-group">
+                                                            <input type="text" name="content" class="form-control rounded-pill-start" placeholder="Write a comment..." required>
+                                                            <button type="submit" class="btn btn-primary rounded-pill-end">
+                                                                <i class="fas fa-paper-plane"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-text text-end mt-1">
+                                                        <small>Press Enter to submit</small>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No posts found. Be the first to create one!
+                        </div>
+                    {% endfor %}
+
+                    {# Pagination #}
+                    {% if posts|length > 0 %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                {% if previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('app_blog', {'page': previous, 'search': app.request.query.get('search')}) }}">Previous</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Previous</span>
+                                    </li>
+                                {% endif %}
+
+                                <li class="page-item active">
+                                    <span class="page-link">{{ currentPage }}</span>
+                                </li>
+
+                                {% if next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('app_blog', {'page': next, 'search': app.request.query.get('search')}) }}">Next</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        // Function to send reaction
+        window.sendReaction = function(postId, emoji, typeIndex) {
+            console.log('Sending reaction:', postId, emoji, typeIndex);
+            fetch(`/blog/${postId}/react`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new URLSearchParams({
+                    emoji: emoji,
+                    type: typeIndex
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                console.log('Reaction response:', data);
+                if (data.status === 'ok' || data.status === 'updated' || data.status === 'removed') {
+                    location.reload();
+                } else {
+                    alert('Error with reaction: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to send reaction. Please try again.');
+            });
+        };
+
+        // Function to toggle comments
+        window.toggleComments = function(postId) {
+            console.log('Toggling comments for post:', postId);
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            if (commentsSection) {
+                if (commentsSection.classList.contains('d-none')) {
+                    // Show comments with a smooth animation
+                    commentsSection.classList.remove('d-none');
+                    commentsSection.style.opacity = '0';
+                    commentsSection.style.transform = 'translateY(-10px)';
+                    commentsSection.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+
+                    // Focus on comment input after animation
+                    setTimeout(() => {
+                        commentsSection.style.opacity = '1';
+                        commentsSection.style.transform = 'translateY(0)';
+
+                        // Focus on the comment input
+                        const commentInput = commentsSection.querySelector('input[name="content"]');
+                        if (commentInput) {
+                            setTimeout(() => {
+                                commentInput.focus();
+                            }, 300);
+                        }
+                    }, 10);
+                } else {
+                    // Hide comments with a smooth animation
+                    commentsSection.style.opacity = '0';
+                    commentsSection.style.transform = 'translateY(-10px)';
+
+                    setTimeout(() => {
+                        commentsSection.classList.add('d-none');
+                        commentsSection.style.opacity = '';
+                        commentsSection.style.transform = '';
+                    }, 300);
+                }
+                console.log('Comments section toggled');
+            } else {
+                console.error(`Comments section for post ${postId} not found`);
+            }
+        };
+
+        // Add click event listeners to all reaction buttons
+        document.querySelectorAll('[id^="reactionDropdown"]').forEach(button => {
+            button.addEventListener('click', function(e) {
+                console.log('Reaction dropdown clicked');
+                e.stopPropagation();
+            });
+        });
+
+        // Add click event listeners to all reaction buttons
+        document.querySelectorAll('.reaction-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                console.log('Reaction button clicked');
+                e.preventDefault();
+                e.stopPropagation();
+
+                const postId = this.getAttribute('data-post-id');
+                const emoji = this.getAttribute('data-emoji');
+                const type = this.getAttribute('data-type');
+
+                console.log('Reaction data:', postId, emoji, type);
+                sendReaction(postId, emoji, parseInt(type));
+            });
+        });
+
+        // Add click event listeners to all comment buttons
+        document.querySelectorAll('.comment-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                console.log('Comment button clicked');
+                e.preventDefault();
+                e.stopPropagation();
+
+                const postId = this.getAttribute('data-post-id');
+                console.log('Comment button data:', postId);
+                toggleComments(postId);
+            });
+        });
+
+        // Handle comment form submissions
+        document.querySelectorAll('.comment-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const postId = this.getAttribute('data-post-id');
+                const contentInput = this.querySelector('input[name="content"]');
+                const content = contentInput.value.trim();
+
+                if (!content) {
+                    return;
+                }
+
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalBtnHtml = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+                // Submit the form normally (non-AJAX for simplicity)
+                this.submit();
+            });
+
+            // Allow pressing Enter to submit
+            const contentInput = form.querySelector('input[name="content"]');
+            if (contentInput) {
+                contentInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                });
+            }
+        });
+
+        // Handle "Load More Comments" buttons
+        document.querySelectorAll('.load-more-comments').forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.getAttribute('data-post-id');
+                const remaining = parseInt(this.getAttribute('data-remaining'));
+                const commentsSection = this.closest('.comment-list');
+                const hiddenComments = commentsSection.querySelector('.hidden-comments');
+                const loadMoreContainer = this.closest('.load-more-container');
+
+                // Show loading state
+                this.disabled = true;
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+
+                // Simulate loading delay (remove in production)
+                setTimeout(() => {
+                    // Move hidden comments to visible area
+                    const commentItems = hiddenComments.querySelectorAll('.comment-item');
+                    const commentList = commentsSection.querySelector('.comment-item:last-of-type').parentNode;
+
+                    commentItems.forEach(item => {
+                        // Clone the item to avoid reference issues
+                        const clone = item.cloneNode(true);
+                        // Add animation class
+                        clone.classList.add('comment-new');
+                        // Append to the comment list
+                        commentList.appendChild(clone);
+                    });
+
+                    // Remove the "Load More" button
+                    loadMoreContainer.remove();
+
+                    // Scroll to show new comments
+                    const lastNewComment = commentList.querySelector('.comment-new:last-of-type');
+                    if (lastNewComment) {
+                        lastNewComment.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }, 500);
+            });
+        });
+    });
+</script>
+{% endblock %}

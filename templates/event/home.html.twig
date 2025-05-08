@@ -1,0 +1,207 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Events - InnoTravel{% endblock %}
+
+{% block section8 %}
+<div class="hero-banner-six">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-10 col-lg-11 col-md-10 m-auto">
+                <div class="text-center">
+                    <h1 class="hero-heading">Discover Amazing Events in Tunisia</h1>
+                    <p class="text-lg mt-35 mb-50 lg-mt-30 lg-mb-40">Join exciting events, workshops, and activities organized by our trusted partners.</p>
+                    <div class="d-sm-flex justify-content-center">
+                        <a href="{{ path('events_index') }}" class="btn-twenty fw-500 tran3s me-sm-4 mb-3">Browse Events</a>
+                        {% if app.user %}
+                            <a href="{{ path('participations_index') }}" class="btn-twenty fw-500 tran3s mb-3">My Tickets</a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="btn-twenty fw-500 tran3s mb-3">Sign In to Register</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-75 lg-mt-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 m-auto">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-body p-0">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <div class="text-center py-5 px-4 border-right">
+                                        <div class="icon rounded-circle d-flex align-items-center justify-content-center m-auto mb-3">
+                                            <i class="fas fa-calendar-alt fa-2x text-primary"></i>
+                                        </div>
+                                        <h4 class="mb-2">Diverse Events</h4>
+                                        <p class="mb-0">From cultural festivals to workshops, find events that match your interests.</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center py-5 px-4 border-right">
+                                        <div class="icon rounded-circle d-flex align-items-center justify-content-center m-auto mb-3">
+                                            <i class="fas fa-ticket-alt fa-2x text-primary"></i>
+                                        </div>
+                                        <h4 class="mb-2">Easy Registration</h4>
+                                        <p class="mb-0">Register with just a few clicks and receive your ticket instantly.</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center py-5 px-4">
+                                        <div class="icon rounded-circle d-flex align-items-center justify-content-center m-auto mb-3">
+                                            <i class="fas fa-building fa-2x text-primary"></i>
+                                        </div>
+                                        <h4 class="mb-2">Trusted Organizers</h4>
+                                        <p class="mb-0">All events are hosted by verified organizers for a quality experience.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fancy-feature-thirtyEight mt-180 lg-mt-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="title-style-eleven mb-50 lg-mb-30">
+                    <h2 class="main-title">Featured Events</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <div class="col-md-6">
+                                <img src="{{ asset('images/events-hero.jpg') }}" alt="Events" class="img-fluid rounded-start" style="height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-5">
+                                    <h3 class="mb-3">Experience Tunisia Through Events</h3>
+                                    <p class="mb-4">Discover the rich culture, traditions, and experiences Tunisia has to offer through our curated events. From traditional festivals to modern workshops, there's something for everyone.</p>
+                                    <ul class="list-style-one">
+                                        <li>Cultural festivals and celebrations</li>
+                                        <li>Workshops and learning experiences</li>
+                                        <li>Food and culinary events</li>
+                                        <li>Music and entertainment</li>
+                                        <li>Outdoor adventures and activities</li>
+                                    </ul>
+                                    <a href="{{ path('events_index') }}" class="btn-twenty fw-500 tran3s mt-4">Explore All Events</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fancy-feature-thirtyEight mt-140 lg-mt-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title-style-eleven text-center mb-70 lg-mb-50">
+                    <div class="upper-title">How It Works</div>
+                    <h2 class="main-title">Simple Steps to Join Events</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-11">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm text-center mb-5">
+                            <div class="card-body p-4">
+                                <div class="icon rounded-circle d-flex align-items-center justify-content-center m-auto mb-4">
+                                    <span class="fw-bold fs-3">1</span>
+                                </div>
+                                <h4 class="mb-3">Browse Events</h4>
+                                <p class="mb-0">Explore our collection of events and find the ones that interest you.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm text-center mb-5">
+                            <div class="card-body p-4">
+                                <div class="icon rounded-circle d-flex align-items-center justify-content-center m-auto mb-4">
+                                    <span class="fw-bold fs-3">2</span>
+                                </div>
+                                <h4 class="mb-3">Register</h4>
+                                <p class="mb-0">Sign in to your account and register for the event with a few clicks.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm text-center mb-5">
+                            <div class="card-body p-4">
+                                <div class="icon rounded-circle d-flex align-items-center justify-content-center m-auto mb-4">
+                                    <span class="fw-bold fs-3">3</span>
+                                </div>
+                                <h4 class="mb-3">Attend & Enjoy</h4>
+                                <p class="mb-0">Receive your ticket and QR code, then attend the event and enjoy!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-30">
+            <a href="{{ path('events_index') }}" class="btn-twenty fw-500 tran3s">Get Started Now</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .icon {
+        width: 70px;
+        height: 70px;
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+
+    .border-right {
+        border-right: 1px solid #eee;
+    }
+
+    @media (max-width: 767px) {
+        .border-right {
+            border-right: none;
+            border-bottom: 1px solid #eee;
+        }
+    }
+
+    .list-style-one {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .list-style-one li {
+        position: relative;
+        padding-left: 30px;
+        margin-bottom: 10px;
+    }
+
+    .list-style-one li:before {
+        content: "\f00c";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: #0d6efd;
+    }
+</style>
+{% endblock %}

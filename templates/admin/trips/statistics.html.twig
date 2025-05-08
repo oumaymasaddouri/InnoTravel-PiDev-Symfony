@@ -1,0 +1,388 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Trip & Itinerary Statistics{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .chart-container {
+        position: relative;
+        margin: auto;
+        height: 300px;
+    }
+    
+    .info-box {
+        transition: all 0.3s ease;
+    }
+    
+    .info-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .card {
+        transition: all 0.3s ease;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+        background-color: rgba(0,0,0,0.03);
+    }
+    
+    .table-bordered th {
+        background-color: rgba(0,0,0,0.03);
+    }
+    
+    .monthly-chart-container {
+        position: relative;
+        height: 350px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Trip & Itinerary Statistics</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ path('admin_home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('admin_trip_itinerary') }}">Trips</a></li>
+                    <li class="breadcrumb-item active">Statistics</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- Info boxes -->
+        <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info elevation-1"><i class="fas fa-plane-departure"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Trips</span>
+                        <span class="info-box-number">{{ totalTrips }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-map-marked-alt"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Itineraries</span>
+                        <span class="info-box-number">{{ totalItineraries }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="clearfix hidden-md-up"></div>
+            
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                    <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-calendar-plus"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">New Trips (30 days)</span>
+                        <span class="info-box-number">{{ recentTrips }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                    <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-money-bill-wave"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Avg. Budget</span>
+                        <span class="info-box-number">{{ averageBudget }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Trip Status Chart -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Trip Status Distribution</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="tripStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Popular Itineraries Chart -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Most Popular Itineraries</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="popularItinerariesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Monthly Trips Chart -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Monthly Trip Distribution ({{ "now"|date("Y") }})</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="monthly-chart-container">
+                            <canvas id="monthlyTripsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics Summary -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Trip & Itinerary Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width: 50%">Total Trips</th>
+                                                <td>{{ totalTrips }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total Itineraries</th>
+                                                <td>{{ totalItineraries }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>New Trips (30 days)</th>
+                                                <td>{{ recentTrips }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Average Budget</th>
+                                                <td>{{ averageBudget }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2" class="text-center">Trip Status Distribution</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Status</th>
+                                                <th>Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for status, count in tripsByStatus %}
+                                                <tr>
+                                                    <td>{{ status }}</td>
+                                                    <td>{{ count }}</td>
+                                                </tr>
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="2" class="text-center">No data available</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ path('admin_trip_itinerary') }}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Trips
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
+<script>
+    // Wait for the page to be fully loaded
+    window.addEventListener('load', function() {
+        // Destroy any existing charts to prevent conflicts
+        Chart.helpers.each(Chart.instances, function(instance) {
+            instance.destroy();
+        });
+        
+        // Trip Status Chart
+        var tripStatusCtx = document.getElementById('tripStatusChart').getContext('2d');
+        var tripStatusChart = new Chart(tripStatusCtx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    {% for status, count in tripsByStatus %}
+                        '{{ status }}',
+                    {% endfor %}
+                ],
+                datasets: [{
+                    data: [
+                        {% for status, count in tripsByStatus %}
+                            {{ count }},
+                        {% endfor %}
+                    ],
+                    backgroundColor: [
+                        '#00a65a',  // Green - Completed
+                        '#f39c12',  // Yellow - Pending
+                        '#00c0ef',  // Blue - Approved
+                        '#dd4b39',  // Red - Rejected
+                        '#605ca8'   // Purple - Other
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.label || '';
+                                var value = context.raw || 0;
+                                var total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                var percentage = Math.round((value / total) * 100);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Popular Itineraries Chart
+        var popularItinerariesCtx = document.getElementById('popularItinerariesChart').getContext('2d');
+        var popularItinerariesChart = new Chart(popularItinerariesCtx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    {% for itinerary in popularItineraries %}
+                        '{{ itinerary.name }}',
+                    {% endfor %}
+                ],
+                datasets: [{
+                    data: [
+                        {% for itinerary in popularItineraries %}
+                            {{ itinerary.count }},
+                        {% endfor %}
+                    ],
+                    backgroundColor: [
+                        '#3c8dbc',  // Blue
+                        '#f56954',  // Red
+                        '#00a65a',  // Green
+                        '#f39c12',  // Yellow
+                        '#605ca8'   // Purple
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.label || '';
+                                var value = context.raw || 0;
+                                var total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                var percentage = Math.round((value / total) * 100);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Monthly Trips Chart
+        var monthlyTripsCtx = document.getElementById('monthlyTripsChart').getContext('2d');
+        var monthlyTripsChart = new Chart(monthlyTripsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Number of Trips',
+                    data: [
+                        {{ tripsByMonth[1] }}, {{ tripsByMonth[2] }}, {{ tripsByMonth[3] }}, 
+                        {{ tripsByMonth[4] }}, {{ tripsByMonth[5] }}, {{ tripsByMonth[6] }}, 
+                        {{ tripsByMonth[7] }}, {{ tripsByMonth[8] }}, {{ tripsByMonth[9] }}, 
+                        {{ tripsByMonth[10] }}, {{ tripsByMonth[11] }}, {{ tripsByMonth[12] }}
+                    ],
+                    backgroundColor: '#3c8dbc',
+                    borderColor: '#3c8dbc',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

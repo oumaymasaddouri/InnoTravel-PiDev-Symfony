@@ -1,0 +1,108 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}Register - InnoTravel{% endblock %}
+
+{% block section8 %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <img src="{{ asset('frontoffice/images/InnoTravelLOGO.png') }}" alt="InnoTravel Logo" width="120" class="mb-3">
+                        <h2 class="mb-1">Create an Account</h2>
+                        <p class="text-muted">Join InnoTravel to discover amazing experiences</p>
+                    </div>
+                    
+                    {% for flash_error in app.flashes('verify_email_error') %}
+                        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                    {% endfor %}
+                    
+                    {{ form_start(registrationForm) }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ registrationForm.firstName.vars.id }}" class="form-label">First Name</label>
+                                {{ form_widget(registrationForm.firstName) }}
+                                <div class="form-error">
+                                    {{ form_errors(registrationForm.firstName) }}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ registrationForm.lastName.vars.id }}" class="form-label">Last Name</label>
+                                {{ form_widget(registrationForm.lastName) }}
+                                <div class="form-error">
+                                    {{ form_errors(registrationForm.lastName) }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ registrationForm.email.vars.id }}" class="form-label">Email</label>
+                            {{ form_widget(registrationForm.email) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.email) }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ registrationForm.plainPassword.vars.id }}" class="form-label">Password</label>
+                            {{ form_widget(registrationForm.plainPassword) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.plainPassword) }}
+                            </div>
+                            <div class="form-text">
+                                Your password must be at least 6 characters long.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4 form-check">
+                            {{ form_widget(registrationForm.agreeTerms) }}
+                            <label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">
+                                I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                            </label>
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.agreeTerms) }}
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                        </div>
+                    {{ form_end(registrationForm) }}
+                    
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Already have an account? <a href="{{ path('app_login') }}" class="text-decoration-none">Sign in</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .form-control:focus {
+        border-color: #2979FE;
+        box-shadow: 0 0 0 0.25rem rgba(41, 121, 254, 0.25);
+    }
+    
+    .btn-primary {
+        background-color: #2979FE;
+        border-color: #2979FE;
+    }
+    
+    .btn-primary:hover {
+        background-color: #1a68e0;
+        border-color: #1a68e0;
+    }
+    
+    .form-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+</style>
+{% endblock %}

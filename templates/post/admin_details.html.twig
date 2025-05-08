@@ -1,0 +1,250 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Post Details - {{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h2 mb-0">Post Details</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent p-0">
+                        <li class="breadcrumb-item"><a href="{{ path('app_blog_admin') }}">Blog Management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Post Details</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ post.title }}</h3>
+                        <div class="card-tools">
+                            <form method="post" action="{{ path('delete_post', {'id': post.id}) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash mr-1"></i> Delete Post
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="post-content mb-4">
+                            <p class="text-justify">{{ post.content }}</p>
+                        </div>
+
+                        <div class="post-meta">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="info-item mb-3">
+                                        <h5 class="text-muted"><i class="fas fa-user mr-2"></i>Author</h5>
+                                        <p>{{ post.user.firstName }} {{ post.user.lastName }}</p>
+                                    </div>
+
+                                    <div class="info-item mb-3">
+                                        <h5 class="text-muted"><i class="fas fa-calendar-alt mr-2"></i>Date</h5>
+                                        <p>{{ post.createdAt|date('F d, Y h:i A') }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    {% if post.location %}
+                                        <div class="info-item mb-3">
+                                            <h5 class="text-muted"><i class="fas fa-map-marker-alt mr-2"></i>Location</h5>
+                                            <p>{{ post.location }}</p>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if post.email %}
+                                        <div class="info-item mb-3">
+                                            <h5 class="text-muted"><i class="fas fa-envelope mr-2"></i>Email</h5>
+                                            <p>{{ post.email }}</p>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if post.num %}
+                                        <div class="info-item mb-3">
+                                            <h5 class="text-muted"><i class="fas fa-phone mr-2"></i>Phone</h5>
+                                            <p>{{ post.num }}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if reactionCounts is defined and reactionCounts|length > 0 %}
+                            <div class="reactions-section mt-4">
+                                <h5 class="text-muted mb-3"><i class="fas fa-heart mr-2"></i>Reactions</h5>
+                                <div class="d-flex flex-wrap">
+                                    {% for type, count in reactionCounts %}
+                                        <div class="reaction-badge mr-3 mb-2">
+                                            <span class="badge badge-light p-2">
+                                                {% if reactionEmojis[type] is defined %}
+                                                    {{ reactionEmojis[type] }}
+                                                {% elseif emojiMap[type] is defined %}
+                                                    {{ emojiMap[type] }}
+                                                {% else %}
+                                                    Reaction {{ type }}
+                                                {% endif %}
+                                                <span class="badge badge-primary ml-1">{{ count }}</span>
+                                            </span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-comments mr-2"></i>Comments ({{ post.comments|length }})
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        {% if post.comments|length > 0 %}
+                            <div class="comment-list">
+                                {% for comment in post.comments %}
+                                    <div class="comment-item mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="user-info">
+                                                <span class="font-weight-bold">{{ comment.user.firstName }} {{ comment.user.lastName }}</span>
+                                                <small class="text-muted ml-2">{{ comment.createdAt|date('M d, Y h:i A') }}</small>
+                                            </div>
+                                            <div class="actions">
+                                                <form method="post" action="{{ path('delete_comment', {'id': comment.id}) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_comment' ~ comment.id) }}">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="comment-content">
+                                            <p class="mb-0">{{ comment.content }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-light">
+                                <i class="fas fa-info-circle mr-2"></i>No comments yet
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Post Image</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        {% if post.imageUrls %}
+                            <img src="{{ asset('images/' ~ post.imageUrls) }}" class="img-fluid rounded" alt="{{ post.title }}">
+                        {% else %}
+                            <div class="alert alert-light">
+                                <i class="fas fa-image fa-3x mb-3 text-muted"></i>
+                                <p class="mb-0">No image available</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Quick Actions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <a href="{{ path('app_blog_admin') }}" class="list-group-item list-group-item-action">
+                                <i class="fas fa-arrow-left mr-2"></i>Back to Blog List
+                            </a>
+                            <form method="post" action="{{ path('delete_post', {'id': post.id}) }}" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                <button type="submit" class="list-group-item list-group-item-action text-danger w-100 text-left">
+                                    <i class="fas fa-trash mr-2"></i>Delete Post
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Post Statistics</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Comments
+                                <span class="badge badge-primary badge-pill">{{ post.comments|length }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Reactions
+                                <span class="badge badge-primary badge-pill">
+                                    {% set totalReactions = 0 %}
+                                    {% for type, count in reactionCounts %}
+                                        {% set totalReactions = totalReactions + count %}
+                                    {% endfor %}
+                                    {{ totalReactions }}
+                                </span>
+                            </li>
+                            {% if reactionCounts|length > 0 %}
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span>Reaction Details</span>
+                                    </div>
+                                    <div class="reaction-details">
+                                        {% for type, count in reactionCounts %}
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span>
+                                                    {% if reactionEmojis[type] is defined %}
+                                                        {{ reactionEmojis[type] }}
+                                                    {% elseif emojiMap[type] is defined %}
+                                                        {{ emojiMap[type] }}
+                                                    {% else %}
+                                                        Reaction {{ type }}
+                                                    {% endif %}
+                                                </span>
+                                                <span class="badge badge-info">{{ count }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                            {% endif %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Created
+                                <span class="text-muted">{{ post.createdAt|date('M d, Y') }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,462 @@
+{% extends 'basefrontoffice.html.twig' %}
+
+{% block title %}New Reservation{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<link rel="stylesheet" href="{{ asset('css/transport.css') }}">
+<style>
+    #map {
+        height: 400px;
+        width: 100%;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block section8 %}
+
+<section class="section">
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-5">
+                            <h2 class="text-primary fw-bold mb-2">
+                                <i class="fas fa-car-side text-primary mr-2"></i>
+                                New Reservation
+                            </h2>
+                            <div class="title-underline bg-primary mx-auto mb-3"></div>
+                            <p class="text-muted">Book your transportation with just a few clicks</p>
+                        </div>
+
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success alert-dismissible fade show mb-4">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger alert-dismissible fade show mb-4">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+
+                        {% for message in app.flashes('info') %}
+                            <div class="alert alert-info alert-dismissible fade show mb-4">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+
+                        {{ form_start(form) }}
+                            <div class="reservation-form-section">
+                                <h4><i class="fas fa-car"></i> Vehicle Information</h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            {% if form.transport.vars.disabled %}
+                                                {{ form_widget(form.transport, {'attr': {'class': 'd-none'}}) }}
+                                                {% if form.transport_id is defined %}
+                                                    {{ form_widget(form.transport_id) }}
+                                                {% endif %}
+
+                                                <div class="selected-vehicle-card">
+                                                    <div class="vehicle-icon">
+                                                        <i class="fas fa-{% if form.transport.vars.data.vehicleType == 'car' %}car{% elseif form.transport.vars.data.vehicleType == 'taxi' %}taxi{% elseif form.transport.vars.data.vehicleType == 'minibus' %}shuttle-van{% else %}truck{% endif %}"></i>
+                                                    </div>
+                                                    <div class="vehicle-info">
+                                                        <h5>{{ form.transport.vars.data.carModel }}</h5>
+                                                        <div class="vehicle-details">
+                                                            <span class="vehicle-type">{{ form.transport.vars.data.vehicleType|capitalize }}</span>
+                                                            <span class="vehicle-color">
+                                                                <i class="fas fa-circle" style="color: {{ form.transport.vars.data.carColor|lower }}"></i>
+                                                                {{ form.transport.vars.data.carColor }}
+                                                            </span>
+                                                            <span class="vehicle-license">
+                                                                <i class="fas fa-id-card"></i>
+                                                                {{ form.transport.vars.data.licensePlate }}
+                                                            </span>
+                                                            <span class="vehicle-luggage">
+                                                                <i class="fas fa-suitcase"></i>
+                                                                {{ form.transport.vars.data.maxLuggage }} luggage
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="vehicle-features mt-3">
+                                                    <div class="feature-title">Vehicle Features:</div>
+                                                    <div class="feature-list">
+                                                        <div class="feature-item"><i class="fas fa-check-circle"></i> Professional driver</div>
+                                                        <div class="feature-item"><i class="fas fa-check-circle"></i> Air conditioning</div>
+                                                        <div class="feature-item"><i class="fas fa-check-circle"></i> 24/7 customer support</div>
+                                                        <div class="feature-item"><i class="fas fa-check-circle"></i> Free cancellation (24h before)</div>
+                                                        <div class="feature-item"><i class="fas fa-check-circle"></i> Meet & greet service</div>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                {{ form_label(form.transport, 'Select Vehicle', {'label_attr': {'class': 'form-label'}}) }}
+                                                {{ form_widget(form.transport, {'attr': {'class': 'form-control form-select'}}) }}
+                                                <div class="form-error text-danger">
+                                                    {{ form_errors(form.transport) }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="reservation-form-section">
+                                <h4><i class="fas fa-calendar-alt"></i> Reservation Schedule</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_label(form.reservationDate, 'Pickup Date', {'label_attr': {'class': 'form-label'}}) }}
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-white border-right-0"><i class="fas fa-calendar text-primary"></i></span>
+                                                </div>
+                                                {{ form_widget(form.reservationDate, {'attr': {'class': 'form-control border-left-0'}}) }}
+                                            </div>
+                                            <div class="form-error text-danger">
+                                                {{ form_errors(form.reservationDate) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_label(form.reservationTime, 'Pickup Time', {'label_attr': {'class': 'form-label'}}) }}
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-white border-right-0"><i class="fas fa-clock text-primary"></i></span>
+                                                </div>
+                                                {{ form_widget(form.reservationTime, {'attr': {'class': 'form-control border-left-0'}}) }}
+                                            </div>
+                                            <div class="form-error text-danger">
+                                                {{ form_errors(form.reservationTime) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="reservation-form-section">
+                                <h4><i class="fas fa-route"></i> Route Information</h4>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_label(form.pickup_address, 'Pickup Address', {'label_attr': {'class': 'form-label'}}) }}
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-white border-right-0"><i class="fas fa-map-marker-alt text-danger"></i></span>
+                                                </div>
+                                                {{ form_widget(form.pickup_address, {'attr': {'class': 'form-control border-left-0', 'placeholder': 'Enter pickup location'}}) }}
+                                            </div>
+                                            <div class="form-error text-danger">
+                                                {{ form_errors(form.pickup_address) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_label(form.destination_address, 'Destination Address', {'label_attr': {'class': 'form-label'}}) }}
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-white border-right-0"><i class="fas fa-flag-checkered text-success"></i></span>
+                                                </div>
+                                                {{ form_widget(form.destination_address, {'attr': {'class': 'form-control border-left-0', 'placeholder': 'Enter destination location'}}) }}
+                                            </div>
+                                            <div class="form-error text-danger">
+                                                {{ form_errors(form.destination_address) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="map-container position-relative">
+                                            <div id="map" class="map-container"></div>
+                                            <div class="map-overlay">
+                                                <i class="fas fa-info-circle"></i> Enter addresses above to see the route
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{ form_widget(form.pickupLatitude) }}
+                                {{ form_widget(form.pickupLongitude) }}
+                                {{ form_widget(form.destinationLatitude) }}
+                                {{ form_widget(form.destinationLongitude) }}
+                            </div>
+
+                            <div class="reservation-form-section">
+                                <h4><i class="fas fa-comment-alt"></i> Additional Information</h4>
+                                <div class="form-group">
+                                    {{ form_label(form.specialRequests, 'Special Requests', {'label_attr': {'class': 'form-label'}}) }}
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-white border-right-0"><i class="fas fa-comment text-primary"></i></span>
+                                        </div>
+                                        {{ form_widget(form.specialRequests, {'attr': {'class': 'form-control border-left-0', 'rows': 4, 'placeholder': 'Any special requirements or notes for the driver (e.g., luggage assistance, child seat, etc.)'}}) }}
+                                    </div>
+                                    <div class="form-error text-danger">
+                                        {{ form_errors(form.specialRequests) }}
+                                    </div>
+                                    <small class="form-text text-muted mt-2">
+                                        <i class="fas fa-info-circle mr-1"></i> Let us know if you have any special requirements for your trip.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left mr-2"></i>Back to reservations
+                                </a>
+                                <div class="submit-btn-wrapper">
+                                    <button type="submit" class="btn btn-primary px-5 py-2">
+                                        <i class="fas fa-check-circle mr-2"></i>Create Reservation
+                                    </button>
+                                </div>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the map with a more modern style
+        var map = L.map('map', {
+            zoomControl: false, // We'll add it in a better position
+        }).setView([36.8065, 10.1815], 13); // Tunis coordinates
+
+        // Add zoom control to the top-right
+        L.control.zoom({
+            position: 'topright'
+        }).addTo(map);
+
+        // Add a more modern tile layer
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Markers
+        var pickupMarker = null;
+        var destinationMarker = null;
+        var routeLine = null;
+
+        // Get form elements
+        var pickupAddressInput = document.getElementById('reservation_pickup_address');
+        var destinationAddressInput = document.getElementById('reservation_destination_address');
+        var pickupLatInput = document.getElementById('reservation_pickupLatitude');
+        var pickupLngInput = document.getElementById('reservation_pickupLongitude');
+        var destLatInput = document.getElementById('reservation_destinationLatitude');
+        var destLngInput = document.getElementById('reservation_destinationLongitude');
+        var mapOverlay = document.querySelector('.map-overlay');
+
+        // Custom marker icons
+        var pickupIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div class="custom-marker pickup-marker" style="width: 20px; height: 20px; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+        });
+
+        var destinationIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div class="custom-marker destination-marker" style="width: 20px; height: 20px; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+        });
+
+        // Function to geocode an address with loading indicator
+        function geocodeAddress(address, callback) {
+            // Show loading state
+            if (address === pickupAddressInput.value) {
+                pickupAddressInput.classList.add('loading');
+            } else {
+                destinationAddressInput.classList.add('loading');
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Remove loading state
+                    pickupAddressInput.classList.remove('loading');
+                    destinationAddressInput.classList.remove('loading');
+
+                    if (data && data.length > 0) {
+                        callback({
+                            lat: parseFloat(data[0].lat),
+                            lng: parseFloat(data[0].lon),
+                            display_name: data[0].display_name
+                        });
+                    } else {
+                        // Handle no results
+                        alert('Address not found. Please try a different address.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error geocoding address:', error);
+                    // Remove loading state
+                    pickupAddressInput.classList.remove('loading');
+                    destinationAddressInput.classList.remove('loading');
+                    alert('Error finding address. Please try again.');
+                });
+        }
+
+        // Function to update the map
+        function updateMap() {
+            // Clear existing markers and route
+            if (pickupMarker) map.removeLayer(pickupMarker);
+            if (destinationMarker) map.removeLayer(destinationMarker);
+            if (routeLine) map.removeLayer(routeLine);
+
+            // Get addresses
+            var pickupAddress = pickupAddressInput.value;
+            var destinationAddress = destinationAddressInput.value;
+
+            // If both addresses are provided, geocode them
+            if (pickupAddress && destinationAddress) {
+                // Hide the map overlay when we're updating the map
+                if (mapOverlay) mapOverlay.style.display = 'none';
+
+                geocodeAddress(pickupAddress, function(pickupCoords) {
+                    // Add pickup marker with enhanced popup
+                    pickupMarker = L.marker([pickupCoords.lat, pickupCoords.lng], {
+                        icon: pickupIcon
+                    }).addTo(map).bindPopup(
+                        '<div class="map-popup"><strong>Pickup Location</strong><br>' +
+                        pickupCoords.display_name + '</div>',
+                        {className: 'custom-popup'}
+                    );
+
+                    // Update hidden inputs
+                    pickupLatInput.value = pickupCoords.lat;
+                    pickupLngInput.value = pickupCoords.lng;
+
+                    geocodeAddress(destinationAddress, function(destCoords) {
+                        // Add destination marker with enhanced popup
+                        destinationMarker = L.marker([destCoords.lat, destCoords.lng], {
+                            icon: destinationIcon
+                        }).addTo(map).bindPopup(
+                            '<div class="map-popup"><strong>Destination</strong><br>' +
+                            destCoords.display_name + '</div>',
+                            {className: 'custom-popup'}
+                        );
+
+                        // Update hidden inputs
+                        destLatInput.value = destCoords.lat;
+                        destLngInput.value = destCoords.lng;
+
+                        // Calculate distance
+                        var distance = map.distance(
+                            [pickupCoords.lat, pickupCoords.lng],
+                            [destCoords.lat, destCoords.lng]
+                        ) / 1000; // Convert to km
+
+                        // Draw a line between the points with gradient color
+                        routeLine = L.polyline([
+                            [pickupCoords.lat, pickupCoords.lng],
+                            [destCoords.lat, destCoords.lng]
+                        ], {
+                            color: '#4285F4',
+                            weight: 4,
+                            opacity: 0.8,
+                            dashArray: '10, 10'
+                        }).addTo(map);
+
+                        // Add distance tooltip to the route
+                        routeLine.bindTooltip(
+                            `Distance: ${distance.toFixed(2)} km`,
+                            {permanent: true, direction: 'center', className: 'route-tooltip'}
+                        );
+
+                        // Fit the map to show both markers
+                        var bounds = L.latLngBounds([
+                            [pickupCoords.lat, pickupCoords.lng],
+                            [destCoords.lat, destCoords.lng]
+                        ]);
+                        map.fitBounds(bounds, { padding: [50, 50] });
+
+                        // Open popups
+                        setTimeout(function() {
+                            pickupMarker.openPopup();
+                            setTimeout(function() {
+                                pickupMarker.closePopup();
+                                destinationMarker.openPopup();
+                                setTimeout(function() {
+                                    destinationMarker.closePopup();
+                                }, 2000);
+                            }, 2000);
+                        }, 500);
+                    });
+                });
+            } else {
+                // Show the map overlay when addresses are missing
+                if (mapOverlay) mapOverlay.style.display = 'block';
+            }
+        }
+
+        // Add event listeners to address inputs
+        pickupAddressInput.addEventListener('blur', updateMap);
+        destinationAddressInput.addEventListener('blur', updateMap);
+
+        // Add some CSS for the loading state
+        var style = document.createElement('style');
+        style.textContent = `
+            .loading {
+                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><circle cx="50" cy="50" fill="none" stroke="%234285F4" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138"><animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform></circle></svg>');
+                background-position: right 10px center;
+                background-repeat: no-repeat;
+                background-size: 20px;
+            }
+            .custom-popup .leaflet-popup-content-wrapper {
+                border-radius: 8px;
+                padding: 5px;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            }
+            .map-popup {
+                padding: 5px;
+            }
+            .route-tooltip {
+                background: white;
+                border: none;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                padding: 5px 10px;
+                border-radius: 20px;
+                font-weight: bold;
+                color: #4285F4;
+            }
+        `;
+        document.head.appendChild(style);
+    });
+</script>
+{% endblock %}

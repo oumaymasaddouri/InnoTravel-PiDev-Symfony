@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="wpOceans">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('frontoffice/images/favicon.png') }}">
+
+    <title>Register - InnoTravel</title>
+
+    <link href="{{ asset('frontoffice/css/themify-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/flaticon.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/jquery-ui.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/nice-select.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/owl.carousel.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/slick.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/slick-theme.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/swiper.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/owl.transitions.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/jquery.fancybox.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/css/odometer-theme-default.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontoffice/sass/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('frontoffice/css/user/register.css') }}">
+
+</head>
+
+<body>
+
+
+
+<div class="page-wrapper">
+    <div class="wpo-login-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="wpo-accountWrapper">
+                        <div class="wpo-accountInfo">
+
+                        </div>
+
+                        <div class="wpo-accountForm form-style">
+                            <div class="fromTitle">
+                                <h2>Signup</h2>
+                                <p>Register to explore InnoTravel</p>
+                            </div>
+
+                            {% for label, messages in app.flashes %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ label }}">{{ message }}</div>
+                                {% endfor %}
+                            {% endfor %}
+
+                            {% if form.vars.errors|length > 0 %}
+                                <div class="alert alert-danger">
+                                    {% for error in form.vars.errors %}
+                                        <div>{{ error.message }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate', 'class': 'wpo-accountWrapper-form'}}) }}
+
+                            <div class="form-group">
+                                {{ form_label(form.firstName) }}
+                                {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.firstName) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.lastName) }}
+                                {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.lastName) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.gender) }}
+                                <div class="gender-options">
+                                    {% for choice in form.gender %}
+                                        <label>
+                                            {{ form_widget(choice) }}
+                                            {{ choice.vars.label }}
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                {{ form_errors(form.gender) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.dateOfBirth) }}
+                                {{ form_widget(form.dateOfBirth, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.dateOfBirth) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.email) }}
+                                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+
+<div class="form-group" style="clear: both;">
+    <label for="{{ form.country.vars.id }}" class="form-label d-block w-100">Country</label>
+    {{ form_widget(form.country, {'attr': {
+        'class': 'form-select w-100',
+        'data-custom-scroll': 'true'
+    }}) }}
+    {{ form_errors(form.country) }}
+</div>
+
+                            <div class="form-group" style="clear: both; margin-top: 1rem;">
+                                <label for="{{ form.phoneNumber.vars.id }}" class="form-label d-block w-100">Phone Number</label>
+                                {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control w-100'}}) }}
+                                {{ form_errors(form.phoneNumber) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.password) }}
+                                {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.password) }}
+                            </div>
+
+                            <div class="form-group text-center">
+                                {{ form_label(form.profilePictureFile) }}
+                                {{ form_widget(form.profilePictureFile, {'attr': {'class': 'form-control-file', 'onchange': 'previewImage(event)', 'accept': 'image/*'}}) }}
+                                {{ form_errors(form.profilePictureFile) }}
+
+                                <div class="preview-container">
+                                <img id="preview" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 1px solid #ddd; padding: 5px;" />
+                            </div>
+                            </div>
+
+                            <script>
+                                function previewImage(event) {
+                                    const reader = new FileReader();
+                                    reader.onload = function () {
+                                        const preview = document.getElementById('preview');
+                                        preview.src = reader.result;
+                                        preview.style.display = 'inline-block';
+                                    };
+                                    if (event.target.files.length > 0) {
+                                        reader.readAsDataURL(event.target.files[0]);
+                                    }
+                                }
+                            </script>
+
+
+
+                            <div class="form-group">
+                                <button type="submit" class="wpo-accountBtn">Sign Up</button>
+                            </div>
+
+                            {{ form_end(form) }}
+
+                            <p class="subText">Already have an account? <a href="{{ path('app_login') }}">Log in</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('frontoffice/js/jquery.min.js') }}"></script>
+<script src="{{ asset('frontoffice/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('frontoffice/js/modernizr.custom.js') }}"></script>
+<script src="{{ asset('frontoffice/js/jquery.dlmenu.js') }}"></script>
+<script src="{{ asset('frontoffice/js/jquery-plugin-collection.js') }}"></script>
+<script src="{{ asset('frontoffice/js/script.js') }}"></script>
+
+<script>
+    // Country dropdown fix - placed at the end to ensure jQuery is loaded
+    $(document).ready(function() {
+        // Initialize nice-select
+        $('select').niceSelect();
+
+        // Fix scrolling for country dropdown
+        function applyScrollStyles() {
+            $('.nice-select .list').css({
+                'max-height': '200px',
+                'overflow-y': 'scroll',
+                'overflow-x': 'hidden',
+                'width': '100%',
+                'z-index': '9999'
+            });
+        }
+
+        // Apply immediately and with delays to ensure it works
+        applyScrollStyles();
+        setTimeout(applyScrollStyles, 100);
+        setTimeout(applyScrollStyles, 500);
+
+        // Ensure the dropdown opens properly when clicked
+        $(document).on('click', '.nice-select', function() {
+            applyScrollStyles();
+        });
+    });
+</script>
+
+</body>
+</html>

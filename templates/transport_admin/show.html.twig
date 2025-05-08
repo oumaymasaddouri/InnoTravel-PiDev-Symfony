@@ -1,0 +1,126 @@
+{% extends 'basebackoffice.html.twig' %}
+
+{% block title %}Vehicle Details{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h2 mb-0">Vehicle Details</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent p-0">
+                        <li class="breadcrumb-item"><a href="{{ path('admin_transport_index') }}">Transport Management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Vehicle Details</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">{{ transport.carModel }}</h5>
+                            <span class="badge badge-pill {% if transport.status == 'Active' %}badge-success{% else %}badge-danger{% endif %} px-3 py-2">
+                                {{ transport.status }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="vehicle-image mb-4">
+                                    {% if transport.imageFilename %}
+                                        <img src="{{ asset('uploads/transport_images/' ~ transport.imageFilename) }}" alt="{{ transport.carModel }}" class="img-fluid rounded shadow-sm">
+                                    {% else %}
+                                        <div class="bg-light rounded p-5 text-center">
+                                            <i class="fas fa-car fa-4x text-muted"></i>
+                                            <p class="mt-3 text-muted">No image available</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="vehicle-details">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <th width="30%">Vehicle Type</th>
+                                            <td>{{ transport.vehicleType|capitalize }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Model</th>
+                                            <td>{{ transport.carModel }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>License Plate</th>
+                                            <td>{{ transport.licensePlate }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Color</th>
+                                            <td>{{ transport.carColor }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Max Luggage</th>
+                                            <td>{{ transport.maxLuggage }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status</th>
+                                            <td>
+                                                <span class="badge badge-pill {% if transport.status == 'Active' %}badge-success{% else %}badge-danger{% endif %}">
+                                                    {{ transport.status }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('admin_transport_index') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left mr-1"></i> Back to list
+                            </a>
+                            <div>
+                                <a href="{{ path('admin_transport_edit', {'id': transport.id}) }}" class="btn btn-warning">
+                                    <i class="fas fa-edit mr-1"></i> Edit
+                                </a>
+                                <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#deleteModal">
+                                    <i class="fas fa-trash mr-1"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this vehicle?<br>
+                <strong>{{ transport.carModel }} ({{ transport.licensePlate }})</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form method="post" action="{{ path('admin_transport_delete', {'id': transport.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ transport.id) }}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
