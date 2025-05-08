@@ -16,7 +16,9 @@ class GeminiChatService
 
     public function sendMessage(string $userMessage): ?string
     {
-        $response = $this->client->request('POST', $this->apiUrl . '?key=' . "AIzaSyC3C0Fvrs-wFZrM-XlNuSHn51Kq-YUi_cA", [
+        $apiKey = $_ENV['GEMINI_API_KEY'] ?? '';
+
+        $response = $this->client->request('POST', $this->apiUrl . '?key=' . $apiKey, [
             'json' => [
                 'contents' => [
                     [
